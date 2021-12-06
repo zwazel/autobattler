@@ -1,11 +1,13 @@
 package dev.zwazel.autobattler.classes.units;
 
+import dev.zwazel.autobattler.classes.Grid;
 import dev.zwazel.autobattler.classes.abilities.Ability;
 
 import java.util.Arrays;
 
 public abstract class Unit {
     private final long ID;
+    private final char symbol;
     private int baseHealth;
     private int baseEnergy;
     private int level;
@@ -13,14 +15,14 @@ public abstract class Unit {
     private String description;
     private Ability[] abilities = new Ability[0];
     private int baseDamage;
-    private char symbol;
+    private Grid gridPosition;
 
-    public Unit(long id, int level, int baseDamage, String name, String description, int baseHealth, int baseEnergy, char symbol, Ability[] abilities) {
-        this(id, level, baseDamage, name, description, baseHealth, baseEnergy, symbol);
+    public Unit(long id, int level, int baseDamage, String name, String description, int baseHealth, int baseEnergy, char symbol, Ability[] abilities, Grid position) {
+        this(id, level, baseDamage, name, description, baseHealth, baseEnergy, symbol, position);
         this.abilities = abilities;
     }
 
-    public Unit(long id, int level, int baseDamage, String name, String description, int baseHealth, int baseEnergy, char symbol) {
+    public Unit(long id, int level, int baseDamage, String name, String description, int baseHealth, int baseEnergy, char symbol, Grid position) {
         this.ID = id;
         this.level = level;
         this.baseDamage = baseDamage;
@@ -29,6 +31,7 @@ public abstract class Unit {
         this.name = name;
         this.description = description;
         this.symbol = symbol;
+        this.gridPosition = position;
     }
 
     public long getID() {
@@ -95,16 +98,31 @@ public abstract class Unit {
         this.baseDamage = baseDamage;
     }
 
+    public char getSymbol() {
+        return symbol;
+    }
+
+    public Grid getGridPosition() {
+        return gridPosition;
+    }
+
+    public void setGridPosition(Grid gridPosition) {
+        this.gridPosition = gridPosition;
+    }
+
     @Override
     public String toString() {
         return "Unit{" +
                 "ID=" + ID +
-                ", MAX_HEALTH=" + baseHealth +
-                ", MAX_ENERGY=" + baseEnergy +
+                ", symbol=" + symbol +
+                ", baseHealth=" + baseHealth +
+                ", baseEnergy=" + baseEnergy +
                 ", level=" + level +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", abilities=" + Arrays.toString(abilities) +
+                ", baseDamage=" + baseDamage +
+                ", gridPosition=" + gridPosition +
                 '}';
     }
 }

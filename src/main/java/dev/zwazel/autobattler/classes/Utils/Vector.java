@@ -45,6 +45,12 @@ public class Vector {
         return (this.x < vector.x || this.y < vector.y);
     }
 
+    public Double getDistanceFrom(Vector vector) {
+        int xd = vector.x - this.x;
+        int yd = vector.y - this.y;
+        return Math.sqrt(xd * xd - yd * yd);
+    }
+
     public int getX() {
         return x;
     }

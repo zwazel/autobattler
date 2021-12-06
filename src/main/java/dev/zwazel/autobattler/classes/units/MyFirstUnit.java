@@ -11,11 +11,9 @@ public class MyFirstUnit extends Unit {
 
     @Override
     public void move(Vector direction) {
-        System.out.println("this.getGridPosition() = " + this.getGridPosition());
         Vector temp = new Vector(this.getGridPosition());
         for (int i = 0; i < this.getBaseSpeed(); i++) {
             temp.add(direction);
-            System.out.println("temp = " + temp);
             if (!temp.greaterThan(this.getGridSize()) || !temp.smallerThan(new Vector(0,0))) {
                 this.setGridPosition(temp);
             } else {

@@ -19,25 +19,17 @@ public class Battler {
         units.add(new MyFirstUnit(unitCounter++, 1, "unit4", new Vector(9, 1), gridSize));
 
         boolean fightFinished = false;
+        int counter = 0;
         while (!fightFinished) {
-            fightFinished = true;
+            counter++;
+            if(counter > 30) {
+                fightFinished = true;
+            }
+            for (Unit unit : units) {
+                unit.moveRandom();
+            }
             drawBoard();
-//            for (Unit unit : units) {
-//                unit.moveRandom();
-//            }
-//            drawBoard();
         }
-        System.out.println(units.get(3).getGridPosition());
-        units.get(3).move(Vector.DIRECTION.RIGHT.getDirection());
-        System.out.println(units.get(3).getGridPosition());
-
-        System.out.println("komplett nach links...");
-
-        units.get(3).setBaseSpeed(10);
-        units.get(3).move(Vector.DIRECTION.LEFT.getDirection());
-        System.out.println(units.get(3).getGridPosition());
-
-        drawBoard();
     }
 
     public static void main(String[] args) {

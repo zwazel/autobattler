@@ -18,6 +18,7 @@ public class Battler {
         units.add(new MyFirstUnit(unitCounter++, 1, "unit3", new Vector(5, 2), gridSize));
         units.add(new MyFirstUnit(unitCounter++, 1, "unit4", new Vector(9, 1), gridSize));
 
+        drawBoard();
         boolean fightFinished = false;
         int counter = 0;
         while (!fightFinished) {
@@ -27,6 +28,7 @@ public class Battler {
             }
             for (Unit unit : units) {
                 unit.moveRandom();
+                System.out.println("unit.getGridPosition() = " + unit.getGridPosition());
             }
             drawBoard();
         }
@@ -40,8 +42,7 @@ public class Battler {
         ArrayList<Unit> placedUnits = new ArrayList<>();
         StringBuilder vertical = new StringBuilder();
         vertical.append("-".repeat((gridSize.getX() + 1) * 4 + 1));
-
-        int counter = 0;
+        
         Vector gridPositionNow = new Vector(0, 0);
 
         for (int row = 0; row <= gridSize.getY(); row++) {

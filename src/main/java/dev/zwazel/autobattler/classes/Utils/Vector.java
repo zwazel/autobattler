@@ -81,8 +81,8 @@ public class Vector {
     public enum DIRECTION {
         RIGHT(1, 0),
         LEFT(-1, 0),
-        UP(0, 1),
-        DOWN(0, -1);
+        UP(0, -1),
+        DOWN(0, 1);
 
         final Vector direction;
 

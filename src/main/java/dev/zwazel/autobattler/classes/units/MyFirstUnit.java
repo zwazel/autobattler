@@ -14,7 +14,7 @@ public class MyFirstUnit extends Unit {
         Vector temp = new Vector(this.getGridPosition());
         for (int i = 0; i < this.getBaseSpeed(); i++) {
             temp.add(direction);
-            if (!temp.greaterThan(this.getGridSize()) || !temp.smallerThan(new Vector(0,0))) {
+            if (!temp.greaterThan(this.getGridSize()) && !temp.smallerThan(new Vector(0,0))) {
                 this.setGridPosition(temp);
             } else {
                 break;

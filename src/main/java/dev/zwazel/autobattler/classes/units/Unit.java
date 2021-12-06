@@ -1,5 +1,6 @@
 package dev.zwazel.autobattler.classes.units;
 
+import dev.zwazel.autobattler.Battler;
 import dev.zwazel.autobattler.classes.Utils.Vector;
 import dev.zwazel.autobattler.classes.abilities.Ability;
 
@@ -18,13 +19,14 @@ public abstract class Unit {
     private Vector gridPosition;
     private Vector gridSize;
     private int baseSpeed;
+    private Battler battler;
 
-    public Unit(long id, int level, int baseDamage, String name, String description, int baseHealth, int baseEnergy, char symbol, Ability[] abilities, Vector position, Vector gridSize, int baseSpeed) {
-        this(id, level, baseDamage, name, description, baseHealth, baseEnergy, symbol, position, gridSize, baseSpeed);
+    public Unit(long id, int level, int baseDamage, String name, String description, int baseHealth, int baseEnergy, char symbol, Ability[] abilities, Vector position, Vector gridSize, int baseSpeed, Battler battler) {
+        this(id, level, baseDamage, name, description, baseHealth, baseEnergy, symbol, position, gridSize, baseSpeed, battler);
         this.abilities = abilities;
     }
 
-    public Unit(long id, int level, int baseDamage, String name, String description, int baseHealth, int baseEnergy, char symbol, Vector position, Vector gridSize, int baseSpeed) {
+    public Unit(long id, int level, int baseDamage, String name, String description, int baseHealth, int baseEnergy, char symbol, Vector position, Vector gridSize, int baseSpeed, Battler battler) {
         this.ID = id;
         this.level = level;
         this.baseDamage = baseDamage;
@@ -36,6 +38,7 @@ public abstract class Unit {
         this.gridPosition = position;
         this.gridSize = gridSize;
         this.baseSpeed = baseSpeed;
+        this.battler = battler;
     }
 
     public abstract void move(Vector direction);
@@ -134,6 +137,14 @@ public abstract class Unit {
         this.baseSpeed = baseSpeed;
     }
 
+    public Battler getBattler() {
+        return battler;
+    }
+
+    public void setBattler(Battler battler) {
+        this.battler = battler;
+    }
+
     @Override
     public String toString() {
         return "Unit{" +
@@ -149,6 +160,7 @@ public abstract class Unit {
                 ", gridPosition=" + gridPosition +
                 ", gridSize=" + gridSize +
                 ", baseSpeed=" + baseSpeed +
+                ", battler=" + battler +
                 '}';
     }
 }

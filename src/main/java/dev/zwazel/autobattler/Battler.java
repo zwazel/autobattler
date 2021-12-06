@@ -13,36 +13,51 @@ public class Battler {
     public Battler() {
         int unitCounter = 0;
         units = new ArrayList<>();
-        units.add(new MyFirstUnit(unitCounter++, 1, "unit1", new Vector(1, 1), gridSize));
-        units.add(new MyFirstUnit(unitCounter++, 1, "unit2", new Vector(2, 2), gridSize));
-        units.add(new MyFirstUnit(unitCounter++, 1, "unit3", new Vector(5, 2), gridSize));
-        units.add(new MyFirstUnit(unitCounter++, 1, "unit4", new Vector(9, 1), gridSize));
+        units.add(new MyFirstUnit(unitCounter++, 1, "unit1", new Vector(1, 1), gridSize, this));
+        units.add(new MyFirstUnit(unitCounter++, 1, "unit2", new Vector(2, 2), gridSize, this));
+        units.add(new MyFirstUnit(unitCounter++, 1, "unit3", new Vector(5, 2), gridSize, this));
+        units.add(new MyFirstUnit(unitCounter++, 1, "unit4", new Vector(9, 1), gridSize, this));
 
         drawBoard();
         boolean fightFinished = false;
         int counter = 0;
-        while (!fightFinished) {
-            counter++;
-            if(counter > 30) {
-                fightFinished = true;
-            }
-            for (Unit unit : units) {
-                unit.moveRandom();
-                System.out.println("unit.getGridPosition() = " + unit.getGridPosition());
-            }
-            drawBoard();
-        }
+//        while (!fightFinished) {
+//            counter++;
+//            if (counter > 30) {
+//                fightFinished = true;
+//            }
+//            for (Unit unit : units) {
+//                unit.moveRandom();
+//                System.out.println("unit.getGridPosition() = " + unit.getGridPosition());
+//            }
+//            drawBoard();
+//        }
+
+        Unit unit = units.get(0);
+        unit.move(Vector.DIRECTION.DOWN.getDirection());
+        drawBoard();
+        unit.move(Vector.DIRECTION.RIGHT.getDirection());
+        drawBoard();
     }
 
     public static void main(String[] args) {
         new Battler();
     }
 
+    public boolean placeOccupied(Vector toGo) {
+        for (Unit unit : units) {
+            if (unit.getGridPosition().equals(toGo)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void drawBoard() {
         ArrayList<Unit> placedUnits = new ArrayList<>();
         StringBuilder vertical = new StringBuilder();
         vertical.append("-".repeat((gridSize.getX() + 1) * 4 + 1));
-        
+
         Vector gridPositionNow = new Vector(0, 0);
 
         for (int row = 0; row <= gridSize.getY(); row++) {

@@ -9,6 +9,11 @@ public class Vector {
         this.y = y;
     }
 
+    public Vector(Vector vector) {
+        this.x = vector.getX();
+        this.y = vector.getY();
+    }
+
     public void add(int num) {
         add(new Vector(num, num));
     }
@@ -34,6 +39,10 @@ public class Vector {
 
     public boolean greaterThan(Vector vector) {
         return (this.x > vector.x || this.y > vector.y);
+    }
+
+    public boolean smallerThan(Vector vector) {
+        return (this.x < vector.x || this.y < vector.y);
     }
 
     public int getX() {

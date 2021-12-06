@@ -38,8 +38,9 @@ public abstract class Unit {
         this.baseSpeed = baseSpeed;
     }
 
-    public abstract boolean move(Vector direction);
-    public abstract boolean moveRandom();
+    public abstract void move(Vector direction);
+
+    public abstract void moveRandom();
 
     public long getID() {
         return ID;

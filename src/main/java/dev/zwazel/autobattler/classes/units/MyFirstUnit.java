@@ -10,23 +10,26 @@ public class MyFirstUnit extends Unit {
     }
 
     @Override
-    public boolean move(Vector direction) {
-        Vector temp = this.getGridPosition();
-        direction.multiply(this.getBaseSpeed());
-        temp.add(direction);
-        if(!temp.greaterThan(this.getGridSize())) {
-            this.setGridPosition(temp);
+    public void move(Vector direction) {
+        System.out.println("this.getGridPosition() = " + this.getGridPosition());
+        Vector temp = new Vector(this.getGridPosition());
+        for (int i = 0; i < this.getBaseSpeed(); i++) {
+            temp.add(direction);
+            System.out.println("temp = " + temp);
+            if (!temp.greaterThan(this.getGridSize()) || !temp.smallerThan(new Vector(0,0))) {
+                this.setGridPosition(temp);
+            } else {
+                break;
+            }
         }
-
-        return false;
     }
 
     @Override
-    public boolean moveRandom() {
+    public void moveRandom() {
         Random rand = new Random();
         int n = rand.nextInt(Vector.DIRECTION.values().length);
         Vector direction = Vector.DIRECTION.values()[n].getDirection();
         System.out.println("direction of unit " + this.getID() + " = " + direction);
-        return move(direction);
+        move(direction);
     }
 }

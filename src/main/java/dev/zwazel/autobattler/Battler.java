@@ -21,23 +21,16 @@ public class Battler {
         drawBoard();
         boolean fightFinished = false;
         int counter = 0;
-//        while (!fightFinished) {
-//            counter++;
-//            if (counter > 30) {
-//                fightFinished = true;
-//            }
-//            for (Unit unit : units) {
-//                unit.moveRandom();
-//                System.out.println("unit.getGridPosition() = " + unit.getGridPosition());
-//            }
-//            drawBoard();
-//        }
-
-        Unit unit = units.get(0);
-        unit.move(Vector.DIRECTION.DOWN.getDirection());
-        drawBoard();
-        unit.move(Vector.DIRECTION.RIGHT.getDirection());
-        drawBoard();
+        while (!fightFinished) {
+            counter++;
+            if (counter > 30) {
+                fightFinished = true;
+            }
+            for (Unit unit : units) {
+                unit.moveRandom();
+            }
+            drawBoard();
+        }
     }
 
     public static void main(String[] args) {

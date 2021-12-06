@@ -15,7 +15,7 @@ public class MyFirstUnit extends Unit {
         Vector temp = new Vector(this.getGridPosition());
         for (int i = 0; i < this.getBaseSpeed(); i++) {
             temp.add(direction);
-            if (this.getBattler().placeOccupied(temp) && !temp.greaterThan(this.getGridSize()) && !temp.smallerThan(new Vector(0,0))) {
+            if (!this.getBattler().placeOccupied(temp) && !temp.greaterThan(this.getGridSize()) && !temp.smallerThan(new Vector(0,0))) {
                 this.setGridPosition(temp);
             } else {
                 break;
@@ -28,7 +28,6 @@ public class MyFirstUnit extends Unit {
         Random rand = new Random();
         int n = rand.nextInt(Vector.DIRECTION.values().length);
         Vector direction = Vector.DIRECTION.values()[n].getDirection();
-        System.out.println("direction of unit " + this.getID() + " = " + direction);
         move(direction);
     }
 }

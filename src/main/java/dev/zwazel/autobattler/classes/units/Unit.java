@@ -1,6 +1,6 @@
 package dev.zwazel.autobattler.classes.units;
 
-import dev.zwazel.autobattler.classes.Grid;
+import dev.zwazel.autobattler.classes.Utils.Vector;
 import dev.zwazel.autobattler.classes.abilities.Ability;
 
 import java.util.Arrays;
@@ -15,14 +15,16 @@ public abstract class Unit {
     private String description;
     private Ability[] abilities = new Ability[0];
     private int baseDamage;
-    private Grid gridPosition;
+    private Vector gridPosition;
+    private Vector gridSize;
+    private int baseSpeed;
 
-    public Unit(long id, int level, int baseDamage, String name, String description, int baseHealth, int baseEnergy, char symbol, Ability[] abilities, Grid position) {
-        this(id, level, baseDamage, name, description, baseHealth, baseEnergy, symbol, position);
+    public Unit(long id, int level, int baseDamage, String name, String description, int baseHealth, int baseEnergy, char symbol, Ability[] abilities, Vector position, Vector gridSize, int baseSpeed) {
+        this(id, level, baseDamage, name, description, baseHealth, baseEnergy, symbol, position, gridSize, baseSpeed);
         this.abilities = abilities;
     }
 
-    public Unit(long id, int level, int baseDamage, String name, String description, int baseHealth, int baseEnergy, char symbol, Grid position) {
+    public Unit(long id, int level, int baseDamage, String name, String description, int baseHealth, int baseEnergy, char symbol, Vector position, Vector gridSize, int baseSpeed) {
         this.ID = id;
         this.level = level;
         this.baseDamage = baseDamage;
@@ -32,7 +34,12 @@ public abstract class Unit {
         this.description = description;
         this.symbol = symbol;
         this.gridPosition = position;
+        this.gridSize = gridSize;
+        this.baseSpeed = baseSpeed;
     }
+
+    public abstract boolean move(Vector direction);
+    public abstract boolean moveRandom();
 
     public long getID() {
         return ID;
@@ -102,12 +109,28 @@ public abstract class Unit {
         return symbol;
     }
 
-    public Grid getGridPosition() {
+    public Vector getGridPosition() {
         return gridPosition;
     }
 
-    public void setGridPosition(Grid gridPosition) {
+    public void setGridPosition(Vector gridPosition) {
         this.gridPosition = gridPosition;
+    }
+
+    public Vector getGridSize() {
+        return gridSize;
+    }
+
+    public void setGridSize(Vector gridSize) {
+        this.gridSize = gridSize;
+    }
+
+    public int getBaseSpeed() {
+        return baseSpeed;
+    }
+
+    public void setBaseSpeed(int baseSpeed) {
+        this.baseSpeed = baseSpeed;
     }
 
     @Override
@@ -123,6 +146,8 @@ public abstract class Unit {
                 ", abilities=" + Arrays.toString(abilities) +
                 ", baseDamage=" + baseDamage +
                 ", gridPosition=" + gridPosition +
+                ", gridSize=" + gridSize +
+                ", baseSpeed=" + baseSpeed +
                 '}';
     }
 }

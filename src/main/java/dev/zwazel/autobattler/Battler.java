@@ -13,9 +13,9 @@ public class Battler {
     public Battler() {
         int unitCounter = 0;
         units = new ArrayList<>();
-        units.add(new MyFirstUnit(unitCounter++, 1, "unit1", new Vector(0, 0), gridSize));
-        units.add(new MyFirstUnit(unitCounter++, 1, "unit2", new Vector(1, 1), gridSize));
-        units.add(new MyFirstUnit(unitCounter++, 1, "unit3", new Vector(9, 4), gridSize));
+        units.add(new MyFirstUnit(unitCounter++, 1, "unit1", new Vector(1, 1), gridSize));
+        units.add(new MyFirstUnit(unitCounter++, 1, "unit2", new Vector(2, 2), gridSize));
+        units.add(new MyFirstUnit(unitCounter++, 1, "unit3", new Vector(5, 2), gridSize));
 
         boolean fightFinished = false;
         while (!fightFinished) {

@@ -15,7 +15,7 @@ public class MyFirstUnit extends Unit {
         direction.multiply(this.getBaseSpeed());
         temp.add(direction);
         if(!temp.greaterThan(this.getGridSize())) {
-            this.getGridPosition().add(temp);
+            this.setGridPosition(temp);
         }
 
         return false;
@@ -25,6 +25,8 @@ public class MyFirstUnit extends Unit {
     public boolean moveRandom() {
         Random rand = new Random();
         int n = rand.nextInt(Vector.DIRECTION.values().length);
-        return move(Vector.DIRECTION.values()[n].getDirection());
+        Vector direction = Vector.DIRECTION.values()[n].getDirection();
+        System.out.println("direction of unit " + this.getID() + " = " + direction);
+        return move(direction);
     }
 }

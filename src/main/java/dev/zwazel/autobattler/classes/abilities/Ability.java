@@ -5,18 +5,21 @@ import dev.zwazel.autobattler.classes.enums.AbilityType;
 import dev.zwazel.autobattler.classes.enums.UsageType;
 
 public abstract class Ability {
-    private AbilityType type;
     private final UsageType costType;
     private final AbilityOutputType outputType;
+    private final int cooldown;
+    private AbilityType type;
+    private int usageCostAmount;
     private String title;
     private String description;
-    private final int cooldown;
+    private int range;
 
-    public Ability(UsageType costType, int usageCost, AbilityOutputType outputType, int cooldown) {
-        costType.setAmount(usageCost);
+    public Ability(UsageType costType, int usageCost, AbilityOutputType outputType, int cooldown, int range) {
         this.costType = costType;
         this.cooldown = cooldown;
         this.outputType = outputType;
+        this.usageCostAmount = usageCost;
+        this.range = range;
     }
 
     public abstract boolean canBeUsed();
@@ -53,15 +56,37 @@ public abstract class Ability {
         return cooldown;
     }
 
+    public int getUsageCostAmount() {
+        return usageCostAmount;
+    }
+
+    public void setUsageCostAmount(int usageCostAmount) {
+        this.usageCostAmount = usageCostAmount;
+    }
+
+    public AbilityOutputType getOutputType() {
+        return outputType;
+    }
+
+    public int getRange() {
+        return range;
+    }
+
+    public void setRange(int range) {
+        this.range = range;
+    }
 
     @Override
     public String toString() {
         return "Ability{" +
-                "type=" + type +
-                ", costType=" + costType +
+                "costType=" + costType +
+                ", outputType=" + outputType +
+                ", cooldown=" + cooldown +
+                ", type=" + type +
+                ", usageCostAmount=" + usageCostAmount +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", cooldown=" + cooldown +
+                ", range=" + range +
                 '}';
     }
 }

@@ -1,30 +1,34 @@
 package dev.zwazel.autobattler.classes.units;
 
 import dev.zwazel.autobattler.classes.abilities.Ability;
-import dev.zwazel.autobattler.classes.enums.UsageType;
+
+import java.util.Arrays;
 
 public abstract class Unit {
-    private final UsageType MAX_HEALTH = UsageType.HEALTH;
-    private final UsageType MAX_MANA = UsageType.MANA;
-    private final UsageType MAX_STAMINA = UsageType.STAMINA;
-
     private final long ID;
+    private int baseHealth;
+    private int baseEnergy;
+    private int level;
     private String name;
     private String description;
     private Ability[] abilities = new Ability[0];
+    private int baseDamage;
+    private char symbol;
 
-    public Unit(long id, String name, String description, int MAX_HEALTH, int MAX_MANA, int MAX_STAMINA, Ability[] abilities) {
-        this(id, name, description, MAX_HEALTH, MAX_MANA, MAX_STAMINA);
+    public Unit(long id, int level, int baseDamage, String name, String description, int baseHealth, int baseEnergy, char symbol, Ability[] abilities) {
+        this(id, level, baseDamage, name, description, baseHealth, baseEnergy, symbol);
         this.abilities = abilities;
     }
 
-    public Unit(long id, String name, String description, int MAX_HEALTH, int MAX_MANA, int MAX_STAMINA) {
+    public Unit(long id, int level, int baseDamage, String name, String description, int baseHealth, int baseEnergy, char symbol) {
         this.ID = id;
-        setMAX_HEALTH(MAX_HEALTH);
-        setMAX_MANA(MAX_MANA);
-        setMAX_STAMINA(MAX_STAMINA);
+        this.level = level;
+        this.baseDamage = baseDamage;
+        this.baseHealth = baseHealth;
+        this.baseEnergy = baseEnergy;
         this.name = name;
         this.description = description;
+        this.symbol = symbol;
     }
 
     public long getID() {
@@ -47,28 +51,20 @@ public abstract class Unit {
         this.description = description;
     }
 
-    public UsageType getMAX_HEALTH() {
-        return MAX_HEALTH;
+    public int getBaseHealth() {
+        return baseHealth;
     }
 
-    public void setMAX_HEALTH(int MAX_HEALTH) {
-        this.MAX_HEALTH.setAmount(MAX_HEALTH);
+    public void setBaseHealth(int baseHealth) {
+        this.baseHealth = baseHealth;
     }
 
-    public UsageType getMAX_MANA() {
-        return MAX_MANA;
+    public int getBaseEnergy() {
+        return baseEnergy;
     }
 
-    public void setMAX_MANA(int MAX_MANA) {
-        this.MAX_MANA.setAmount(MAX_MANA);
-    }
-
-    public UsageType getMAX_STAMINA() {
-        return MAX_STAMINA;
-    }
-
-    public void setMAX_STAMINA(int MAX_STAMINA) {
-        this.MAX_STAMINA.setAmount(MAX_STAMINA);
+    public void setBaseEnergy(int baseEnergy) {
+        this.baseEnergy = baseEnergy;
     }
 
     public Ability[] getAbilities() {
@@ -81,5 +77,34 @@ public abstract class Unit {
 
     public void setAbility(Ability ability, int index) {
         this.abilities[index] = ability;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getBaseDamage() {
+        return baseDamage;
+    }
+
+    public void setBaseDamage(int baseDamage) {
+        this.baseDamage = baseDamage;
+    }
+
+    @Override
+    public String toString() {
+        return "Unit{" +
+                "ID=" + ID +
+                ", MAX_HEALTH=" + baseHealth +
+                ", MAX_ENERGY=" + baseEnergy +
+                ", level=" + level +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", abilities=" + Arrays.toString(abilities) +
+                '}';
     }
 }

@@ -60,6 +60,7 @@
     - Fähigkeiten
         - Wirft "deine mom" witze an gegner um sie agressiv zu machen
     - Schwächen
+        - Wird von Computerspielen und Computerspiel Sales abgelenkt.
 - Magnus
     - Humor
         - Deutscher Humor
@@ -86,11 +87,11 @@
         - 02 simp
 - Nadina
     - Humor
-        - 
+        - Something
     -  Fähigkeiten
-        -
+        - Something else
     - Schwäche
-        -
+        - anotherone
 
 
 ## Random ideas

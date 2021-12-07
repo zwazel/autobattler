@@ -32,7 +32,6 @@ public class Battler {
             }
             drawBoard();
         }
-        findClosestOther(units.get(2));
     }
 
     public static void main(String[] args) {
@@ -64,12 +63,7 @@ public class Battler {
                 }
             }
         }
-        if (closestUnit != null) {
-            System.out.println("closest unit of " + unit.getID() + " = " + closestUnit.getID());
-            System.out.println("shortestDistance = " + shortestDistance);
-        } else {
-            System.out.println("No close " + sideToCheck + " unit found for unit " + unit.getID());
-        }
+
         return closestUnit;
     }
 

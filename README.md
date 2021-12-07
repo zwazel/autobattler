@@ -17,6 +17,7 @@
 - Kindsmisshandler
     - Extra Damage an Kinder
 
+
 ## Unit ideas
 
 - Ash
@@ -84,3 +85,22 @@
     - Schwäche
         - 02 simp
 - Nadina
+    - Humpr
+        - 
+    -  Fähigkeiten
+        -
+    - Schwäche
+        -
+
+
+## Random ideas
+
+- Events
+    -   Während einer gewissen Zeit kann man seine "Units" in Events auf eine Mission schicken.
+    -   Units sind nicht in allen Kombinationen gleich effektiv und lassen sich evtl von anderen ablenken.
+
+-Spezielle Stadien
+    - Ablenkung
+        -  Der Charakter wird für eine gewisse Zeit vom Kampf abelenkt.
+    - Aggression / Aggressiv
+        - Einzelne Buffs auf Angriffs-Werte aber Verteidigungs und Intelligents Werte sinken. 

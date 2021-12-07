@@ -83,3 +83,4 @@
         - rassist, mehr damage an "anderst farbige"
     - Schwäche
         - 02 simp
+- Nadina

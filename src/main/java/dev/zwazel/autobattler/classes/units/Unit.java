@@ -3,6 +3,7 @@ package dev.zwazel.autobattler.classes.units;
 import dev.zwazel.autobattler.Battler;
 import dev.zwazel.autobattler.classes.Utils.Vector;
 import dev.zwazel.autobattler.classes.abilities.Ability;
+import dev.zwazel.autobattler.classes.actions.Action;
 import dev.zwazel.autobattler.classes.enums.Side;
 
 import java.util.Arrays;
@@ -22,6 +23,7 @@ public abstract class Unit {
     private Vector gridSize;
     private int baseSpeed;
     private Battler battler;
+    private Action todoAction;
 
     public Unit(long id, int level, int baseDamage, String name, String description, int baseHealth, int baseEnergy, char symbol, Ability[] abilities, Vector position, Vector gridSize, int baseSpeed, Battler battler, Side side) {
         this(id, level, baseDamage, name, description, baseHealth, baseEnergy, symbol, position, gridSize, baseSpeed, battler, side);
@@ -47,6 +49,10 @@ public abstract class Unit {
     public abstract void move(Vector direction);
 
     public abstract void moveRandom();
+
+    public abstract void think();
+
+    public abstract void doWhatYouThoughtOf();
 
     public long getID() {
         return ID;
@@ -152,11 +158,20 @@ public abstract class Unit {
         return side;
     }
 
+    public Action getTodoAction() {
+        return todoAction;
+    }
+
+    public void setTodoAction(Action todoAction) {
+        this.todoAction = todoAction;
+    }
+
     @Override
     public String toString() {
         return "Unit{" +
                 "ID=" + ID +
                 ", symbol=" + symbol +
+                ", side=" + side +
                 ", baseHealth=" + baseHealth +
                 ", baseEnergy=" + baseEnergy +
                 ", level=" + level +
@@ -168,7 +183,7 @@ public abstract class Unit {
                 ", gridSize=" + gridSize +
                 ", baseSpeed=" + baseSpeed +
                 ", battler=" + battler +
-                ", side=" + side +
+                ", todoAction=" + todoAction +
                 '}';
     }
 }

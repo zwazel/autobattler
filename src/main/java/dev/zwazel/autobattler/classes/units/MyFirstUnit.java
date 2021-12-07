@@ -2,6 +2,8 @@ package dev.zwazel.autobattler.classes.units;
 
 import dev.zwazel.autobattler.Battler;
 import dev.zwazel.autobattler.classes.Utils.Vector;
+import dev.zwazel.autobattler.classes.abilities.Ability;
+import dev.zwazel.autobattler.classes.abilities.DefaultPunch;
 import dev.zwazel.autobattler.classes.actions.Action;
 import dev.zwazel.autobattler.classes.enums.Side;
 
@@ -9,7 +11,12 @@ import java.util.Random;
 
 public class MyFirstUnit extends Unit {
     public MyFirstUnit(long id, int level, String name, Vector position, Vector gridSize, Battler battler, Side side) {
-        super(id, level, 10, name, "First Unit", 100, 100, 'u', position, gridSize, 1, battler, side);
+        super(id, level, 10, name, "First Unit", 100, 100, 'u', new Ability[]{new DefaultPunch()}, position, gridSize, 1, battler, side);
+    }
+
+    @Override
+    public Ability findSuitableAbility() {
+        return null;
     }
 
     @Override
@@ -43,7 +50,26 @@ public class MyFirstUnit extends Unit {
     @Override
     public void doWhatYouThoughtOf() {
         if (this.getTodoAction() != null) {
-            this.getTodoAction().getActionInterface().doSomething();
+            switch (this.getTodoAction()) {
+                case CHASE -> {
+
+                }
+                case ATTACK -> {
+
+                }
+                case RETREAT -> {
+
+                }
+            }
+        }
+    }
+
+    @Override
+    public void useAbility() {
+        for (Ability ability : getAbilities()) {
+            if (ability.use()) {
+                break;
+            }
         }
     }
 }

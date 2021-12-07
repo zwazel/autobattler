@@ -46,6 +46,8 @@ public abstract class Unit {
         this.side = side;
     }
 
+    public abstract Ability findSuitableAbility();
+
     public abstract void move(Vector direction);
 
     public abstract void moveRandom();
@@ -53,6 +55,8 @@ public abstract class Unit {
     public abstract void think();
 
     public abstract void doWhatYouThoughtOf();
+
+    public abstract void useAbility();
 
     public long getID() {
         return ID;

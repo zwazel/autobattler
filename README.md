@@ -107,3 +107,6 @@
 
 ### Antike Programmieraufgaben
 - Antike Programmieraufgaben verleien einen kurzzeitigen oder permanenten Boost.
+
+### Booster-Gegenstände
+- Booster-Gegenstände sind Gegenstände, welche man seinen Charakteren zuweisen kann. Diese werden von diesem Charakter verbraucht, dieser erhält dafür aber für die nächste Anzahl von Kämpfen (aktiv und oder passiv) oder aber für eine gewisse Zeit einen Boost je nach Booster-Gegenstand, denn dieser Charakter konsumiert hat.

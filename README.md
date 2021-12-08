@@ -76,6 +76,7 @@
     - Nervt Teammitglieder, die seinen Humor nicht teilen mit seinen schlechten witze.
     - Greift immer einen Gegner an, ohne den vorherigen ganz zu besiegen
 - Marc
+<<<<<<< Updated upstream
   - Humor
     - Schwarzer Humor
     - Schadensfreude
@@ -92,6 +93,19 @@
     - Something else
   - Schwäche
     - anotherone
+=======
+    - Humor
+        - Schwarzer Humor
+        - Schadensfreude
+        - Meme-affin
+    - Fähigkeiten
+        - extra schaden an kinder
+        - rassist, mehr damage an "anderst farbige"
+    - Schwäche
+        - 02 simp
+
+
+>>>>>>> Stashed changes
 
 ## Random ideas
 

@@ -3,7 +3,7 @@ package dev.zwazel.autobattler.classes.units;
 import dev.zwazel.autobattler.Battler;
 import dev.zwazel.autobattler.classes.Utils.Vector;
 import dev.zwazel.autobattler.classes.abilities.Ability;
-import dev.zwazel.autobattler.classes.actions.Action;
+import dev.zwazel.autobattler.classes.enums.Action;
 import dev.zwazel.autobattler.classes.enums.Side;
 
 import java.util.Arrays;

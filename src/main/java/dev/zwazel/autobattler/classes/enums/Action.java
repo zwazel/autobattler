@@ -1,4 +1,4 @@
-package dev.zwazel.autobattler.classes.actions;
+package dev.zwazel.autobattler.classes.enums;
 
 public enum Action {
     CHASE(() -> {

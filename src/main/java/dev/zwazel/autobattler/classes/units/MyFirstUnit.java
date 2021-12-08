@@ -11,11 +11,17 @@ import java.util.Random;
 
 public class MyFirstUnit extends Unit {
     public MyFirstUnit(long id, int level, String name, Vector position, Vector gridSize, Battler battler, Side side) {
-        super(id, level, 10, name, "First Unit", 100, 100, 'u', new Ability[]{new DefaultPunch()}, position, gridSize, 1, battler, side);
+        super(id, level, 10, name, "First Unit", 100, 100, 'u', position, gridSize, 1, battler, side);
+        this.setAbilities(new Ability[]{new DefaultPunch(this)});
     }
 
     @Override
     public Ability findSuitableAbility() {
+        for (Ability ability : getAbilities()) {
+            if (ability.canBeUsed() && ability.isInRange(this, getBattler().findClosestOther(this))) {
+                return ability;
+            }
+        }
         return null;
     }
 
@@ -42,9 +48,12 @@ public class MyFirstUnit extends Unit {
 
     @Override
     public void think() {
-        Random rand = new Random();
-        int n = rand.nextInt(Action.values().length);
-        this.setTodoAction(Action.values()[n]);
+        setNextAbility(findSuitableAbility());
+        if (getNextAbility() != null) {
+            this.setTodoAction(Action.USE_ABILITY);
+        } else {
+            this.setTodoAction(Action.CHASE);
+        }
     }
 
     @Override
@@ -54,21 +63,12 @@ public class MyFirstUnit extends Unit {
                 case CHASE -> {
 
                 }
-                case ATTACK -> {
-
+                case USE_ABILITY -> {
+                    getNextAbility().use(getBattler().findClosestOther(this));
                 }
                 case RETREAT -> {
 
                 }
-            }
-        }
-    }
-
-    @Override
-    public void useAbility() {
-        for (Ability ability : getAbilities()) {
-            if (ability.use()) {
-                break;
             }
         }
     }

@@ -4,7 +4,7 @@ public enum Action {
     CHASE(() -> {
         System.out.println("Chase");
     }),
-    ATTACK(() -> {
+    USE_ABILITY(() -> {
         System.out.println("Attack");
     }),
     RETREAT(() -> {

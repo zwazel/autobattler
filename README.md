@@ -30,27 +30,25 @@
   - Humor
     - Schwarzer Humor
   - Fähigkeiten
-    - Ice hockey, rammt immer gegner und schadet sich dabei selber. knockt sich teilweise selber aus für einen
-      Moment
+    - Ice hockey, rammt immer Gegner und schadet sich dabei sellbst. Knockt sich teilweise selbst für einen Moment aus. 
     - Rassist
 - Dennis
   - Humor
     - Schwarzer Humor
     - Meme-affin
   - Fähigkeiten
-    - Verführt männliche gegner da er so gay ist. Verführte Gegner sind abgelenkt und können nicht kämpfen,
-      verfolgen den verführer.
+    - Verführt männliche Fegner da er so gay ist.
   - Schwächen
-    - Hat angst vor Giulia
+    - Hat Angst vor Giulia
 - Phillip
   - Humor
     - "Alles kickt amigs chli ine"
   - Fähigkeiten
-    - Spielt basketball, trifft nie. Ball macht jedoch area damage
-    - Lässt Musiklaufen bei jedem Instrumen das er findet. dadurch tanzt er und kann nicht mehr kämpfen, die gegner
-      werden jedoch abgelenkt und die freunde motiviert
+    - Spielt basketball, trifft nie. Ball macht jedoch Area-Damage
+    - Lässt Musiklaufen bei jedem Instrumen das er findet. Dadurch tanzt er und kann nicht mehr kämpfen, die Gegner
+      werden jedoch abgelenkt und die Freunde motiviert.
   - Schwächen
-    - Schwäche wird von autos und so abgelenkt
+    - Wird von Autos und so abgelenkt
 - Tim
   - Humor
     - Schwarzer Humor (aber nicht so krass)
@@ -64,27 +62,27 @@
   - Humor
     - Deutscher Humor
   - Schwächen
-    - hat schwäche gegenüber frauen, ist simp. wird abgelenkt
+    - Hat Schwäche gegenüber Frauen, ist ein Simp. Wird von diesen abgelenkt.
 - Moritz
   - Humor
     - Flachwitze (aber extrem stark, doppelter effekt)
     - Deutscher Humor
   - Fähigkeiten
-    - Lacht ab seinen eigenen Witzen. Sein Lachen gibt moral boost an seine mates weil das lustig.
-    - Leute mit selben Humor kriegen zusätzlichen Boost
+    - Lacht über seine eigenen Witze. Sein Lachen gibt seinen Teamkammeraden einen Moral-Boost weil sie dieses lustig finden.
+    - Teamkammeraden mit dem selben Humor erhalten einen  zusätzlichen Boost.
   - Schwäche
-    - Nervt Teammitglieder, die seinen Humor nicht teilen mit seinen schlechten witze.
-    - Greift immer einen Gegner an, ohne den vorherigen ganz zu besiegen
+    - Nervt Teammitglieder, welche seinen Humor nicht teilen mit seinen schlechten Witzen.
+    - Greift immer schon einen neuen Gegner an, ohne den vorherigen ganz zu besiegen. 
 - Marc
     - Humor
         - Schwarzer Humor
         - Schadensfreude
         - Meme-affin
     - Fähigkeiten
-        - extra schaden an kinder
-        - rassist, mehr damage an "anderst farbige"
+        - Extra schaden an Kindern.
+        - Rassist, mehr Damage an "anderst farbige"
     - Schwäche
-        - 02 simp
+        - 02 Simp
 
 ## Random ideas
 
@@ -99,6 +97,8 @@
   - Der Charakter wird für eine gewisse Zeit vom Kampf abelenkt.
 - Aggression / Aggressiv
   - Einzelne Buffs auf Angriffs-Werte aber Verteidigungs und Intelligents Werte sinken.
+- Verführt
+    -Verführte Gegner sind abgelenkt und können nicht kämpfen, verfolgen ihren Verführer.
 
 ### Antike Programmieraufgaben
 

@@ -28,7 +28,10 @@ public class Battler {
                 fightFinished = true;
             }
             for (Unit unit : units) {
-                unit.moveRandom();
+                unit.think();
+            }
+            for (Unit unit : units) {
+                unit.doWhatYouThoughtOf();
             }
             drawBoard();
         }

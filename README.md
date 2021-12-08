@@ -75,6 +75,7 @@
         - Leute mit selben Humor kriegen zusätzlichen Boost
     - Schwäche
         - Nervt Teammitglieder, die seinen Humor nicht teilen mit seinen schlechten witze.
+        - Greift immer einen Gegner an, ohne den vorherigen ganz zu besiegen
 - Marc
     - Humor
         - Schwarzer Humor
@@ -111,3 +112,7 @@
 
 ### Booster-Gegenstände
 - Booster-Gegenstände sind Gegenstände, welche man seinen Charakteren zuweisen kann. Diese werden von diesem Charakter verbraucht, dieser erhält dafür aber für die nächste Anzahl von Kämpfen (aktiv und oder passiv) oder aber für eine gewisse Zeit einen Boost je nach Booster-Gegenstand, denn dieser Charakter konsumiert hat.
+
+### Auf-/Ausüsten
+- Charaktere können mit Gegenständen ausgerüstet werden, welche ihre Werte verbessern
+- Charaktere sammel während Kämpfen EP und können so nach einer gewissen Zeit verbessert werden. Dies verschafft ihnen neue Möglichkeiten und verbessert ihre Werte

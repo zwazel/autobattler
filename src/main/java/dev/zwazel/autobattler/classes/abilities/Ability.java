@@ -53,7 +53,6 @@ public abstract class Ability extends RoundAffected {
     // TODO: 07.12.2021
     public boolean isInRange(Vector target) {
         Double range = this.getOwner().getGridPosition().getDistanceFrom(target);
-        System.out.println("unit " + this.getOwner().getID() + " range = " + range);
         return range <= this.range;
     }
 

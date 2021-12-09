@@ -20,7 +20,7 @@ public abstract class Ability extends RoundAffected {
     private String description;
     private int range;
 
-    public Ability(Unit owner, UsageType costType, int usageCost, AbilityOutputType outputType, int outPutAmount, int cooldown, int range) {
+    public Ability(String title, String description, Unit owner, UsageType costType, int usageCost, AbilityOutputType outputType, int outPutAmount, int cooldown, int range) {
         this.costType = costType;
         this.cooldown = cooldown;
         this.outputType = outputType;
@@ -28,15 +28,33 @@ public abstract class Ability extends RoundAffected {
         this.range = range;
         this.outPutAmount = outPutAmount;
         this.owner = owner;
+        this.title = title;
+        this.description = description;
     }
 
     public abstract boolean canBeUsed(Unit target);
 
     public abstract boolean use(Unit target);
 
+    public void doOutput(Unit target) {
+        switch (this.getOutputType()) {
+            case DAMAGE -> {
+                target.takeDamage(this.outPutAmount);
+            }
+            case HEAL -> {
+
+            }
+            case STAMINA -> {
+
+            }
+        }
+    }
+
     // TODO: 07.12.2021
     public boolean isInRange(Vector target) {
-        return false;
+        Double range = this.getOwner().getGridPosition().getDistanceFrom(target);
+        System.out.println("unit " + this.getOwner().getID() + " range = " + range);
+        return range <= this.range;
     }
 
     public boolean isInRange(Unit target) {
@@ -118,13 +136,13 @@ public abstract class Ability extends RoundAffected {
                 ", outputType=" + outputType +
                 ", outPutAmount=" + outPutAmount +
                 ", cooldown=" + cooldown +
+                ", owner=" + owner +
                 ", currentCooldown=" + currentCooldown +
                 ", type=" + type +
                 ", usageCostAmount=" + usageCostAmount +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", range=" + range +
-                ", owner=" + owner +
                 '}';
     }
 }

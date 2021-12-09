@@ -25,6 +25,7 @@ public abstract class Unit {
     private Battler battler;
     private Action todoAction;
     private Ability nextAbility;
+    private Unit targetUnit;
 
     public Unit(long id, int level, int baseDamage, String name, String description, int baseHealth, int baseEnergy, char symbol, Vector position, Vector gridSize, int baseSpeed, Battler battler, Side side) {
         this.ID = id;
@@ -51,6 +52,12 @@ public abstract class Unit {
     public abstract void think();
 
     public abstract void doWhatYouThoughtOf();
+
+    public abstract Unit findTargetUnit(boolean updateTarget);
+
+    public void takeDamage(int damage) {
+        baseHealth -= damage;
+    }
 
     public long getID() {
         return ID;
@@ -172,6 +179,14 @@ public abstract class Unit {
         this.nextAbility = nextAbility;
     }
 
+    public Unit getTargetUnit() {
+        return targetUnit;
+    }
+
+    public void setTargetUnit(Unit targetUnit) {
+        this.targetUnit = targetUnit;
+    }
+
     @Override
     public String toString() {
         return "Unit{" +
@@ -191,6 +206,7 @@ public abstract class Unit {
                 ", battler=" + battler +
                 ", todoAction=" + todoAction +
                 ", nextAbility=" + nextAbility +
+                ", targetUnit=" + targetUnit +
                 '}';
     }
 }

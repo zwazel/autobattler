@@ -18,7 +18,9 @@ public class MyFirstUnit extends Unit {
     @Override
     public Ability findSuitableAbility() {
         for (Ability ability : getAbilities()) {
-            if (ability.canBeUsed() && ability.isInRange(this, getBattler().findClosestOther(this))) {
+            Unit target = findTargetUnit(true);
+            if (ability.canBeUsed(target)) {
+                System.out.println("suitable ability = " + ability.getTitle());
                 return ability;
             }
         }
@@ -54,22 +56,35 @@ public class MyFirstUnit extends Unit {
         } else {
             this.setTodoAction(Action.CHASE);
         }
+        System.out.println("this.getTodoAction() = " + this.getTodoAction());
     }
 
     @Override
     public void doWhatYouThoughtOf() {
+        for (Ability ability : getAbilities()) {
+            ability.doRound();
+        }
+
         if (this.getTodoAction() != null) {
             switch (this.getTodoAction()) {
                 case CHASE -> {
-
+                    moveRandom();
                 }
                 case USE_ABILITY -> {
-                    getNextAbility().use(getBattler().findClosestOther(this));
+                    getNextAbility().use(findTargetUnit(false));
                 }
                 case RETREAT -> {
 
                 }
             }
         }
+    }
+
+    @Override
+    public Unit findTargetUnit(boolean updateTarget) {
+        if (updateTarget || this.getTargetUnit() == null) {
+            setTargetUnit(getBattler().findClosestOther(this));
+        }
+        return getTargetUnit();
     }
 }

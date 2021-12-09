@@ -49,6 +49,7 @@ public class Battler {
             for (Unit unit : units) {
                 System.out.println(unit.getID());
                 System.out.println("\tHealth = " + unit.getBaseHealth());
+                System.out.println("\tPos = " + unit.getGridPosition());
             }
             drawBoard();
         }

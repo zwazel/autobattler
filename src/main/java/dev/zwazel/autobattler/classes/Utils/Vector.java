@@ -46,9 +46,9 @@ public class Vector {
     }
 
     public Double getDistanceFrom(Vector vector) {
-        int xd = vector.x - this.x;
-        int yd = vector.y - this.y;
-        return Math.sqrt(xd * xd - yd * yd);
+        int xx = vector.x - this.x;
+        int yy = vector.y - this.y;
+        return Math.sqrt((xx * xx) + (yy * yy));
     }
 
     public int getX() {

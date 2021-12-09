@@ -78,7 +78,7 @@ public class Vector {
 
     @Override
     public String toString() {
-        return "Grid{" +
+        return "Vector{" +
                 "x=" + x +
                 ", y=" + y +
                 '}';

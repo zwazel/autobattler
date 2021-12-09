@@ -45,6 +45,8 @@ public abstract class Unit {
 
     public abstract Ability findSuitableAbility();
 
+    public abstract void moveTowards(Unit target);
+
     public abstract void move(Vector direction);
 
     public abstract void moveRandom();

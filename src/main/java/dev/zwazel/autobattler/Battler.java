@@ -46,7 +46,7 @@ public class Battler {
             System.out.println();
             System.out.println("STATS");
             System.out.println("---------------------------------------------------------------------------");
-            for(Unit unit : units) {
+            for (Unit unit : units) {
                 System.out.println(unit.getID());
                 System.out.println("\tHealth = " + unit.getBaseHealth());
             }
@@ -83,7 +83,7 @@ public class Battler {
             }
         }
 
-        if(closestUnit != null) {
+        if (closestUnit != null) {
             System.out.println("closest unit to unit " + unit.getID() + " = " + closestUnit.getID() + " with distance = " + shortestDistance);
         } else {
             System.out.println("no closest unit to unit " + unit.getID());

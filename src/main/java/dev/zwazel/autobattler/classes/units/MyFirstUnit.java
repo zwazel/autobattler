@@ -28,6 +28,11 @@ public class MyFirstUnit extends Unit {
     }
 
     @Override
+    public void moveTowards(Unit target) {
+
+    }
+
+    @Override
     public void move(Vector direction) {
         Vector temp = new Vector(this.getGridPosition());
         for (int i = 0; i < this.getBaseSpeed(); i++) {

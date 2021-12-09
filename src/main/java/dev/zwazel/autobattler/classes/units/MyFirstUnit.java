@@ -56,7 +56,7 @@ public class MyFirstUnit extends Unit {
         } else {
             this.setTodoAction(Action.CHASE);
         }
-        System.out.println("this.getTodoAction() = " + this.getTodoAction());
+        System.out.println("unit " + this.getID() + " todo = " + this.getTodoAction());
     }
 
     @Override

@@ -24,11 +24,8 @@ public abstract class Unit {
     private int baseSpeed;
     private Battler battler;
     private Action todoAction;
-
-    public Unit(long id, int level, int baseDamage, String name, String description, int baseHealth, int baseEnergy, char symbol, Ability[] abilities, Vector position, Vector gridSize, int baseSpeed, Battler battler, Side side) {
-        this(id, level, baseDamage, name, description, baseHealth, baseEnergy, symbol, position, gridSize, baseSpeed, battler, side);
-        this.abilities = abilities;
-    }
+    private Ability nextAbility;
+    private Unit targetUnit;
 
     public Unit(long id, int level, int baseDamage, String name, String description, int baseHealth, int baseEnergy, char symbol, Vector position, Vector gridSize, int baseSpeed, Battler battler, Side side) {
         this.ID = id;
@@ -48,6 +45,8 @@ public abstract class Unit {
 
     public abstract Ability findSuitableAbility();
 
+    public abstract void moveTowards(Unit target);
+
     public abstract void move(Vector direction);
 
     public abstract void moveRandom();
@@ -56,7 +55,11 @@ public abstract class Unit {
 
     public abstract void doWhatYouThoughtOf();
 
-    public abstract void useAbility();
+    public abstract Unit findTargetUnit(boolean updateTarget);
+
+    public void takeDamage(int damage) {
+        baseHealth -= damage;
+    }
 
     public long getID() {
         return ID;
@@ -170,6 +173,22 @@ public abstract class Unit {
         this.todoAction = todoAction;
     }
 
+    public Ability getNextAbility() {
+        return nextAbility;
+    }
+
+    public void setNextAbility(Ability nextAbility) {
+        this.nextAbility = nextAbility;
+    }
+
+    public Unit getTargetUnit() {
+        return targetUnit;
+    }
+
+    public void setTargetUnit(Unit targetUnit) {
+        this.targetUnit = targetUnit;
+    }
+
     @Override
     public String toString() {
         return "Unit{" +
@@ -188,6 +207,8 @@ public abstract class Unit {
                 ", baseSpeed=" + baseSpeed +
                 ", battler=" + battler +
                 ", todoAction=" + todoAction +
+                ", nextAbility=" + nextAbility +
+                ", targetUnit=" + targetUnit +
                 '}';
     }
 }

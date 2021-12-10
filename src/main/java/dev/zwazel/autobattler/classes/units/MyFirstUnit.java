@@ -30,17 +30,42 @@ public class MyFirstUnit extends Unit {
 
     @Override
     public void moveTowards(Unit target) {
-        System.out.println("direction " + this.getID() + " to " + target.getID() + " = " + this.getGridPosition().directionTo(target.getGridPosition()));
+        Vector dir = this.getGridPosition().directionTo(target.getGridPosition());
+        System.out.println("direction " + this.getID() + " to " + target.getID() + " = " + dir);
+        move(dir);
     }
 
     @Override
     public void move(Vector direction) {
+        System.out.println("unit " + this.getID() + " is moving, direction = " + direction + ":");
         Vector temp = new Vector(this.getGridPosition());
         for (int i = 0; i < this.getBaseSpeed(); i++) {
             temp.add(direction);
-            if (!this.getBattler().placeOccupied(temp) && !temp.greaterThan(this.getGridSize()) && !temp.smallerThan(new Vector(0, 0))) {
+            System.out.println("\ttemp = " + temp);
+            boolean placeOccupied = this.getBattler().placeOccupied(temp);
+            System.out.println("\tplaceOccupied = " + placeOccupied);
+            boolean canChangeDir = direction.getX() != 0 && direction.getY() != 0;
+            System.out.println("\tcanChangeDir = " + canChangeDir);
+            int counter = 0;
+            int tempDir = 0;
+            while (canChangeDir && placeOccupied) {
+                if (counter == 0) {
+                    tempDir = temp.getY();
+                    temp.setY(this.getGridPosition().getY());
+                } else {
+                    temp.setY(tempDir);
+                    temp.setX(this.getGridPosition().getX());
+                    canChangeDir = false;
+                }
+                System.out.println("\ttemp after checking other direction = " + temp);
+                placeOccupied = this.getBattler().placeOccupied(temp);
+                counter++;
+            }
+            if (!placeOccupied && !temp.greaterThan(this.getGridSize()) && !temp.smallerThan(new Vector(0, 0))) {
+                System.out.println("\tpos not occupied, moving to " + temp);
                 this.setGridPosition(temp);
             } else {
+                System.out.println("\tunit couldnt move!");
                 break;
             }
         }
@@ -74,6 +99,7 @@ public class MyFirstUnit extends Unit {
         if (this.getTodoAction() != null) {
             switch (this.getTodoAction()) {
                 case CHASE -> {
+                    // TODO: 10.12.2021 THE CHECKING IF THE PLACE IS OCCUPIED MUST BE DONE WHILE THINKING AND NOT WHILE DOING!!
                     moveTowards(findTargetUnit());
                 }
                 case USE_ABILITY -> {

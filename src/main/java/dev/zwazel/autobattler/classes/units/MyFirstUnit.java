@@ -5,6 +5,7 @@ import dev.zwazel.autobattler.classes.Utils.Vector;
 import dev.zwazel.autobattler.classes.abilities.Ability;
 import dev.zwazel.autobattler.classes.abilities.DefaultPunch;
 import dev.zwazel.autobattler.classes.enums.Action;
+import dev.zwazel.autobattler.classes.enums.CurrentState;
 import dev.zwazel.autobattler.classes.enums.Side;
 
 import java.util.Random;
@@ -18,7 +19,7 @@ public class MyFirstUnit extends Unit {
     @Override
     public Ability findSuitableAbility() {
         for (Ability ability : getAbilities()) {
-            Unit target = findTargetUnit(true);
+            Unit target = findTargetUnit();
             if (ability.canBeUsed(target)) {
                 System.out.println("suitable ability = " + ability.getTitle());
                 return ability;
@@ -29,7 +30,7 @@ public class MyFirstUnit extends Unit {
 
     @Override
     public void moveTowards(Unit target) {
-
+        System.out.println("direction " + this.getID() + " to " + target.getID() + " = " + this.getGridPosition().directionTo(target.getGridPosition()));
     }
 
     @Override
@@ -73,10 +74,10 @@ public class MyFirstUnit extends Unit {
         if (this.getTodoAction() != null) {
             switch (this.getTodoAction()) {
                 case CHASE -> {
-                    moveRandom();
+                    moveTowards(findTargetUnit());
                 }
                 case USE_ABILITY -> {
-                    getNextAbility().use(findTargetUnit(false));
+                    getNextAbility().use(findTargetUnit());
                 }
                 case RETREAT -> {
 
@@ -86,8 +87,8 @@ public class MyFirstUnit extends Unit {
     }
 
     @Override
-    public Unit findTargetUnit(boolean updateTarget) {
-        if (updateTarget || this.getTargetUnit() == null) {
+    public Unit findTargetUnit() {
+        if (this.getBattler().getCurrentState() == CurrentState.THINKING || this.getTargetUnit() == null) {
             setTargetUnit(getBattler().findClosestOther(this));
         }
         return getTargetUnit();

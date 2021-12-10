@@ -55,7 +55,7 @@ public abstract class Unit {
 
     public abstract void doWhatYouThoughtOf();
 
-    public abstract Unit findTargetUnit(boolean updateTarget);
+    public abstract Unit findTargetUnit();
 
     public void takeDamage(int damage) {
         baseHealth -= damage;

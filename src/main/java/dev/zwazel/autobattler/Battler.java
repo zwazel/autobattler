@@ -1,6 +1,7 @@
 package dev.zwazel.autobattler;
 
 import dev.zwazel.autobattler.classes.Utils.Vector;
+import dev.zwazel.autobattler.classes.enums.CurrentState;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.units.MyFirstUnit;
 import dev.zwazel.autobattler.classes.units.Unit;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 public class Battler {
     private final Vector gridSize = new Vector(9, 4);
     private final ArrayList<Unit> units;
+    private CurrentState currentState;
 
     public Battler() {
         int unitCounter = 0;
@@ -33,12 +35,14 @@ public class Battler {
             System.out.println("ROUND " + counter);
             System.out.println("THINK");
             System.out.println("---------------------------------------------------------------------------");
+            currentState = CurrentState.THINKING;
             for (Unit unit : units) {
                 unit.think();
             }
             System.out.println();
             System.out.println("DO");
             System.out.println("---------------------------------------------------------------------------");
+            currentState = CurrentState.DOING;
             for (Unit unit : units) {
                 unit.doWhatYouThoughtOf();
             }
@@ -128,5 +132,9 @@ public class Battler {
 
     public ArrayList<Unit> getUnits() {
         return units;
+    }
+
+    public CurrentState getCurrentState() {
+        return currentState;
     }
 }

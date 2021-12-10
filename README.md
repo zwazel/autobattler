@@ -112,3 +112,24 @@
 
 - Charaktere können mit Gegenständen ausgerüstet werden, welche ihre Werte verbessern
 - Charaktere sammel während Kämpfen EP und können so nach einer gewissen Zeit verbessert werden. Dies verschafft ihnen neue Möglichkeiten und verbessert ihre Werte
+
+### Spiel Modi
+
+#### Conquest Modus
+
+- Ein Spieler kann mit seinem Team gegen eine Reihe von zufälligen Teams kämpfen. 
+- Die Teams starten mit dem Gesundheits Werten des letzten Kampfes, tote einheiten können nicht verwendet werden.
+
+#### 2 gegen 2
+
+- Zwei Spieler haben 24h Zeit je ein Team zu setzen.
+- nach diesen 24h haben sie weiderrum 24h Zeit das gegnerische Team anzugreifen.
+
+### Team Kombos / Teamchemie
+
+- Teamchemie
+    - Jedes Team verfügt über eine Chemie von 10 - 100, je alle 10 Punkte bekommt das gesamte Team einen Effekt. 
+    - Die Chemie wird durch Team Kombos verbessert oder verschlechtert.
+
+- Team Kombos
+    - Verschiedene Charaktere arbeiten sehr gut zusammen unf Boosten sich gegenseitig, andere hingegen lenken sich ab oder Schaden in der Kombo der Chemie des Teams.

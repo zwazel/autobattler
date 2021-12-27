@@ -15,6 +15,7 @@ public abstract class Unit {
     private int baseHealth;
     private int baseEnergy;
     private int level;
+    private int priority;
     private String name;
     private String description;
     private Ability[] abilities = new Ability[0];
@@ -27,7 +28,7 @@ public abstract class Unit {
     private Ability nextAbility;
     private Unit targetUnit;
 
-    public Unit(long id, int level, int baseDamage, String name, String description, int baseHealth, int baseEnergy, char symbol, Vector position, Vector gridSize, int baseSpeed, Battler battler, Side side) {
+    public Unit(long id, int level, int baseDamage, String name, String description, int baseHealth, int baseEnergy, char symbol, Vector position, Vector gridSize, int baseSpeed, Battler battler, Side side, int priority) {
         this.ID = id;
         this.level = level;
         this.baseDamage = baseDamage;
@@ -41,6 +42,7 @@ public abstract class Unit {
         this.baseSpeed = baseSpeed;
         this.battler = battler;
         this.side = side;
+        this.priority = priority;
     }
 
     public abstract Ability findSuitableAbility();
@@ -187,6 +189,14 @@ public abstract class Unit {
 
     public void setTargetUnit(Unit targetUnit) {
         this.targetUnit = targetUnit;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 
     @Override

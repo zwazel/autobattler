@@ -126,4 +126,5 @@
 - Charaktere sammel während Kämpfen EP und können so nach einer gewissen Zeit verbessert werden. Dies verschafft ihnen neue Möglichkeiten und verbessert ihre Werte
 
 ## Wünsche
-- Es werden auch für die Gegner "Charakter Karten" angezeigt und nicht wie in AFK Arena nur die eigenen, bei vielen Effekten kann man schnell den Überblick verlieren, wie viele Gegner noch leben & wieviel Leben sie noch haben. 
+
+- Es werden auch für die Gegner "Charakter Karten" angezeigt und nicht wie in AFK Arena nur die eigenen, bei vielen Effekten kann man schnell den Überblick verlieren, wie viele Gegner noch leben & wieviel Leben sie noch haben.

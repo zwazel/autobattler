@@ -16,7 +16,7 @@ public class DefaultPunch extends Ability {
         boolean cooldownReady = this.getCurrentCooldown() <= 0;
         boolean inRange = this.isInRange(target);
         System.out.println("\tCooldown is reset, ability could be used = " + cooldownReady + ", current cooldown = " + this.getCurrentCooldown());
-        System.out.println("\tis in range of target " + target.getID() + " = " + inRange);
+        System.out.println("\tis in range of target " + ((target == null) ? "null" : target.getID()) + " = " + inRange);
         return cooldownReady && inRange;
     }
 

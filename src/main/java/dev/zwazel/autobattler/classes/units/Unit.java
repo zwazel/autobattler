@@ -1,14 +1,16 @@
 package dev.zwazel.autobattler.classes.units;
 
 import dev.zwazel.autobattler.Battler;
+import dev.zwazel.autobattler.classes.ProcessingInstance;
 import dev.zwazel.autobattler.classes.Utils.Vector;
 import dev.zwazel.autobattler.classes.abilities.Ability;
 import dev.zwazel.autobattler.classes.enums.Action;
 import dev.zwazel.autobattler.classes.enums.Side;
+import dev.zwazel.autobattler.classes.enums.State;
 
 import java.util.Arrays;
 
-public abstract class Unit {
+public abstract class Unit implements ProcessingInstance {
     private final long ID;
     private final char symbol;
     private final Side side;
@@ -27,6 +29,7 @@ public abstract class Unit {
     private Action todoAction;
     private Ability nextAbility;
     private Unit targetUnit;
+    private State myState = State.ALIVE;
 
     public Unit(long id, int level, int baseDamage, String name, String description, int baseHealth, int baseEnergy, char symbol, Vector position, Vector gridSize, int baseSpeed, Battler battler, Side side, int priority) {
         this.ID = id;
@@ -201,6 +204,14 @@ public abstract class Unit {
         this.priority = priority;
     }
 
+    public State getMyState() {
+        return myState;
+    }
+
+    public void setMyState(State myState) {
+        this.myState = myState;
+    }
+
     @Override
     public String toString() {
         return "Unit{" +
@@ -210,6 +221,7 @@ public abstract class Unit {
                 ", baseHealth=" + baseHealth +
                 ", baseEnergy=" + baseEnergy +
                 ", level=" + level +
+                ", priority=" + priority +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", abilities=" + Arrays.toString(abilities) +
@@ -221,6 +233,7 @@ public abstract class Unit {
                 ", todoAction=" + todoAction +
                 ", nextAbility=" + nextAbility +
                 ", targetUnit=" + targetUnit +
+                ", myState=" + myState +
                 '}';
     }
 }

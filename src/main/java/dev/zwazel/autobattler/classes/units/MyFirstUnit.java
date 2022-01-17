@@ -5,8 +5,9 @@ import dev.zwazel.autobattler.classes.Utils.Vector;
 import dev.zwazel.autobattler.classes.abilities.Ability;
 import dev.zwazel.autobattler.classes.abilities.DefaultPunch;
 import dev.zwazel.autobattler.classes.enums.Action;
-import dev.zwazel.autobattler.classes.enums.CurrentState;
+import dev.zwazel.autobattler.classes.enums.GamePhase;
 import dev.zwazel.autobattler.classes.enums.Side;
+import dev.zwazel.autobattler.classes.enums.State;
 
 import java.util.Random;
 
@@ -30,9 +31,11 @@ public class MyFirstUnit extends Unit {
 
     @Override
     public void moveTowards(Unit target) {
-        Vector dir = this.getGridPosition().directionTo(target.getGridPosition());
-        System.out.println("direction " + this.getID() + " to " + target.getID() + " = " + dir);
-        move(dir);
+        if(target != null) {
+            Vector dir = this.getGridPosition().directionTo(target.getGridPosition());
+            System.out.println("direction " + this.getID() + " to " + target.getID() + " = " + dir);
+            move(dir);
+        }
     }
 
     @Override
@@ -81,36 +84,36 @@ public class MyFirstUnit extends Unit {
 
     @Override
     public void think() {
-        if(getBaseHealth() <= 0) {
-            die();
+        setNextAbility(findSuitableAbility());
+        if (getNextAbility() != null) {
+            this.setTodoAction(Action.USE_ABILITY);
         } else {
-            setNextAbility(findSuitableAbility());
-            if (getNextAbility() != null) {
-                this.setTodoAction(Action.USE_ABILITY);
-            } else {
-                this.setTodoAction(Action.CHASE);
-            }
-            System.out.println("unit " + this.getID() + " todo = " + this.getTodoAction());
+            this.setTodoAction(Action.CHASE);
         }
+        System.out.println("unit " + this.getID() + " todo = " + this.getTodoAction());
     }
 
     @Override
     public void doWhatYouThoughtOf() {
-        for (Ability ability : getAbilities()) {
-            ability.doRound();
-        }
+        if (getBaseHealth() <= 0) {
+            die();
+        } else {
+            for (Ability ability : getAbilities()) {
+                ability.doRound();
+            }
 
-        if (this.getTodoAction() != null) {
-            switch (this.getTodoAction()) {
-                case CHASE -> {
-                    // TODO: 10.12.2021 THE CHECKING IF THE PLACE IS OCCUPIED MUST BE DONE WHILE THINKING AND NOT WHILE DOING!!
-                    moveTowards(findTargetUnit());
-                }
-                case USE_ABILITY -> {
-                    getNextAbility().use(findTargetUnit());
-                }
-                case RETREAT -> {
+            if (this.getTodoAction() != null) {
+                switch (this.getTodoAction()) {
+                    case CHASE -> {
+                        // TODO: 10.12.2021 THE CHECKING IF THE PLACE IS OCCUPIED MUST BE DONE WHILE THINKING AND NOT WHILE DOING!!
+                        moveTowards(findTargetUnit());
+                    }
+                    case USE_ABILITY -> {
+                        getNextAbility().use(findTargetUnit());
+                    }
+                    case RETREAT -> {
 
+                    }
                 }
             }
         }
@@ -118,7 +121,7 @@ public class MyFirstUnit extends Unit {
 
     @Override
     public Unit findTargetUnit() {
-        if (this.getBattler().getCurrentState() == CurrentState.THINKING || this.getTargetUnit() == null) {
+        if (this.getBattler().getCurrentState() == GamePhase.THINKING || this.getTargetUnit() == null) {
             setTargetUnit(getBattler().findClosestOther(this));
         }
         return getTargetUnit();
@@ -127,6 +130,11 @@ public class MyFirstUnit extends Unit {
     @Override
     public void die() {
         System.out.println("unit " + this.getID() + " died!");
-        this.getBattler().unitDied(this);
+        setMyState(State.DEAD);
+    }
+
+    @Override
+    public void run() {
+
     }
 }

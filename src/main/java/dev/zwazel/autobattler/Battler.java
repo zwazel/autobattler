@@ -1,12 +1,14 @@
 package dev.zwazel.autobattler;
 
 import dev.zwazel.autobattler.classes.Utils.Vector;
-import dev.zwazel.autobattler.classes.enums.CurrentState;
+import dev.zwazel.autobattler.classes.enums.GamePhase;
 import dev.zwazel.autobattler.classes.enums.Side;
+import dev.zwazel.autobattler.classes.enums.State;
 import dev.zwazel.autobattler.classes.units.MyFirstUnit;
 import dev.zwazel.autobattler.classes.units.Unit;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Battler {
     private final Vector gridSize = new Vector(9, 4);
@@ -14,18 +16,20 @@ public class Battler {
     private final ArrayList<Unit> friendlyUnitList = new ArrayList<>();
     private final ArrayList<Unit> enemyUnitList = new ArrayList<>();
     private boolean fightFinished = false;
-    private CurrentState currentState;
+    private GamePhase gamePhase;
     private Side winningSide;
-    private int maxFriendlyCounter;
-    private int maxEnemyCounter;
 
     public Battler() {
         int unitCounter = 0;
         units = new ArrayList<>();
         units.add(new MyFirstUnit(unitCounter++, 1, 1, "unit1", new Vector(1, 1), gridSize, this, Side.FRIENDLY));
         units.add(new MyFirstUnit(unitCounter++, 2, 1, "unit2", new Vector(2, 2), gridSize, this, Side.FRIENDLY));
+        units.add(new MyFirstUnit(unitCounter++, 3, 1, "unit5", new Vector(1, 2), gridSize, this, Side.FRIENDLY));
+        units.add(new MyFirstUnit(unitCounter++, 4, 1, "unit6", new Vector(2, 1), gridSize, this, Side.FRIENDLY));
         units.add(new MyFirstUnit(unitCounter++, 1, 1, "unit3", new Vector(5, 2), gridSize, this, Side.ENEMY));
         units.add(new MyFirstUnit(unitCounter++, 2, 1, "unit4", new Vector(9, 1), gridSize, this, Side.ENEMY));
+        units.add(new MyFirstUnit(unitCounter++, 3, 1, "unit7", new Vector(9, 2), gridSize, this, Side.ENEMY));
+        units.add(new MyFirstUnit(unitCounter++, 4, 1, "unit8", new Vector(6, 2), gridSize, this, Side.ENEMY));
 
         for (Unit unit : units) {
             if (unit.getSide() == Side.FRIENDLY) {
@@ -38,8 +42,17 @@ public class Battler {
         drawBoard();
         int counter = 0;
         while (!fightFinished) {
-            maxFriendlyCounter = friendlyUnitList.size() - 1;
-            maxEnemyCounter = enemyUnitList.size() - 1;
+            ArrayList<Unit> unitsToRemove = new ArrayList<>();
+            for(Unit unit : units) {
+                if(unit.getMyState() == State.DEAD) {
+                    unitDied(unit);
+                    unitsToRemove.add(unit);
+                }
+            }
+            units.removeAll(unitsToRemove);
+
+            int maxFriendlyCounter = friendlyUnitList.size() - 1;
+            int maxEnemyCounter = enemyUnitList.size() - 1;
             int friendlyCounter = 0;
             int enemyCounter = 0;
             boolean cannotSwitchSide = false;
@@ -49,7 +62,7 @@ public class Battler {
             System.out.println("ROUND " + counter);
             System.out.println("THINK");
             System.out.println("---------------------------------------------------------------------------");
-            currentState = CurrentState.THINKING;
+            gamePhase = GamePhase.THINKING;
             for (int i = 0; i < units.size(); i++) {
                 if (!cannotSwitchSide) {
                     boolean cantFriendlies = false;
@@ -69,6 +82,7 @@ public class Battler {
                 }
 
                 // TODO: 27.12.2021 make sure it still works even if there are more friendlies than enemies or other way around
+                // TODO: 17.01.2022 respect order and priority
                 Unit unit;
                 System.out.println("i = " + i);
                 System.out.println("friendlyCounter = " + friendlyCounter);
@@ -92,8 +106,10 @@ public class Battler {
             System.out.println();
             System.out.println("DO");
             System.out.println("---------------------------------------------------------------------------");
-            currentState = CurrentState.DOING;
+            gamePhase = GamePhase.DOING;
+            // TODO: 17.01.2022 respect order and priorities!
             for (Unit unit : units) {
+                if(unit.getMyState() != State.DEAD)
                 unit.doWhatYouThoughtOf();
             }
 
@@ -132,7 +148,7 @@ public class Battler {
         Double shortestDistance = -1d;
         for (Unit unitChecking : units) {
             if (unitChecking != unit) {
-                if (unitChecking.getSide() == sideToCheck) {
+                if (unitChecking.getSide() == sideToCheck && unitChecking.getMyState() != State.DEAD) {
                     Double temp = unit.getGridPosition().getDistanceFrom(unitChecking.getGridPosition());
                     if (shortestDistance < 0 || temp < shortestDistance) {
                         shortestDistance = temp;
@@ -187,16 +203,12 @@ public class Battler {
             this.friendlyUnitList.remove(unit);
         }
 
-        units.remove(unit);
-
         if (enemyUnitList.size() == 0) {
             winningSide = Side.FRIENDLY;
             fightFinished = true;
-            maxEnemyCounter--;
         } else if (friendlyUnitList.size() == 0) {
             winningSide = Side.ENEMY;
             fightFinished = true;
-            maxFriendlyCounter--;
         }
     }
 
@@ -208,7 +220,7 @@ public class Battler {
         return units;
     }
 
-    public CurrentState getCurrentState() {
-        return currentState;
+    public GamePhase getCurrentState() {
+        return gamePhase;
     }
 }

@@ -4,6 +4,7 @@ import dev.zwazel.autobattler.classes.RoundAffected;
 import dev.zwazel.autobattler.classes.Utils.Vector;
 import dev.zwazel.autobattler.classes.enums.AbilityOutputType;
 import dev.zwazel.autobattler.classes.enums.AbilityType;
+import dev.zwazel.autobattler.classes.enums.State;
 import dev.zwazel.autobattler.classes.enums.UsageType;
 import dev.zwazel.autobattler.classes.units.Unit;
 
@@ -57,7 +58,7 @@ public abstract class Ability extends RoundAffected {
     }
 
     public boolean isInRange(Unit target) {
-        return isInRange(target.getGridPosition());
+        return (target != null && target.getMyState() != State.DEAD && isInRange(target.getGridPosition()));
     }
 
     public UsageType getCostType() {

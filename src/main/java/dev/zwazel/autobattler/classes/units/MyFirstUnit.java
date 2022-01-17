@@ -81,13 +81,17 @@ public class MyFirstUnit extends Unit {
 
     @Override
     public void think() {
-        setNextAbility(findSuitableAbility());
-        if (getNextAbility() != null) {
-            this.setTodoAction(Action.USE_ABILITY);
+        if(getBaseHealth() <= 0) {
+            die();
         } else {
-            this.setTodoAction(Action.CHASE);
+            setNextAbility(findSuitableAbility());
+            if (getNextAbility() != null) {
+                this.setTodoAction(Action.USE_ABILITY);
+            } else {
+                this.setTodoAction(Action.CHASE);
+            }
+            System.out.println("unit " + this.getID() + " todo = " + this.getTodoAction());
         }
-        System.out.println("unit " + this.getID() + " todo = " + this.getTodoAction());
     }
 
     @Override
@@ -118,5 +122,11 @@ public class MyFirstUnit extends Unit {
             setTargetUnit(getBattler().findClosestOther(this));
         }
         return getTargetUnit();
+    }
+
+    @Override
+    public void die() {
+        System.out.println("unit " + this.getID() + " died!");
+        this.getBattler().unitDied(this);
     }
 }

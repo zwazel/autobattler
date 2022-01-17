@@ -59,6 +59,8 @@ public abstract class Unit {
 
     public abstract Unit findTargetUnit();
 
+    public abstract void die();
+
     public void takeDamage(int damage) {
         baseHealth -= damage;
     }

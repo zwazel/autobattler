@@ -8,7 +8,6 @@ import dev.zwazel.autobattler.classes.units.MyFirstUnit;
 import dev.zwazel.autobattler.classes.units.Unit;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class Battler {
     private final Vector gridSize = new Vector(9, 4);
@@ -43,8 +42,8 @@ public class Battler {
         int counter = 0;
         while (!fightFinished) {
             ArrayList<Unit> unitsToRemove = new ArrayList<>();
-            for(Unit unit : units) {
-                if(unit.getMyState() == State.DEAD) {
+            for (Unit unit : units) {
+                if (unit.getMyState() == State.DEAD) {
                     unitDied(unit);
                     unitsToRemove.add(unit);
                 }
@@ -109,8 +108,8 @@ public class Battler {
             gamePhase = GamePhase.DOING;
             // TODO: 17.01.2022 respect order and priorities!
             for (Unit unit : units) {
-                if(unit.getMyState() != State.DEAD)
-                unit.doWhatYouThoughtOf();
+                if (unit.getMyState() != State.DEAD)
+                    unit.doWhatYouThoughtOf();
             }
 
             System.out.println();

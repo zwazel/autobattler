@@ -16,6 +16,8 @@ public class Battler {
     private boolean fightFinished = false;
     private CurrentState currentState;
     private Side winningSide;
+    private int maxFriendlyCounter;
+    private int maxEnemyCounter;
 
     public Battler() {
         int unitCounter = 0;
@@ -36,8 +38,8 @@ public class Battler {
         drawBoard();
         int counter = 0;
         while (!fightFinished) {
-            int maxFriendlyCounter = friendlyUnitList.size() - 1;
-            int maxEnemyCounter = enemyUnitList.size() - 1;
+            maxFriendlyCounter = friendlyUnitList.size() - 1;
+            maxEnemyCounter = enemyUnitList.size() - 1;
             int friendlyCounter = 0;
             int enemyCounter = 0;
             boolean cannotSwitchSide = false;
@@ -49,11 +51,30 @@ public class Battler {
             System.out.println("---------------------------------------------------------------------------");
             currentState = CurrentState.THINKING;
             for (int i = 0; i < units.size(); i++) {
+                if (!cannotSwitchSide) {
+                    boolean cantFriendlies = false;
+                    boolean cantEnemies = false;
+                    if (friendlyCounter > maxFriendlyCounter) {
+                        cantFriendlies = true;
+                        friendlies = false;
+                    }
+                    if (enemyCounter > maxEnemyCounter) {
+                        cantEnemies = true;
+                        friendlies = true;
+                    }
+
+                    if (cantEnemies || cantFriendlies) {
+                        cannotSwitchSide = true;
+                    }
+                }
+
                 // TODO: 27.12.2021 make sure it still works even if there are more friendlies than enemies or other way around
                 Unit unit;
                 System.out.println("i = " + i);
                 System.out.println("friendlyCounter = " + friendlyCounter);
+                System.out.println("maxFriendlyCounter = " + maxFriendlyCounter);
                 System.out.println("enemyCounter = " + enemyCounter);
+                System.out.println("maxEnemyCounter = " + maxEnemyCounter);
                 System.out.println("friendlies = " + friendlies);
                 if (friendlies) {
                     unit = friendlyUnitList.get(friendlyCounter++);
@@ -63,10 +84,6 @@ public class Battler {
 
                 if (!cannotSwitchSide) {
                     friendlies = !friendlies;
-                }
-
-                if (!cannotSwitchSide) {
-                    cannotSwitchSide = friendlyCounter > maxFriendlyCounter || enemyCounter > maxEnemyCounter;
                 }
 
                 unit.think();
@@ -175,9 +192,11 @@ public class Battler {
         if (enemyUnitList.size() == 0) {
             winningSide = Side.FRIENDLY;
             fightFinished = true;
+            maxEnemyCounter--;
         } else if (friendlyUnitList.size() == 0) {
             winningSide = Side.ENEMY;
             fightFinished = true;
+            maxFriendlyCounter--;
         }
     }
 

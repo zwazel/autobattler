@@ -15,6 +15,7 @@ public class Battler {
     private final ArrayList<Unit> enemyUnitList = new ArrayList<>();
     private boolean fightFinished = false;
     private CurrentState currentState;
+    private Side winningSide;
 
     public Battler() {
         int unitCounter = 0;
@@ -34,9 +35,12 @@ public class Battler {
 
         drawBoard();
         int counter = 0;
-        int friendlyCounter = 0;
-        int enemyCounter = 0;
         while (!fightFinished) {
+            int maxFriendlyCounter = friendlyUnitList.size() - 1;
+            int maxEnemyCounter = enemyUnitList.size() - 1;
+            int friendlyCounter = 0;
+            int enemyCounter = 0;
+            boolean cannotSwitchSide = false;
             boolean friendlies = true;
             System.out.println();
             System.out.println();
@@ -47,13 +51,24 @@ public class Battler {
             for (int i = 0; i < units.size(); i++) {
                 // TODO: 27.12.2021 make sure it still works even if there are more friendlies than enemies or other way around
                 Unit unit;
+                System.out.println("i = " + i);
+                System.out.println("friendlyCounter = " + friendlyCounter);
+                System.out.println("enemyCounter = " + enemyCounter);
+                System.out.println("friendlies = " + friendlies);
                 if (friendlies) {
                     unit = friendlyUnitList.get(friendlyCounter++);
                 } else {
                     unit = enemyUnitList.get(enemyCounter++);
                 }
 
-                friendlies = !friendlies;
+                if (!cannotSwitchSide) {
+                    friendlies = !friendlies;
+                }
+
+                if (!cannotSwitchSide) {
+                    cannotSwitchSide = friendlyCounter > maxFriendlyCounter || enemyCounter > maxEnemyCounter;
+                }
+
                 unit.think();
             }
 
@@ -74,7 +89,11 @@ public class Battler {
                 System.out.println("\tPos = " + unit.getGridPosition());
             }
             drawBoard();
+            counter++;
         }
+
+        System.out.println("Game ended after " + counter + " rounds!");
+        System.out.println("Winner is: " + winningSide);
     }
 
     public static void main(String[] args) {
@@ -151,7 +170,15 @@ public class Battler {
             this.friendlyUnitList.remove(unit);
         }
 
-        fightFinished = enemyUnitList.size() == 0 || friendlyUnitList.size() == 0;
+        units.remove(unit);
+
+        if (enemyUnitList.size() == 0) {
+            winningSide = Side.FRIENDLY;
+            fightFinished = true;
+        } else if (friendlyUnitList.size() == 0) {
+            winningSide = Side.ENEMY;
+            fightFinished = true;
+        }
     }
 
     public Vector getGridSize() {

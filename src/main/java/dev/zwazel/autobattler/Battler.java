@@ -21,14 +21,14 @@ public class Battler {
     public Battler() {
         int unitCounter = 0;
         units = new ArrayList<>();
-        units.add(new MyFirstUnit(unitCounter++, 1, 1, "unit1", new Vector(1, 1), gridSize, this, Side.FRIENDLY));
-        units.add(new MyFirstUnit(unitCounter++, 2, 1, "unit2", new Vector(2, 2), gridSize, this, Side.FRIENDLY));
-        units.add(new MyFirstUnit(unitCounter++, 3, 1, "unit5", new Vector(1, 2), gridSize, this, Side.FRIENDLY));
-        units.add(new MyFirstUnit(unitCounter++, 4, 1, "unit6", new Vector(2, 1), gridSize, this, Side.FRIENDLY));
-        units.add(new MyFirstUnit(unitCounter++, 1, 1, "unit3", new Vector(5, 2), gridSize, this, Side.ENEMY));
-        units.add(new MyFirstUnit(unitCounter++, 2, 1, "unit4", new Vector(9, 1), gridSize, this, Side.ENEMY));
-        units.add(new MyFirstUnit(unitCounter++, 3, 1, "unit7", new Vector(9, 2), gridSize, this, Side.ENEMY));
-        units.add(new MyFirstUnit(unitCounter++, 4, 1, "unit8", new Vector(6, 2), gridSize, this, Side.ENEMY));
+        units.add(new MyFirstUnit(unitCounter++, 1, 1, "unit1", new Vector(1, 1), this, Side.FRIENDLY));
+        units.add(new MyFirstUnit(unitCounter++, 2, 1, "unit2", new Vector(2, 2), this, Side.FRIENDLY));
+        units.add(new MyFirstUnit(unitCounter++, 3, 1, "unit5", new Vector(1, 2), this, Side.FRIENDLY));
+        units.add(new MyFirstUnit(unitCounter++, 4, 1, "unit6", new Vector(2, 1), this, Side.FRIENDLY));
+        units.add(new MyFirstUnit(unitCounter++, 1, 1, "unit3", new Vector(5, 2), this, Side.ENEMY));
+        units.add(new MyFirstUnit(unitCounter++, 2, 1, "unit4", new Vector(9, 1), this, Side.ENEMY));
+        units.add(new MyFirstUnit(unitCounter++, 3, 1, "unit7", new Vector(9, 2), this, Side.ENEMY));
+        units.add(new MyFirstUnit(unitCounter++, 4, 1, "unit8", new Vector(6, 2), this, Side.ENEMY));
 
         for (Unit unit : units) {
             if (unit.getSide() == Side.FRIENDLY) {

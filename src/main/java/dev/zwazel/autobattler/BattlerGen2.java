@@ -31,22 +31,14 @@ public class BattlerGen2 {
         friendlyUnitList = new ArrayList<>();
         enemyUnitList = new ArrayList<>();
 
-        try {
-            File file = getFileFromResource("friendlyFormation.json");
-            Reader reader = new FileReader(file);
-            JsonElement jsonElement = JsonParser.parseReader(reader);
-            JsonArray jsonArray = jsonElement.getAsJsonArray();
-            jsonArray = jsonArray.get(1).getAsJsonObject().getAsJsonObject().get("formation").getAsJsonArray();
-            for (int i = 0; i < jsonArray.size(); i++) {
-                JsonObject unit = jsonArray.get(i).getAsJsonObject();
-                Unit actualUnit = UnitTypeParser.getUnit(unit, new Battler(false), Side.FRIENDLY);
-                friendlyUnitList.add(actualUnit);
-            }
-        } catch (URISyntaxException | FileNotFoundException | UnknownUnitType e) {
-            e.printStackTrace();
-        }
+        getDataFromFormationPlan(Side.FRIENDLY, "friendlyFormation.json");
+        getDataFromFormationPlan(Side.ENEMY, "enemyFormation.json");
 
-        for(Unit unit : friendlyUnitList) {
+        for (Unit unit : friendlyUnitList) {
+            System.out.println("unit = " + unit);
+        }
+        System.out.println("-----");
+        for (Unit unit : enemyUnitList) {
             System.out.println("unit = " + unit);
         }
     }
@@ -55,8 +47,28 @@ public class BattlerGen2 {
         new BattlerGen2();
     }
 
-    private void getDataFromFormationPlan(JsonObject jsonObject, ArrayList<Unit> units) {
-
+    private void getDataFromFormationPlan(Side side, String fileName) {
+        try {
+            File file = getFileFromResource(fileName);
+            Reader reader = new FileReader(file);
+            JsonElement jsonElement = JsonParser.parseReader(reader);
+            JsonArray jsonArray = jsonElement.getAsJsonArray();
+            jsonArray = jsonArray.get(1).getAsJsonObject().getAsJsonObject().get("formation").getAsJsonArray();
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JsonObject unit = jsonArray.get(i).getAsJsonObject();
+                Unit actualUnit = UnitTypeParser.getUnit(unit, new Battler(false), side);
+                switch (side) {
+                    case FRIENDLY -> {
+                        friendlyUnitList.add(actualUnit);
+                    }
+                    case ENEMY -> {
+                        enemyUnitList.add(actualUnit);
+                    }
+                }
+            }
+        } catch (URISyntaxException | FileNotFoundException | UnknownUnitType e) {
+            e.printStackTrace();
+        }
     }
 
     /*

@@ -131,18 +131,6 @@ public abstract class Ability extends RoundAffected {
 
     @Override
     public String toString() {
-        return "Ability{" +
-                "costType=" + costType +
-                ", outputType=" + outputType +
-                ", outPutAmount=" + outPutAmount +
-                ", cooldown=" + cooldown +
-                ", owner=" + owner +
-                ", currentCooldown=" + currentCooldown +
-                ", type=" + type +
-                ", usageCostAmount=" + usageCostAmount +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", range=" + range +
-                '}';
+        return this.getTitle();
     }
 }

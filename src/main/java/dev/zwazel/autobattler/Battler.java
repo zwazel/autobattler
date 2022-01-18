@@ -18,6 +18,10 @@ public class Battler {
     private GamePhase gamePhase;
     private Side winningSide;
 
+    public Battler(boolean something) {
+        units = new ArrayList<>();
+    }
+
     public Battler() {
         int unitCounter = 0;
         units = new ArrayList<>();

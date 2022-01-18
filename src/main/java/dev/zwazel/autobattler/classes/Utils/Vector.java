@@ -1,10 +1,18 @@
 package dev.zwazel.autobattler.classes.Utils;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 import static java.lang.Math.atan2;
 
 public class Vector {
     private int x;
     private int y;
+
+    public Vector(JsonObject json) {
+        this.x = json.get("x").getAsInt();
+        this.y = json.get("y").getAsInt();
+    }
 
     public Vector(int x, int y) {
         this.x = x;

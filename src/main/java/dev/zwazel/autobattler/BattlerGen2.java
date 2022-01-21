@@ -174,8 +174,8 @@ public class BattlerGen2 {
             File file = getFileFromResource(fileName);
             Reader reader = new FileReader(file);
             JsonElement jsonElement = JsonParser.parseReader(reader);
-            JsonArray jsonArray = jsonElement.getAsJsonArray();
-            jsonArray = jsonArray.get(1).getAsJsonObject().getAsJsonObject().get("formation").getAsJsonArray();
+            JsonObject jsonObject = jsonElement.getAsJsonObject();
+            JsonArray jsonArray = jsonObject.get("formation").getAsJsonArray();
             for (int i = 0; i < jsonArray.size(); i++) {
                 JsonObject unit = jsonArray.get(i).getAsJsonObject();
                 Unit actualUnit = UnitTypeParser.getUnit(unit, this, side);

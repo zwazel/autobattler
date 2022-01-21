@@ -1,56 +1,52 @@
-[
-  {
-    "user": {
-      "id": 0,
-      "username": "Zwazel"
-    }
+{
+  "user": {
+    "id": 0,
+    "username": "Zwazel"
   },
-  {
-    "formation": [
-      {
-        "id": 1,
-        "type": "MY_FIRST_UNIT",
-        "name": "Ash",
-        "level": 1,
-        "priority": 3,
-        "position": {
-          "x": 0,
-          "y": 2
-        }
-      },
-      {
-        "id": 2,
-        "type": "MY_FIRST_UNIT",
-        "name": "Phillip",
-        "level": 69,
-        "priority": 2,
-        "position": {
-          "x": 1,
-          "y": 2
-        }
-      },
-      {
-        "id": 3,
-        "type": "MY_FIRST_UNIT",
-        "name": "Tim",
-        "level": 1,
-        "priority": 1,
-        "position": {
-          "x": 2,
-          "y": 1
-        }
-      },
-      {
-        "id": 4,
-        "type": "MY_FIRST_UNIT",
-        "name": "Loic",
-        "level": 7,
-        "priority": 5,
-        "position": {
-          "x": 2,
-          "y": 1
-        }
+  "formation": [
+    {
+      "id": 1,
+      "type": "MY_FIRST_UNIT",
+      "name": "Ash",
+      "level": 1,
+      "priority": 3,
+      "position": {
+        "x": 0,
+        "y": 2
       }
-    ]
-  }
-]
+    },
+    {
+      "id": 2,
+      "type": "MY_FIRST_UNIT",
+      "name": "Phillip",
+      "level": 69,
+      "priority": 2,
+      "position": {
+        "x": 1,
+        "y": 2
+      }
+    },
+    {
+      "id": 3,
+      "type": "MY_FIRST_UNIT",
+      "name": "Tim",
+      "level": 1,
+      "priority": 1,
+      "position": {
+        "x": 2,
+        "y": 1
+      }
+    },
+    {
+      "id": 4,
+      "type": "MY_FIRST_UNIT",
+      "name": "Loic",
+      "level": 7,
+      "priority": 5,
+      "position": {
+        "x": 2,
+        "y": 1
+      }
+    }
+  ]
+}

@@ -38,7 +38,7 @@ public class MyFirstUnit extends Unit {
         for (Ability ability : getAbilities()) {
             Unit target = findTargetUnit(ability.getTargetSide());
             if (ability.canBeUsed(target)) {
-                System.out.println("suitable ability = " + ability.getTitle());
+//                System.out.println("suitable ability = " + ability.getTitle());
                 return ability;
             }
         }
@@ -49,22 +49,22 @@ public class MyFirstUnit extends Unit {
     public void moveTowards(Unit target) {
         if (target != null) {
             Vector dir = this.getGridPosition().directionTo(target.getGridPosition());
-            System.out.println("direction " + this.getID() + " to " + target.getID() + " = " + dir);
+//            System.out.println("direction " + this.getID() + " to " + target.getID() + " = " + dir);
             move(dir);
         }
     }
 
     @Override
     public void move(Vector direction) {
-        System.out.println("unit " + this.getID() + " is moving, direction = " + direction + ":");
+//        System.out.println("unit " + this.getID() + " is moving, direction = " + direction + ":");
         Vector temp = new Vector(this.getGridPosition());
         for (int i = 0; i < this.getSpeed(); i++) {
             temp.add(direction);
-            System.out.println("\ttemp = " + temp);
+//            System.out.println("\ttemp = " + temp);
             boolean placeOccupied = this.getBattler().placeOccupied(temp);
-            System.out.println("\tplaceOccupied = " + placeOccupied);
+//            System.out.println("\tplaceOccupied = " + placeOccupied);
             boolean canChangeDir = direction.getX() != 0 && direction.getY() != 0;
-            System.out.println("\tcanChangeDir = " + canChangeDir);
+//            System.out.println("\tcanChangeDir = " + canChangeDir);
             int counter = 0;
             int tempDir = 0;
             while (canChangeDir && placeOccupied) {
@@ -76,15 +76,15 @@ public class MyFirstUnit extends Unit {
                     temp.setX(this.getGridPosition().getX());
                     canChangeDir = false;
                 }
-                System.out.println("\ttemp after checking other direction = " + temp);
+//                System.out.println("\ttemp after checking other direction = " + temp);
                 placeOccupied = this.getBattler().placeOccupied(temp);
                 counter++;
             }
             if (!placeOccupied && !temp.greaterThan(this.getGridSize()) && !temp.smallerThan(new Vector(0, 0))) {
-                System.out.println("\tpos not occupied, moving to " + temp);
+//                System.out.println("\tpos not occupied, moving to " + temp);
                 this.setGridPosition(temp);
             } else {
-                System.out.println("\tunit couldnt move!");
+//                System.out.println("\tunit couldnt move!");
                 break;
             }
         }
@@ -105,29 +105,34 @@ public class MyFirstUnit extends Unit {
 
     @Override
     public void die() {
-        System.out.println("unit " + this.getName() + " died! (" + this.getSide() + ")");
+        System.out.println("unit " + this.getName() + " died! (" + this.getSide() + ")" + " last hitter: " + this.getLastHitter().getName());
         setMyState(State.DEAD);
     }
 
     @Override
     public void run() {
-        for (Ability ability : getAbilities()) {
-            ability.doRound();
-        }
+        if (this.getHealth() <= 0) {
+            die();
+        } else {
 
-        Ability suitableAbility = findSuitableAbility();
-
-        Action todoAction = (suitableAbility == null) ? Action.CHASE : Action.USE_ABILITY;
-
-        switch (todoAction) {
-            case CHASE -> {
-                moveTowards(findTargetUnit(ENEMY));
+            for (Ability ability : getAbilities()) {
+                ability.doRound();
             }
-            case USE_ABILITY -> {
-                suitableAbility.use(findTargetUnit(suitableAbility.getTargetSide()));
-            }
-            case RETREAT -> {
 
+            Ability suitableAbility = findSuitableAbility();
+
+            Action todoAction = (suitableAbility == null) ? Action.CHASE : Action.USE_ABILITY;
+
+            switch (todoAction) {
+                case CHASE -> {
+                    moveTowards(findTargetUnit(ENEMY));
+                }
+                case USE_ABILITY -> {
+                    suitableAbility.use(findTargetUnit(suitableAbility.getTargetSide()));
+                }
+                case RETREAT -> {
+
+                }
             }
         }
     }

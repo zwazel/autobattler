@@ -26,6 +26,7 @@ public abstract class Unit implements ProcessingInstance {
     private int speed;
     private BattlerGen2 battler;
     private State myState = State.ALIVE;
+    private Unit lastHitter;
 
     public Unit(long id, int level, int damage, String name, String description, int health, int energy, char symbol, Vector position, Vector gridSize, int speed, BattlerGen2 battler, Side side, int priority) {
         this.ID = id;
@@ -62,8 +63,9 @@ public abstract class Unit implements ProcessingInstance {
 
     protected abstract void die();
 
-    public void takeDamage(int damage) {
+    public void takeDamage(int damage, Unit hitter) {
         health -= damage;
+        this.lastHitter = hitter;
     }
 
     public long getID() {
@@ -184,6 +186,14 @@ public abstract class Unit implements ProcessingInstance {
 
     public void setMyState(State myState) {
         this.myState = myState;
+    }
+
+    public Unit getLastHitter() {
+        return lastHitter;
+    }
+
+    public void setLastHitter(Unit lastHitter) {
+        this.lastHitter = lastHitter;
     }
 
     @Override

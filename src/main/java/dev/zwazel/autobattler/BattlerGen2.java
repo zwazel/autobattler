@@ -67,9 +67,9 @@ public class BattlerGen2 {
         for (Unit unit : units) {
             System.out.println(unit);
         }
-        
+
+        drawBoard();
         while (!fightFinished) {
-            drawBoard();
             ListIterator<Unit> unitIterator = units.listIterator();
             while (unitIterator.hasNext()) {
                 Unit unit = unitIterator.next();
@@ -86,12 +86,6 @@ public class BattlerGen2 {
                 }
             }
 
-            for (Unit unit : units) {
-                System.out.println(unit.getID() + " " + unit.getName());
-                System.out.println("\tHealth = " + unit.getHealth());
-                System.out.println("\tPos = " + unit.getGridPosition());
-            }
-
             if (friendlyUnitList.size() <= 0) {
                 winningSide = Side.ENEMY;
                 fightFinished = true;
@@ -103,6 +97,8 @@ public class BattlerGen2 {
 
         System.out.println("fight done!");
         System.out.println("winningSide = " + winningSide);
+
+        drawBoard();
     }
 
     public static void main(String[] args) {
@@ -136,9 +132,9 @@ public class BattlerGen2 {
         }
 
         if (closestUnit != null) {
-            System.out.println("closest unit to unit " + unit.getID() + " = " + closestUnit.getID() + " with distance = " + shortestDistance);
+//            System.out.println("closest unit to unit " + unit.getID() + " = " + closestUnit.getID() + " with distance = " + shortestDistance);
         } else {
-            System.out.println("no closest unit to unit " + unit.getID());
+//            System.out.println("no closest unit to unit " + unit.getID());
         }
         return closestUnit;
     }

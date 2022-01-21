@@ -37,13 +37,34 @@ public class BattlerGen2 {
 
         friendlyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
         enemyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
+        ArrayList<Unit> orderedList = new ArrayList<>();
 
-        for (Unit unit : friendlyUnitList) {
-            System.out.println("unit = " + unit);
+        boolean friendlies = Math.random() < 0.5;
+        int firstCounter = 0;
+        int secondCounter = 0;
+        for (int i = 0; i < friendlyUnitList.size() + enemyUnitList.size(); i++) {
+            boolean friendlyDone = firstCounter >= friendlyUnitList.size();
+            boolean enemyDone = secondCounter >= enemyUnitList.size();
+            System.out.println("friendlies = " + friendlies);
+            System.out.println("i = " + i);
+            System.out.println("secondCounter = " + secondCounter);
+            System.out.println("firstCounter = " + firstCounter);
+
+            if (friendlies) {
+                orderedList.add(friendlyUnitList.get(firstCounter++));
+            } else {
+                orderedList.add(enemyUnitList.get(secondCounter++));
+            }
+
+            friendlies = !friendlies;
+            if (friendlyDone || enemyDone) {
+                friendlies = !friendlies;
+                System.out.println("no " + ((friendlyDone) ? "friendlies" : "enemies"));
+            }
         }
-        System.out.println("-----");
-        for (Unit unit : enemyUnitList) {
-            System.out.println("unit = " + unit);
+
+        for (Unit unit : orderedList) {
+            System.out.println(unit);
         }
     }
 

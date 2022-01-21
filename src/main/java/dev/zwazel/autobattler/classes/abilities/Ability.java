@@ -5,12 +5,14 @@ import dev.zwazel.autobattler.classes.Utils.Vector;
 import dev.zwazel.autobattler.classes.enums.AbilityOutputType;
 import dev.zwazel.autobattler.classes.enums.AbilityType;
 import dev.zwazel.autobattler.classes.enums.UsageType;
+import dev.zwazel.autobattler.classes.units.Unit;
 
 public abstract class Ability extends RoundAffected {
     private final UsageType costType;
     private final AbilityOutputType outputType;
     private final int outPutAmount;
     private final int cooldown;
+    private final Unit owner;
     private int currentCooldown = 0;
     private AbilityType type;
     private int usageCostAmount;
@@ -18,22 +20,44 @@ public abstract class Ability extends RoundAffected {
     private String description;
     private int range;
 
-    public Ability(UsageType costType, int usageCost, AbilityOutputType outputType, int outPutAmount, int cooldown, int range) {
+    public Ability(String title, String description, Unit owner, UsageType costType, int usageCost, AbilityOutputType outputType, int outPutAmount, int cooldown, int range) {
         this.costType = costType;
         this.cooldown = cooldown;
         this.outputType = outputType;
         this.usageCostAmount = usageCost;
         this.range = range;
         this.outPutAmount = outPutAmount;
+        this.owner = owner;
+        this.title = title;
+        this.description = description;
     }
 
-    public abstract boolean canBeUsed();
+    public abstract boolean canBeUsed(Unit target);
 
-    public abstract boolean use();
+    public abstract boolean use(Unit target);
+
+    public void doOutput(Unit target) {
+        switch (this.getOutputType()) {
+            case DAMAGE -> {
+                target.takeDamage(this.outPutAmount);
+            }
+            case HEAL -> {
+
+            }
+            case STAMINA -> {
+
+            }
+        }
+    }
 
     // TODO: 07.12.2021
-    public boolean isInRange(Vector self, Vector target) {
-        return false;
+    public boolean isInRange(Vector target) {
+        Double range = this.getOwner().getGridPosition().getDistanceFrom(target);
+        return range <= this.range;
+    }
+
+    public boolean isInRange(Unit target) {
+        return isInRange(target.getGridPosition());
     }
 
     public UsageType getCostType() {
@@ -100,6 +124,10 @@ public abstract class Ability extends RoundAffected {
         return outPutAmount;
     }
 
+    public Unit getOwner() {
+        return owner;
+    }
+
     @Override
     public String toString() {
         return "Ability{" +
@@ -107,6 +135,7 @@ public abstract class Ability extends RoundAffected {
                 ", outputType=" + outputType +
                 ", outPutAmount=" + outPutAmount +
                 ", cooldown=" + cooldown +
+                ", owner=" + owner +
                 ", currentCooldown=" + currentCooldown +
                 ", type=" + type +
                 ", usageCostAmount=" + usageCostAmount +

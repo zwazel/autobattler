@@ -11,12 +11,25 @@ import java.util.Random;
 
 public class MyFirstUnit extends Unit {
     public MyFirstUnit(long id, int level, String name, Vector position, Vector gridSize, Battler battler, Side side) {
-        super(id, level, 10, name, "First Unit", 100, 100, 'u', new Ability[]{new DefaultPunch()}, position, gridSize, 1, battler, side);
+        super(id, level, 10, name, "First Unit", 100, 100, 'u', position, gridSize, 1, battler, side);
+        this.setAbilities(new Ability[]{new DefaultPunch(this)});
     }
 
     @Override
     public Ability findSuitableAbility() {
+        for (Ability ability : getAbilities()) {
+            Unit target = findTargetUnit(true);
+            if (ability.canBeUsed(target)) {
+                System.out.println("suitable ability = " + ability.getTitle());
+                return ability;
+            }
+        }
         return null;
+    }
+
+    @Override
+    public void moveTowards(Unit target) {
+
     }
 
     @Override
@@ -42,20 +55,28 @@ public class MyFirstUnit extends Unit {
 
     @Override
     public void think() {
-        Random rand = new Random();
-        int n = rand.nextInt(Action.values().length);
-        this.setTodoAction(Action.values()[n]);
+        setNextAbility(findSuitableAbility());
+        if (getNextAbility() != null) {
+            this.setTodoAction(Action.USE_ABILITY);
+        } else {
+            this.setTodoAction(Action.CHASE);
+        }
+        System.out.println("unit " + this.getID() + " todo = " + this.getTodoAction());
     }
 
     @Override
     public void doWhatYouThoughtOf() {
+        for (Ability ability : getAbilities()) {
+            ability.doRound();
+        }
+
         if (this.getTodoAction() != null) {
             switch (this.getTodoAction()) {
                 case CHASE -> {
-
+                    moveRandom();
                 }
-                case ATTACK -> {
-
+                case USE_ABILITY -> {
+                    getNextAbility().use(findTargetUnit(false));
                 }
                 case RETREAT -> {
 
@@ -65,11 +86,10 @@ public class MyFirstUnit extends Unit {
     }
 
     @Override
-    public void useAbility() {
-        for (Ability ability : getAbilities()) {
-            if (ability.use()) {
-                break;
-            }
+    public Unit findTargetUnit(boolean updateTarget) {
+        if (updateTarget || this.getTargetUnit() == null) {
+            setTargetUnit(getBattler().findClosestOther(this));
         }
+        return getTargetUnit();
     }
 }

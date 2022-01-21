@@ -27,11 +27,29 @@ public class Battler {
             if (counter > 30) {
                 fightFinished = true;
             }
+
+            System.out.println();
+            System.out.println();
+            System.out.println("ROUND " + counter);
+            System.out.println("THINK");
+            System.out.println("---------------------------------------------------------------------------");
             for (Unit unit : units) {
                 unit.think();
             }
+            System.out.println();
+            System.out.println("DO");
+            System.out.println("---------------------------------------------------------------------------");
             for (Unit unit : units) {
                 unit.doWhatYouThoughtOf();
+            }
+
+            System.out.println();
+            System.out.println("STATS");
+            System.out.println("---------------------------------------------------------------------------");
+            for (Unit unit : units) {
+                System.out.println(unit.getID());
+                System.out.println("\tHealth = " + unit.getBaseHealth());
+                System.out.println("\tPos = " + unit.getGridPosition());
             }
             drawBoard();
         }
@@ -57,7 +75,6 @@ public class Battler {
         for (Unit unitChecking : units) {
             if (unitChecking != unit) {
                 if (unitChecking.getSide() == sideToCheck) {
-                    System.out.println(unitChecking.getID() + "=" + unitChecking.getGridPosition());
                     Double temp = unit.getGridPosition().getDistanceFrom(unitChecking.getGridPosition());
                     if (shortestDistance < 0 || temp < shortestDistance) {
                         shortestDistance = temp;
@@ -67,6 +84,11 @@ public class Battler {
             }
         }
 
+        if (closestUnit != null) {
+            System.out.println("closest unit to unit " + unit.getID() + " = " + closestUnit.getID() + " with distance = " + shortestDistance);
+        } else {
+            System.out.println("no closest unit to unit " + unit.getID());
+        }
         return closestUnit;
     }
 

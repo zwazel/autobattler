@@ -35,8 +35,8 @@ public abstract class Unit implements ProcessingInstance {
         this.ID = id;
         this.level = level;
         this.baseDamage = baseDamage;
-        this.health = getLevelHealth(health, level-1);
-        this.energy = getLevelEnergy(energy, level-1);
+        this.health = getLevelHealth(health, level - 1);
+        this.energy = getLevelEnergy(energy, level - 1);
         this.name = name;
         this.description = description;
         this.symbol = symbol;

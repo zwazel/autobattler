@@ -14,8 +14,8 @@ public abstract class Unit implements ProcessingInstance {
     private final long ID;
     private final char symbol;
     private final Side side;
-    private int baseHealth;
-    private int baseEnergy;
+    private int health;
+    private int energy;
     private int level;
     private int priority;
     private String name;
@@ -31,12 +31,12 @@ public abstract class Unit implements ProcessingInstance {
     private Unit targetUnit;
     private State myState = State.ALIVE;
 
-    public Unit(long id, int level, int baseDamage, String name, String description, int baseHealth, int baseEnergy, char symbol, Vector position, Vector gridSize, int baseSpeed, Battler battler, Side side, int priority) {
+    public Unit(long id, int level, int baseDamage, String name, String description, int health, int energy, char symbol, Vector position, Vector gridSize, int baseSpeed, Battler battler, Side side, int priority) {
         this.ID = id;
         this.level = level;
         this.baseDamage = baseDamage;
-        this.baseHealth = baseHealth;
-        this.baseEnergy = baseEnergy;
+        this.health = getLevelHealth(health, level-1);
+        this.energy = getLevelEnergy(energy, level-1);
         this.name = name;
         this.description = description;
         this.symbol = symbol;
@@ -48,24 +48,24 @@ public abstract class Unit implements ProcessingInstance {
         this.priority = priority;
     }
 
-    public abstract Ability findSuitableAbility();
+    protected abstract int getLevelHealth(int health, int level);
 
-    public abstract void moveTowards(Unit target);
+    protected abstract int getLevelEnergy(int energy, int level);
 
-    public abstract void move(Vector direction);
+    protected abstract Ability findSuitableAbility();
 
-    public abstract void moveRandom();
+    protected abstract void moveTowards(Unit target);
 
-    public abstract void think();
+    protected abstract void move(Vector direction);
 
-    public abstract void doWhatYouThoughtOf();
+    protected abstract void moveRandom();
 
-    public abstract Unit findTargetUnit();
+    protected abstract Unit findTargetUnit();
 
-    public abstract void die();
+    protected abstract void die();
 
     public void takeDamage(int damage) {
-        baseHealth -= damage;
+        health -= damage;
     }
 
     public long getID() {
@@ -88,20 +88,20 @@ public abstract class Unit implements ProcessingInstance {
         this.description = description;
     }
 
-    public int getBaseHealth() {
-        return baseHealth;
+    public int getHealth() {
+        return health;
     }
 
-    public void setBaseHealth(int baseHealth) {
-        this.baseHealth = baseHealth;
+    public void setHealth(int health) {
+        this.health = health;
     }
 
-    public int getBaseEnergy() {
-        return baseEnergy;
+    public int getEnergy() {
+        return energy;
     }
 
-    public void setBaseEnergy(int baseEnergy) {
-        this.baseEnergy = baseEnergy;
+    public void setEnergy(int energy) {
+        this.energy = energy;
     }
 
     public Ability[] getAbilities() {
@@ -218,8 +218,8 @@ public abstract class Unit implements ProcessingInstance {
                 "ID=" + ID +
                 ", symbol=" + symbol +
                 ", side=" + side +
-                ", baseHealth=" + baseHealth +
-                ", baseEnergy=" + baseEnergy +
+                ", baseHealth=" + health +
+                ", baseEnergy=" + energy +
                 ", level=" + level +
                 ", priority=" + priority +
                 ", name='" + name + '\'' +

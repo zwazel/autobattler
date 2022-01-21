@@ -18,6 +18,16 @@ public class MyFirstUnit extends Unit {
     }
 
     @Override
+    protected int getLevelHealth(int health, int level) {
+        return (int) (health + (health * (level * 0.25)));
+    }
+
+    @Override
+    protected int getLevelEnergy(int energy, int level) {
+        return (int) (energy + (energy * (level * 0.25)));
+    }
+
+    @Override
     public Ability findSuitableAbility() {
         for (Ability ability : getAbilities()) {
             Unit target = findTargetUnit();
@@ -31,7 +41,7 @@ public class MyFirstUnit extends Unit {
 
     @Override
     public void moveTowards(Unit target) {
-        if(target != null) {
+        if (target != null) {
             Vector dir = this.getGridPosition().directionTo(target.getGridPosition());
             System.out.println("direction " + this.getID() + " to " + target.getID() + " = " + dir);
             move(dir);
@@ -82,7 +92,7 @@ public class MyFirstUnit extends Unit {
         move(direction);
     }
 
-    @Override
+    //    @Override
     public void think() {
         setNextAbility(findSuitableAbility());
         if (getNextAbility() != null) {
@@ -93,9 +103,9 @@ public class MyFirstUnit extends Unit {
         System.out.println("unit " + this.getID() + " todo = " + this.getTodoAction());
     }
 
-    @Override
+    //    @Override
     public void doWhatYouThoughtOf() {
-        if (getBaseHealth() <= 0) {
+        if (getHealth() <= 0) {
             die();
         } else {
             for (Ability ability : getAbilities()) {

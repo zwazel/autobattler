@@ -11,7 +11,7 @@
         "id": 1,
         "type": "MY_FIRST_UNIT",
         "name": "Moritz",
-        "level": 1,
+        "level": 100,
         "priority": 1,
         "position": {
           "x": 8,

@@ -102,8 +102,6 @@ public class Battler {
                 if (!cannotSwitchSide) {
                     friendlies = !friendlies;
                 }
-
-                unit.think();
             }
 
             System.out.println();
@@ -112,8 +110,9 @@ public class Battler {
             gamePhase = GamePhase.DOING;
             // TODO: 17.01.2022 respect order and priorities!
             for (Unit unit : units) {
-                if (unit.getMyState() != State.DEAD)
-                    unit.doWhatYouThoughtOf();
+                if (unit.getMyState() != State.DEAD) {
+
+                }
             }
 
             System.out.println();
@@ -121,7 +120,7 @@ public class Battler {
             System.out.println("---------------------------------------------------------------------------");
             for (Unit unit : units) {
                 System.out.println(unit.getID());
-                System.out.println("\tHealth = " + unit.getBaseHealth());
+                System.out.println("\tHealth = " + unit.getHealth());
                 System.out.println("\tPos = " + unit.getGridPosition());
             }
             drawBoard();

@@ -18,6 +18,7 @@ import java.io.Reader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class BattlerGen2 {
     private final Vector gridSize = new Vector(9, 9);
@@ -33,6 +34,9 @@ public class BattlerGen2 {
 
         getDataFromFormationPlan(Side.FRIENDLY, "friendlyFormation.json");
         getDataFromFormationPlan(Side.ENEMY, "enemyFormation.json");
+
+        friendlyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
+        enemyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
 
         for (Unit unit : friendlyUnitList) {
             System.out.println("unit = " + unit);

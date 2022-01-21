@@ -12,7 +12,7 @@
         "type": "MY_FIRST_UNIT",
         "name": "Ash",
         "level": 1,
-        "priority": 1,
+        "priority": 3,
         "position": {
           "x": 0,
           "y": 2
@@ -34,7 +34,7 @@
         "type": "MY_FIRST_UNIT",
         "name": "Tim",
         "level": 1,
-        "priority": 3,
+        "priority": 1,
         "position": {
           "x": 2,
           "y": 1

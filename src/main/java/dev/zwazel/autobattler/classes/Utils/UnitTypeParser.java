@@ -16,7 +16,9 @@ public class UnitTypeParser {
         if (type != null) {
             switch (type) {
                 case MY_FIRST_UNIT -> {
-                    return new MyFirstUnit(unitJson.get("id").getAsLong(), unitJson.get("priority").getAsInt(), unitJson.get("level").getAsInt(), unitJson.get("name").getAsString(), new Vector(unitJson.get("position").getAsJsonObject()), battler, side);
+                    return new MyFirstUnit(unitJson.get("id").getAsLong(), unitJson.get("priority").getAsInt(),
+                            unitJson.get("level").getAsInt(), unitJson.get("name").getAsString(),
+                            new Vector(unitJson.get("position").getAsJsonObject()), battler, side);
                 }
                 default -> {
                     throw new UnknownUnitType();

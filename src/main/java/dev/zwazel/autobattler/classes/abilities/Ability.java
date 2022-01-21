@@ -2,10 +2,7 @@ package dev.zwazel.autobattler.classes.abilities;
 
 import dev.zwazel.autobattler.classes.RoundAffected;
 import dev.zwazel.autobattler.classes.Utils.Vector;
-import dev.zwazel.autobattler.classes.enums.AbilityOutputType;
-import dev.zwazel.autobattler.classes.enums.AbilityType;
-import dev.zwazel.autobattler.classes.enums.State;
-import dev.zwazel.autobattler.classes.enums.UsageType;
+import dev.zwazel.autobattler.classes.enums.*;
 import dev.zwazel.autobattler.classes.units.Unit;
 
 public abstract class Ability extends RoundAffected {
@@ -20,8 +17,9 @@ public abstract class Ability extends RoundAffected {
     private String title;
     private String description;
     private int range;
+    private final Side targetSide;
 
-    public Ability(String title, String description, Unit owner, UsageType costType, int usageCost, AbilityOutputType outputType, int outPutAmount, int cooldown, int range) {
+    public Ability(String title, String description, Unit owner, UsageType costType, int usageCost, AbilityOutputType outputType, int outPutAmount, int cooldown, int range, Side targetSide) {
         this.costType = costType;
         this.cooldown = cooldown;
         this.outputType = outputType;
@@ -31,6 +29,7 @@ public abstract class Ability extends RoundAffected {
         this.owner = owner;
         this.title = title;
         this.description = description;
+        this.targetSide = targetSide;
     }
 
     public abstract boolean canBeUsed(Unit target);
@@ -51,7 +50,6 @@ public abstract class Ability extends RoundAffected {
         }
     }
 
-    // TODO: 07.12.2021
     public boolean isInRange(Vector target) {
         Double range = this.getOwner().getGridPosition().getDistanceFrom(target);
         return range <= this.range;
@@ -127,6 +125,10 @@ public abstract class Ability extends RoundAffected {
 
     public Unit getOwner() {
         return owner;
+    }
+
+    public Side getTargetSide() {
+        return targetSide;
     }
 
     @Override

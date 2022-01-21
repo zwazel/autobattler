@@ -1,10 +1,9 @@
 package dev.zwazel.autobattler.classes.units;
 
-import dev.zwazel.autobattler.Battler;
+import dev.zwazel.autobattler.BattlerGen2;
 import dev.zwazel.autobattler.classes.ProcessingInstance;
 import dev.zwazel.autobattler.classes.Utils.Vector;
 import dev.zwazel.autobattler.classes.abilities.Ability;
-import dev.zwazel.autobattler.classes.enums.Action;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
 
@@ -21,20 +20,17 @@ public abstract class Unit implements ProcessingInstance {
     private String name;
     private String description;
     private Ability[] abilities = new Ability[0];
-    private int baseDamage;
+    private int damage;
     private Vector gridPosition;
     private Vector gridSize;
-    private int baseSpeed;
-    private Battler battler;
-    private Action todoAction;
-    private Ability nextAbility;
-    private Unit targetUnit;
+    private int speed;
+    private BattlerGen2 battler;
     private State myState = State.ALIVE;
 
-    public Unit(long id, int level, int baseDamage, String name, String description, int health, int energy, char symbol, Vector position, Vector gridSize, int baseSpeed, Battler battler, Side side, int priority) {
+    public Unit(long id, int level, int damage, String name, String description, int health, int energy, char symbol, Vector position, Vector gridSize, int speed, BattlerGen2 battler, Side side, int priority) {
         this.ID = id;
         this.level = level;
-        this.baseDamage = baseDamage;
+        this.damage = getLevelDamage(damage, level - 1);
         this.health = getLevelHealth(health, level - 1);
         this.energy = getLevelEnergy(energy, level - 1);
         this.name = name;
@@ -42,7 +38,7 @@ public abstract class Unit implements ProcessingInstance {
         this.symbol = symbol;
         this.gridPosition = position;
         this.gridSize = gridSize;
-        this.baseSpeed = baseSpeed;
+        this.speed = speed;
         this.battler = battler;
         this.side = side;
         this.priority = priority;
@@ -52,6 +48,8 @@ public abstract class Unit implements ProcessingInstance {
 
     protected abstract int getLevelEnergy(int energy, int level);
 
+    protected abstract int getLevelDamage(int damage, int level);
+
     protected abstract Ability findSuitableAbility();
 
     protected abstract void moveTowards(Unit target);
@@ -60,7 +58,7 @@ public abstract class Unit implements ProcessingInstance {
 
     protected abstract void moveRandom();
 
-    protected abstract Unit findTargetUnit();
+    protected abstract Unit findTargetUnit(Side side);
 
     protected abstract void die();
 
@@ -124,12 +122,12 @@ public abstract class Unit implements ProcessingInstance {
         this.level = level;
     }
 
-    public int getBaseDamage() {
-        return baseDamage;
+    public int getDamage() {
+        return damage;
     }
 
-    public void setBaseDamage(int baseDamage) {
-        this.baseDamage = baseDamage;
+    public void setDamage(int damage) {
+        this.damage = damage;
     }
 
     public char getSymbol() {
@@ -152,48 +150,24 @@ public abstract class Unit implements ProcessingInstance {
         this.gridSize = gridSize;
     }
 
-    public int getBaseSpeed() {
-        return baseSpeed;
+    public int getSpeed() {
+        return speed;
     }
 
-    public void setBaseSpeed(int baseSpeed) {
-        this.baseSpeed = baseSpeed;
+    public void setSpeed(int speed) {
+        this.speed = speed;
     }
 
-    public Battler getBattler() {
+    public BattlerGen2 getBattler() {
         return battler;
     }
 
-    public void setBattler(Battler battler) {
+    public void setBattler(BattlerGen2 battler) {
         this.battler = battler;
     }
 
     public Side getSide() {
         return side;
-    }
-
-    public Action getTodoAction() {
-        return todoAction;
-    }
-
-    public void setTodoAction(Action todoAction) {
-        this.todoAction = todoAction;
-    }
-
-    public Ability getNextAbility() {
-        return nextAbility;
-    }
-
-    public void setNextAbility(Ability nextAbility) {
-        this.nextAbility = nextAbility;
-    }
-
-    public Unit getTargetUnit() {
-        return targetUnit;
-    }
-
-    public void setTargetUnit(Unit targetUnit) {
-        this.targetUnit = targetUnit;
     }
 
     public int getPriority() {
@@ -218,21 +192,16 @@ public abstract class Unit implements ProcessingInstance {
                 "ID=" + ID +
                 ", symbol=" + symbol +
                 ", side=" + side +
-                ", health=" + health +
-                ", energy=" + energy +
-                ", level=" + level +
-                ", priority=" + priority +
                 ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
+                ", level=" + level +
+                ", health=" + health +
+                ", damage=" + damage +
+                ", energy=" + energy +
+                ", speed=" + speed +
+                ", priority=" + priority +
                 ", abilities=" + Arrays.toString(abilities) +
-                ", baseDamage=" + baseDamage +
                 ", gridPosition=" + gridPosition +
-                ", gridSize=" + gridSize +
-                ", baseSpeed=" + baseSpeed +
                 ", battler=" + battler +
-                ", todoAction=" + todoAction +
-                ", nextAbility=" + nextAbility +
-                ", targetUnit=" + targetUnit +
                 ", myState=" + myState +
                 '}';
     }

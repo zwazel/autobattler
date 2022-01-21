@@ -1,18 +1,19 @@
 package dev.zwazel.autobattler.classes.units;
 
-import dev.zwazel.autobattler.Battler;
+import dev.zwazel.autobattler.BattlerGen2;
 import dev.zwazel.autobattler.classes.Utils.Vector;
 import dev.zwazel.autobattler.classes.abilities.Ability;
 import dev.zwazel.autobattler.classes.abilities.DefaultPunch;
 import dev.zwazel.autobattler.classes.enums.Action;
-import dev.zwazel.autobattler.classes.enums.GamePhase;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
 
 import java.util.Random;
 
+import static dev.zwazel.autobattler.classes.enums.Side.ENEMY;
+
 public class MyFirstUnit extends Unit {
-    public MyFirstUnit(long id, int priority, int level, String name, Vector position, Battler battler, Side side) {
+    public MyFirstUnit(long id, int priority, int level, String name, Vector position, BattlerGen2 battler, Side side) {
         super(id, level, 10, name, "First Unit", 100, 100, 'u', position, battler.getGridSize(), 1, battler, side, priority);
         this.setAbilities(new Ability[]{new DefaultPunch(this)});
     }
@@ -28,9 +29,14 @@ public class MyFirstUnit extends Unit {
     }
 
     @Override
+    protected int getLevelDamage(int damage, int level) {
+        return (int) (damage + (damage * (level * 0.25)));
+    }
+
+    @Override
     public Ability findSuitableAbility() {
         for (Ability ability : getAbilities()) {
-            Unit target = findTargetUnit();
+            Unit target = findTargetUnit(ability.getTargetSide());
             if (ability.canBeUsed(target)) {
                 System.out.println("suitable ability = " + ability.getTitle());
                 return ability;
@@ -52,7 +58,7 @@ public class MyFirstUnit extends Unit {
     public void move(Vector direction) {
         System.out.println("unit " + this.getID() + " is moving, direction = " + direction + ":");
         Vector temp = new Vector(this.getGridPosition());
-        for (int i = 0; i < this.getBaseSpeed(); i++) {
+        for (int i = 0; i < this.getSpeed(); i++) {
             temp.add(direction);
             System.out.println("\ttemp = " + temp);
             boolean placeOccupied = this.getBattler().placeOccupied(temp);
@@ -92,49 +98,9 @@ public class MyFirstUnit extends Unit {
         move(direction);
     }
 
-    //    @Override
-    public void think() {
-        setNextAbility(findSuitableAbility());
-        if (getNextAbility() != null) {
-            this.setTodoAction(Action.USE_ABILITY);
-        } else {
-            this.setTodoAction(Action.CHASE);
-        }
-        System.out.println("unit " + this.getID() + " todo = " + this.getTodoAction());
-    }
-
-    //    @Override
-    public void doWhatYouThoughtOf() {
-        if (getHealth() <= 0) {
-            die();
-        } else {
-            for (Ability ability : getAbilities()) {
-                ability.doRound();
-            }
-
-            if (this.getTodoAction() != null) {
-                switch (this.getTodoAction()) {
-                    case CHASE -> {
-                        // TODO: 10.12.2021 THE CHECKING IF THE PLACE IS OCCUPIED MUST BE DONE WHILE THINKING AND NOT WHILE DOING!!
-                        moveTowards(findTargetUnit());
-                    }
-                    case USE_ABILITY -> {
-                        getNextAbility().use(findTargetUnit());
-                    }
-                    case RETREAT -> {
-
-                    }
-                }
-            }
-        }
-    }
-
     @Override
-    public Unit findTargetUnit() {
-        if (this.getBattler().getCurrentState() == GamePhase.THINKING || this.getTargetUnit() == null) {
-            setTargetUnit(getBattler().findClosestOther(this));
-        }
-        return getTargetUnit();
+    public Unit findTargetUnit(Side side) {
+        return getBattler().findClosestOther(this, side, false);
     }
 
     @Override
@@ -145,9 +111,24 @@ public class MyFirstUnit extends Unit {
 
     @Override
     public void run() {
-        this.setHealth(this.getHealth() - 10);
-        if (this.getHealth() <= 0) {
-            this.die();
+        for (Ability ability : getAbilities()) {
+            ability.doRound();
+        }
+
+        Ability suitableAbility = findSuitableAbility();
+
+        Action todoAction = (suitableAbility == null) ? Action.CHASE : Action.USE_ABILITY;
+
+        switch (todoAction) {
+            case CHASE -> {
+                moveTowards(findTargetUnit(ENEMY));
+            }
+            case USE_ABILITY -> {
+                suitableAbility.use(findTargetUnit(suitableAbility.getTargetSide()));
+            }
+            case RETREAT -> {
+
+            }
         }
     }
 }

@@ -1,13 +1,14 @@
 package dev.zwazel.autobattler.classes.abilities;
 
 import dev.zwazel.autobattler.classes.enums.AbilityOutputType;
+import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.UsageType;
 import dev.zwazel.autobattler.classes.units.Unit;
 
 public class DefaultPunch extends Ability {
     public DefaultPunch(Unit owner) {
         super("DefaultPunch", "Just a basic, default punch ability", owner, UsageType.NOTHING, 0,
-                AbilityOutputType.DAMAGE, 5, 10, 1);
+                AbilityOutputType.DAMAGE, 5, 10, 1, Side.ENEMY);
     }
 
     @Override

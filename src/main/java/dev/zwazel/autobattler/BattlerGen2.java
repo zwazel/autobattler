@@ -8,6 +8,7 @@ import dev.zwazel.autobattler.classes.Utils.UnitTypeParser;
 import dev.zwazel.autobattler.classes.Utils.Vector;
 import dev.zwazel.autobattler.classes.enums.GamePhase;
 import dev.zwazel.autobattler.classes.enums.Side;
+import dev.zwazel.autobattler.classes.enums.State;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.units.Unit;
 
@@ -19,12 +20,16 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.ListIterator;
+
+import static dev.zwazel.autobattler.classes.enums.Side.ENEMY;
+import static dev.zwazel.autobattler.classes.enums.Side.FRIENDLY;
 
 public class BattlerGen2 {
     private final Vector gridSize = new Vector(9, 9);
     private final ArrayList<Unit> friendlyUnitList;
     private final ArrayList<Unit> enemyUnitList;
-    private final boolean fightFinished = false;
+    private boolean fightFinished = false;
     private GamePhase gamePhase;
     private Side winningSide;
 
@@ -32,8 +37,8 @@ public class BattlerGen2 {
         friendlyUnitList = new ArrayList<>();
         enemyUnitList = new ArrayList<>();
 
-        getDataFromFormationPlan(Side.FRIENDLY, "friendlyFormation.json");
-        getDataFromFormationPlan(Side.ENEMY, "enemyFormation.json");
+        getDataFromFormationPlan(FRIENDLY, "friendlyFormation.json");
+        getDataFromFormationPlan(ENEMY, "enemyFormation.json");
 
         friendlyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
         enemyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
@@ -66,6 +71,35 @@ public class BattlerGen2 {
         for (Unit unit : orderedList) {
             System.out.println(unit);
         }
+
+        while (!fightFinished) {
+            ListIterator<Unit> unitIterator = orderedList.listIterator();
+            while (unitIterator.hasNext()) {
+                Unit unit = unitIterator.next();
+                if (unit.getMyState() != State.ALIVE) {
+                    if (unit.getSide() == FRIENDLY) {
+                        friendlyUnitList.remove(unit);
+                    } else if (unit.getSide() == ENEMY) {
+                        enemyUnitList.remove(unit);
+                    }
+
+                    unitIterator.remove();
+                } else {
+                    unit.run();
+                }
+            }
+
+            if (friendlyUnitList.size() <= 0) {
+                winningSide = Side.ENEMY;
+                fightFinished = true;
+            } else if (enemyUnitList.size() <= 0) {
+                winningSide = FRIENDLY;
+                fightFinished = true;
+            }
+        }
+
+        System.out.println("fight done!");
+        System.out.println("winningSide = " + winningSide);
     }
 
     public static void main(String[] args) {

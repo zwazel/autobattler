@@ -218,8 +218,8 @@ public abstract class Unit implements ProcessingInstance {
                 "ID=" + ID +
                 ", symbol=" + symbol +
                 ", side=" + side +
-                ", baseHealth=" + health +
-                ", baseEnergy=" + energy +
+                ", health=" + health +
+                ", energy=" + energy +
                 ", level=" + level +
                 ", priority=" + priority +
                 ", name='" + name + '\'' +

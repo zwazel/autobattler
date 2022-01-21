@@ -139,12 +139,15 @@ public class MyFirstUnit extends Unit {
 
     @Override
     public void die() {
-        System.out.println("unit " + this.getID() + " died!");
+        System.out.println("unit " + this.getName() + " died! (" + this.getSide() + ")");
         setMyState(State.DEAD);
     }
 
     @Override
     public void run() {
-
+        this.setHealth(this.getHealth() - 10);
+        if (this.getHealth() <= 0) {
+            this.die();
+        }
     }
 }

@@ -74,15 +74,27 @@
     - Nervt Teammitglieder, welche seinen Humor nicht teilen mit seinen schlechten Witzen.
     - Greift immer schon einen neuen Gegner an, ohne den vorherigen ganz zu besiegen. 
 - Marc
-    - Humor
-        - Schwarzer Humor
-        - Schadensfreude
-        - Meme-affin
-    - Fähigkeiten
-        - Extra schaden an Kindern.
-        - Rassist, mehr Damage an "anderst farbige"
-    - Schwäche
-        - 02 Simp
+  - Humor
+    - Schwarzer Humor
+    - Schadensfreude
+    - Meme-affin
+  - Fähigkeiten
+    - extra schaden an kinder
+    - rassist, mehr damage an "anderst farbige"
+  - Schwäche
+    - 02 simp
+- Nadina
+  - Humor
+    - Something
+  - Fähigkeiten
+    - Something else
+  - Schwäche
+    - anotherone
+- Leon
+  - Humor
+    - Deutscher Humor
+  - Fähigkeiten
+    - Entscheidet mit einer Partie Schach das Spiel. Schach wird richtig simuliert, am Anfang random entschieden wer schwarz und weiss ist (nicht rassistisch gemeint). Jeder Charakter hat ein "Schach kenntniss" Level mit welchem entschieden wird wie weit jeder vorandenken kann.
 
 ## Random ideas
 
@@ -112,6 +124,9 @@
 
 - Charaktere können mit Gegenständen ausgerüstet werden, welche ihre Werte verbessern
 - Charaktere sammel während Kämpfen EP und können so nach einer gewissen Zeit verbessert werden. Dies verschafft ihnen neue Möglichkeiten und verbessert ihre Werte
+
+## Wünsche
+- Es werden auch für die Gegner "Charakter Karten" angezeigt und nicht wie in AFK Arena nur die eigenen, bei vielen Effekten kann man schnell den Überblick verlieren, wie viele Gegner noch leben & wieviel Leben sie noch haben. 
 
 ### Spiel Modi
 

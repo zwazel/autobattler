@@ -1,5 +1,7 @@
 package dev.zwazel.autobattler.classes.Utils;
 
+import static java.lang.Math.atan2;
+
 public class Vector {
     private int x;
     private int y;
@@ -12,6 +14,16 @@ public class Vector {
     public Vector(Vector vector) {
         this.x = vector.getX();
         this.y = vector.getY();
+    }
+
+    public double directionTo360(Vector vector) {
+        return atan2(vector.y - this.y, vector.x - this.x);
+    }
+
+    public Vector directionTo(Vector vector) {
+        int x = Integer.compare(vector.x, this.x);
+        int y = Integer.compare(vector.y, this.y);
+        return new Vector(x,y);
     }
 
     public void add(int num) {

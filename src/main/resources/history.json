@@ -1,0 +1,70 @@
+{
+  "start": "left",
+  "unitsLeft": [
+    {
+      "id": 1,
+      "type": "MY_FIRST_UNIT",
+      "name": "Ash",
+      "level": 1,
+      "priority": 3,
+      "position": {
+        "x": 0,
+        "y": 2
+      }
+    },
+    {
+      "id": 2,
+      "type": "MY_FIRST_UNIT",
+      "name": "Phillip",
+      "level": 69,
+      "priority": 2,
+      "position": {
+        "x": 1,
+        "y": 2
+      }
+    }
+  ],
+  "unitsRight": [
+    {
+      "id": 1,
+      "type": "MY_FIRST_UNIT",
+      "name": "Moritz",
+      "level": 100,
+      "priority": 1,
+      "position": {
+        "x": 8,
+        "y": 5
+      }
+    },
+    {
+      "id": 2,
+      "type": "MY_FIRST_UNIT",
+      "name": "Magnus",
+      "level": 1,
+      "priority": 3,
+      "position": {
+        "x": 7,
+        "y": 5
+      }
+    }
+  ],
+  "history": [
+    {
+      "id": 1,
+      "moved": {
+        "x": 1,
+        "y": 2
+      }
+    },
+    {
+      "id": 1,
+      "usedAbility": {
+        "name": "punch",
+        "target": {
+          "id": 1,
+          "side": "left"
+        }
+      }
+    }
+  ]
+}

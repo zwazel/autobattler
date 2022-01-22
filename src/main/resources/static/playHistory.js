@@ -5,7 +5,14 @@ async function init() {
     await fetch(window.location.protocol + "//" + window.location.host + "/hello")
         .then((response) => response.json())
         .then((data) => {
-            console.log(data.entity);
+            let entity = data.entity;
+            console.log(entity)
+            gridSize = {
+                x: entity.gridSize.x,
+                y: entity.gridSize.y
+            }
+
+            console.log(gridSize)
         })
 }
 

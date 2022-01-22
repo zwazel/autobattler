@@ -27,6 +27,7 @@ import static dev.zwazel.autobattler.classes.enums.Side.ENEMY;
 import static dev.zwazel.autobattler.classes.enums.Side.FRIENDLY;
 
 public class BattlerGen2 {
+    // TODO: 22.01.2022 make a grid, containing "gridCell" (a new class, which extends vector) that saves what cell is occupied and which one isnt
     private final Vector gridSize = new Vector(9, 9);
     private final ArrayList<Unit> friendlyUnitList;
     private final ArrayList<Unit> enemyUnitList;

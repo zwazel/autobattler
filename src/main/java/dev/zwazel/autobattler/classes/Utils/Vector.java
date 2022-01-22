@@ -31,7 +31,7 @@ public class Vector {
     public Vector directionTo(Vector vector) {
         int x = Integer.compare(vector.x, this.x);
         int y = Integer.compare(vector.y, this.y);
-        return new Vector(x,y);
+        return new Vector(x, y);
     }
 
     public void add(int num) {
@@ -55,6 +55,10 @@ public class Vector {
     public void multiply(int num) {
         this.x *= num;
         this.y *= num;
+    }
+
+    public Long toNumberId() {
+        return Long.valueOf(this.x + "" + this.y);
     }
 
     public boolean greaterThan(Vector vector) {
@@ -89,6 +93,12 @@ public class Vector {
 
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
         if (obj.getClass() == this.getClass()) {
             Vector other = (Vector) obj;
             return (other.getX() == this.x && other.getY() == this.y);

@@ -3,7 +3,7 @@ package dev.zwazel.autobattler.classes.Utils;
 import dev.zwazel.autobattler.classes.Obstacle;
 
 public class GridCell {
-    private Obstacle currentObstacle;
+    private Obstacle currentObstacle = null;
 
     public GridCell() {
 
@@ -19,5 +19,12 @@ public class GridCell {
 
     public void setCurrentObstacle(Obstacle currentObstacle) {
         this.currentObstacle = currentObstacle;
+    }
+
+    @Override
+    public String toString() {
+        return "GridCell{" +
+                "currentObstacle=" + currentObstacle +
+                '}';
     }
 }

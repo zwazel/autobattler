@@ -4,10 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import dev.zwazel.autobattler.classes.Utils.GetFile;
-import dev.zwazel.autobattler.classes.Utils.Grid;
-import dev.zwazel.autobattler.classes.Utils.UnitTypeParser;
-import dev.zwazel.autobattler.classes.Utils.Vector;
+import dev.zwazel.autobattler.classes.Utils.*;
 import dev.zwazel.autobattler.classes.enums.GamePhase;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
@@ -108,7 +105,8 @@ public class BattlerGen2 {
     }
 
     public boolean placeOccupied(Vector toGo) {
-        return grid.getGrid().get(toGo).getCurrentObstacle() != null;
+        GridCell cell = grid.getGrid().get(toGo.toNumberId());
+        return cell.getCurrentObstacle() != null;
     }
 
     public Unit findClosestOther(Unit unit, Side sideToCheck, boolean includeDead) {

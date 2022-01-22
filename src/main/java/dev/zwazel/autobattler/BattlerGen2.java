@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dev.zwazel.autobattler.classes.Utils.GetFile;
+import dev.zwazel.autobattler.classes.Utils.Grid;
 import dev.zwazel.autobattler.classes.Utils.UnitTypeParser;
 import dev.zwazel.autobattler.classes.Utils.Vector;
 import dev.zwazel.autobattler.classes.enums.GamePhase;
@@ -27,8 +28,7 @@ import static dev.zwazel.autobattler.classes.enums.Side.ENEMY;
 import static dev.zwazel.autobattler.classes.enums.Side.FRIENDLY;
 
 public class BattlerGen2 {
-    // TODO: 22.01.2022 make a grid, containing "gridCell" (a new class, which extends vector) that saves what cell is occupied and which one isnt
-    private final Vector gridSize = new Vector(9, 9);
+    private final Grid grid = new Grid(new Vector(9, 9));
     private final ArrayList<Unit> friendlyUnitList;
     private final ArrayList<Unit> enemyUnitList;
     private final ArrayList<Unit> units;
@@ -108,12 +108,7 @@ public class BattlerGen2 {
     }
 
     public boolean placeOccupied(Vector toGo) {
-        for (Unit unit : units) {
-            if (unit.getGridPosition().equals(toGo)) {
-                return true;
-            }
-        }
-        return false;
+        return grid.getGrid().get(toGo).getCurrentObstacle() != null;
     }
 
     public Unit findClosestOther(Unit unit, Side sideToCheck, boolean includeDead) {
@@ -133,26 +128,26 @@ public class BattlerGen2 {
             }
         }
 
-        if (closestUnit != null) {
+//        if (closestUnit != null) {
 //            System.out.println("closest unit to unit " + unit.getID() + " = " + closestUnit.getID() + " with distance = " + shortestDistance);
-        } else {
+//        } else {
 //            System.out.println("no closest unit to unit " + unit.getID());
-        }
+//        }
         return closestUnit;
     }
 
     private void drawBoard() {
         ArrayList<Unit> placedUnits = new ArrayList<>();
         StringBuilder vertical = new StringBuilder();
-        vertical.append("-".repeat((gridSize.getX() + 1) * 4 + 1));
+        vertical.append("-".repeat((grid.getWidth() + 1) * 4 + 1));
 
         Vector gridPositionNow = new Vector(0, 0);
 
-        for (int row = 0; row <= gridSize.getY(); row++) {
+        for (int row = 0; row <= grid.getHeight(); row++) {
             System.out.println();
             System.out.println(vertical);
 
-            for (int column = 0; column <= gridSize.getX(); column++) {
+            for (int column = 0; column <= grid.getWidth(); column++) {
                 String character = " ";
                 gridPositionNow.setX(column);
                 gridPositionNow.setY(row);
@@ -183,12 +178,8 @@ public class BattlerGen2 {
                 JsonObject unit = jsonArray.get(i).getAsJsonObject();
                 Unit actualUnit = UnitTypeParser.getUnit(unit, this, side);
                 switch (side) {
-                    case FRIENDLY -> {
-                        friendlyUnitList.add(actualUnit);
-                    }
-                    case ENEMY -> {
-                        enemyUnitList.add(actualUnit);
-                    }
+                    case FRIENDLY -> friendlyUnitList.add(actualUnit);
+                    case ENEMY -> enemyUnitList.add(actualUnit);
                 }
             }
         } catch (URISyntaxException | FileNotFoundException | UnknownUnitType e) {
@@ -196,8 +187,12 @@ public class BattlerGen2 {
         }
     }
 
-    public Vector getGridSize() {
-        return gridSize;
+    public Grid getGrid() {
+        return grid;
+    }
+
+    public ArrayList<Unit> getUnits() {
+        return units;
     }
 
     public ArrayList<Unit> getFriendlyUnitList() {

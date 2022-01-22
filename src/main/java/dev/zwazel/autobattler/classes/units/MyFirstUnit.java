@@ -14,7 +14,7 @@ import static dev.zwazel.autobattler.classes.enums.Side.ENEMY;
 
 public class MyFirstUnit extends Unit {
     public MyFirstUnit(long id, int priority, int level, String name, Vector position, BattlerGen2 battler, Side side) {
-        super(id, level, 10, name, "First Unit", 100, 100, 'u', position, battler.getGridSize(), 1, battler, side, priority);
+        super(id, level, 10, name, "First Unit", 100, 100, 'u', position, battler.getGrid().getGridSize(), 1, battler, side, priority);
         this.setAbilities(new Ability[]{new DefaultPunch(this)});
     }
 

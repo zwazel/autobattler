@@ -1,5 +1,9 @@
 {
   "start": "left",
+  "gridSize": {
+    "x": 0,
+    "y": 2
+  },
   "unitsLeft": [
     {
       "id": 1,

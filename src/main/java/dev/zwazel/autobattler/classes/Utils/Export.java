@@ -10,9 +10,9 @@ import java.util.Date;
 
 public class Export {
     public void export(History history) throws IOException {
-        var exportsFolder = getExportsFolder();
-
-        saveFile(exportsFolder, history);
+//        var exportsFolder = getExportsFolder();
+        new Gson().toJson(history);
+//        saveFile(exportsFolder, history);
     }
 
     private File getExportsFolder() {

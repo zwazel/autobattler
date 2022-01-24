@@ -34,8 +34,10 @@ public class BattlerGen2 {
         friendlyUnitList = new ArrayList<>();
         enemyUnitList = new ArrayList<>();
 
-        getDataFromFormationPlan(FRIENDLY, "friendlyFormation.json");
-        getDataFromFormationPlan(ENEMY, "enemyFormation.json");
+//        getDataFromFormationPlan(FRIENDLY, "friendlyFormation.json");
+//        getDataFromFormationPlan(ENEMY, "enemyFormation.json");
+        getDataFromFormationPlan(FRIENDLY, "friendlyFormationBig.json");
+        getDataFromFormationPlan(ENEMY, "enemyFormationBig.json");
 
         friendlyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
         enemyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
@@ -95,6 +97,10 @@ public class BattlerGen2 {
 
         System.out.println("fight done!");
         System.out.println("winningSide = " + winningSide);
+        System.out.println("surviving units: ");
+        for (Unit unit : units) {
+            System.out.println(unit);
+        }
 
         drawBoard();
 

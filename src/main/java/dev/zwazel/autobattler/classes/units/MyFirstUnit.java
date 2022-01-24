@@ -115,6 +115,7 @@ public class MyFirstUnit extends Unit {
         Action todoAction = null;
         Unit target = null;
         Ability suitableAbility = null;
+        Vector targetPosition = null;
         if (this.getHealth() <= 0) {
             die();
             todoAction = Action.DIE;
@@ -129,16 +130,19 @@ public class MyFirstUnit extends Unit {
             todoAction = (suitableAbility == null) ? Action.CHASE : Action.USE_ABILITY;
             switch (todoAction) {
                 case CHASE -> {
-                    moveTowards(findTargetUnit(ENEMY));
+                    target = findTargetUnit(this.getSide().getOpposite());
+                    moveTowards(target);
+                    targetPosition = this.getGridPosition();
                 }
                 case USE_ABILITY -> {
-                    suitableAbility.use(findTargetUnit(suitableAbility.getTargetSide()));
+                    target = findTargetUnit(suitableAbility.getTargetSide());
+                    suitableAbility.use(target);
                 }
                 case RETREAT -> {
 
                 }
             }
         }
-        return new ActionHistory(todoAction, this, target, suitableAbility);
+        return new ActionHistory(todoAction, this, target, suitableAbility, targetPosition);
     }
 }

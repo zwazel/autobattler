@@ -8,7 +8,7 @@ import dev.zwazel.autobattler.classes.units.Unit;
 public class DefaultPunch extends Ability {
     public DefaultPunch(Unit owner) {
         super("DefaultPunch", "Just a basic, default punch ability", owner, UsageType.NOTHING, 0,
-                AbilityOutputType.DAMAGE, 5, 1, 1, Side.ENEMY);
+                AbilityOutputType.DAMAGE, 5, 1, 1, owner.getSide().getOpposite());
     }
 
     @Override

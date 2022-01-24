@@ -9,12 +9,14 @@ public class ActionHistory {
     private final Unit user;
     private final Unit target;
     private final Ability ability;
+    private final Vector position;
 
-    public ActionHistory(Action actionType, Unit user, Unit target, Ability ability) {
+    public ActionHistory(Action actionType, Unit user, Unit target, Ability ability, Vector position) {
         this.actionType = actionType;
         this.user = user;
         this.target = target;
         this.ability = ability;
+        this.position = position;
     }
 
     public Action getActionType() {
@@ -33,6 +35,10 @@ public class ActionHistory {
         return ability;
     }
 
+    public Vector getPosition() {
+        return position;
+    }
+
     @Override
     public String toString() {
         return "ActionHistory{" +
@@ -40,6 +46,7 @@ public class ActionHistory {
                 ", user=" + user +
                 ", target=" + target +
                 ", ability=" + ability +
+                ", position=" + position +
                 '}';
     }
 }

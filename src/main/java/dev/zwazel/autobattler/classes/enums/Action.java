@@ -1,8 +1,5 @@
 package dev.zwazel.autobattler.classes.enums;
 
-import dev.zwazel.autobattler.classes.abilities.Ability;
-import dev.zwazel.autobattler.classes.units.Unit;
-
 public enum Action {
     CHASE,
     USE_ABILITY,
@@ -14,6 +11,6 @@ public enum Action {
 
     @Override
     public String toString() {
-        return "Action{"+this.name()+"}";
+        return "Action{" + this.name() + "}";
     }
 }

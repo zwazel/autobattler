@@ -11,13 +11,13 @@ public abstract class Ability extends RoundAffected {
     private final int outPutAmount;
     private final int cooldown;
     private final Unit owner;
+    private final Side targetSide;
     private int currentCooldown = 0;
     private AbilityType type;
     private int usageCostAmount;
     private String title;
     private String description;
     private int range;
-    private final Side targetSide;
 
     public Ability(String title, String description, Unit owner, UsageType costType, int usageCost, AbilityOutputType outputType, int outPutAmount, int cooldown, int range, Side targetSide) {
         this.costType = costType;
@@ -39,7 +39,7 @@ public abstract class Ability extends RoundAffected {
     public void doOutput(Unit target) {
         switch (this.getOutputType()) {
             case DAMAGE -> {
-                    target.takeDamage(this.outPutAmount, owner);
+                target.takeDamage(this.outPutAmount, owner);
             }
             case HEAL -> {
 

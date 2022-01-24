@@ -2,15 +2,13 @@ package dev.zwazel.autobattler.classes.units;
 
 import dev.zwazel.autobattler.BattlerGen2;
 import dev.zwazel.autobattler.classes.Obstacle;
-import dev.zwazel.autobattler.classes.ProcessingInstance;
+import dev.zwazel.autobattler.classes.Utils.ActionHistory;
 import dev.zwazel.autobattler.classes.Utils.Vector;
 import dev.zwazel.autobattler.classes.abilities.Ability;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
 
-import java.util.Arrays;
-
-public abstract class Unit implements ProcessingInstance, Obstacle {
+public abstract class Unit implements Obstacle {
     private final long ID;
     private final char symbol;
     private final Side side;
@@ -45,6 +43,8 @@ public abstract class Unit implements ProcessingInstance, Obstacle {
         this.side = side;
         this.priority = priority;
     }
+
+    public abstract ActionHistory run();
 
     protected abstract int getLevelHealth(int health, int level);
 
@@ -200,20 +200,9 @@ public abstract class Unit implements ProcessingInstance, Obstacle {
     @Override
     public String toString() {
         return "Unit{" +
-                "ID=" + ID +
-                ", symbol=" + symbol +
-                ", side=" + side +
-                ", name='" + name + '\'' +
-                ", level=" + level +
-                ", health=" + health +
-                ", damage=" + damage +
-                ", energy=" + energy +
-                ", speed=" + speed +
-                ", priority=" + priority +
-                ", abilities=" + Arrays.toString(abilities) +
-                ", gridPosition=" + gridPosition +
-                ", battler=" + battler +
-                ", myState=" + myState +
-                '}';
+                this.getName() +
+                "," + this.getSide() +
+                "," + this.getMyState() +
+                "}";
     }
 }

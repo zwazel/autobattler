@@ -11,12 +11,8 @@ import dev.zwazel.autobattler.classes.enums.State;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.units.Unit;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
+import java.io.*;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.ListIterator;
@@ -32,6 +28,7 @@ public class BattlerGen2 {
     private boolean fightFinished = false;
     private GamePhase gamePhase;
     private Side winningSide;
+    private History history;
 
     public BattlerGen2() {
         friendlyUnitList = new ArrayList<>();
@@ -67,6 +64,8 @@ public class BattlerGen2 {
             System.out.println(unit);
         }
 
+        history = new History(new Formation(new ArrayList<>(friendlyUnitList)), new Formation(new ArrayList<>(enemyUnitList)));
+
         drawBoard();
         while (!fightFinished) {
             ListIterator<Unit> unitIterator = units.listIterator();
@@ -81,7 +80,7 @@ public class BattlerGen2 {
 
                     unitIterator.remove();
                 } else {
-                    unit.run();
+                    history.addActionHistory(unit.run());
                 }
             }
 
@@ -98,6 +97,16 @@ public class BattlerGen2 {
         System.out.println("winningSide = " + winningSide);
 
         drawBoard();
+
+        System.out.println("\nHISTORY\n");
+
+        System.out.println(history);
+
+        try {
+            new Export().export(history);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
@@ -223,5 +232,9 @@ public class BattlerGen2 {
 
     public void setWinningSide(Side winningSide) {
         this.winningSide = winningSide;
+    }
+
+    public History getHistory() {
+        return history;
     }
 }

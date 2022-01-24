@@ -39,7 +39,7 @@ public abstract class Ability extends RoundAffected {
     public void doOutput(Unit target) {
         switch (this.getOutputType()) {
             case DAMAGE -> {
-                target.takeDamage(this.outPutAmount, owner);
+                    target.takeDamage(this.outPutAmount, owner);
             }
             case HEAL -> {
 

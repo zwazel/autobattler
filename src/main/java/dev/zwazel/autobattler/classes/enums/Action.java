@@ -1,28 +1,19 @@
 package dev.zwazel.autobattler.classes.enums;
 
+import dev.zwazel.autobattler.classes.abilities.Ability;
+import dev.zwazel.autobattler.classes.units.Unit;
+
 public enum Action {
-    CHASE(() -> {
-        System.out.println("Chase");
-    }),
-    USE_ABILITY(() -> {
-        System.out.println("Attack");
-    }),
-    RETREAT(() -> {
-        System.out.println("Retreat");
-    });
+    CHASE,
+    USE_ABILITY,
+    RETREAT,
+    DIE;
 
-    private final ActionInterface actionInterface;
-
-    Action(ActionInterface actionInterface) {
-        this.actionInterface = actionInterface;
+    Action() {
     }
 
-    public ActionInterface getActionInterface() {
-        return actionInterface;
-    }
-
-    @FunctionalInterface
-    public interface ActionInterface {
-        void doSomething();
+    @Override
+    public String toString() {
+        return "Action{"+this.name()+"}";
     }
 }

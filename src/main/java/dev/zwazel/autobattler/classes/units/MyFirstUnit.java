@@ -1,6 +1,7 @@
 package dev.zwazel.autobattler.classes.units;
 
 import dev.zwazel.autobattler.BattlerGen2;
+import dev.zwazel.autobattler.classes.Utils.ActionHistory;
 import dev.zwazel.autobattler.classes.Utils.Vector;
 import dev.zwazel.autobattler.classes.abilities.Ability;
 import dev.zwazel.autobattler.classes.abilities.DefaultPunch;
@@ -110,19 +111,22 @@ public class MyFirstUnit extends Unit {
     }
 
     @Override
-    public void run() {
+    public ActionHistory run() {
+        Action todoAction = null;
+        Unit target = null;
+        Ability suitableAbility = null;
         if (this.getHealth() <= 0) {
             die();
+            todoAction = Action.DIE;
         } else {
 
             for (Ability ability : getAbilities()) {
                 ability.doRound();
             }
 
-            Ability suitableAbility = findSuitableAbility();
+            suitableAbility = findSuitableAbility();
 
-            Action todoAction = (suitableAbility == null) ? Action.CHASE : Action.USE_ABILITY;
-
+            todoAction = (suitableAbility == null) ? Action.CHASE : Action.USE_ABILITY;
             switch (todoAction) {
                 case CHASE -> {
                     moveTowards(findTargetUnit(ENEMY));
@@ -135,5 +139,6 @@ public class MyFirstUnit extends Unit {
                 }
             }
         }
+        return new ActionHistory(todoAction, this, target, suitableAbility);
     }
 }

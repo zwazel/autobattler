@@ -13,8 +13,6 @@ public class HistoryToJson {
         Gson gson = new Gson();
         String json = "{\"gridSize\":" + gson.toJson(history.getBattler().getGrid().getGridSize()) + ",";
 
-        System.out.println();
-
         String jsonLeft = "\"unitsLeft\":";
         jsonLeft += formationToJson(history.getLeft());
         jsonLeft += ",";
@@ -41,8 +39,6 @@ public class HistoryToJson {
         json += actionHistory.toString();
 
         json += "}";
-
-        System.out.println(json);
 
         return json;
     }

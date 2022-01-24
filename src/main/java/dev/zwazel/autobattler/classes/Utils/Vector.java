@@ -1,6 +1,5 @@
 package dev.zwazel.autobattler.classes.Utils;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import static java.lang.Math.atan2;

@@ -8,9 +8,4 @@ public enum Action {
 
     Action() {
     }
-
-    @Override
-    public String toString() {
-        return "Action{" + this.name() + "}";
-    }
 }

@@ -25,12 +25,14 @@ public abstract class Ability extends RoundAffected {
         this.outputType = outputType;
         this.usageCostAmount = usageCost;
         this.range = range;
-        this.outPutAmount = outPutAmount;
+        this.outPutAmount = scaleOutputAmount(owner.getLevel() - 1, outPutAmount);
         this.owner = owner;
         this.title = title;
         this.description = description;
         this.targetSide = targetSide;
     }
+
+    public abstract int scaleOutputAmount(int level, int baseDamage);
 
     public abstract boolean canBeUsed(Unit target);
 
@@ -133,6 +135,13 @@ public abstract class Ability extends RoundAffected {
 
     @Override
     public String toString() {
-        return this.getTitle();
+        return "Ability{" +
+                "title='" + title + '\'' +
+                ", targetSide=" + targetSide +
+                ", cooldown=" + cooldown +
+                ", currentCooldown=" + currentCooldown +
+                ", outputAmount=" + outPutAmount +
+                ", outputType=" + outputType +
+                '}';
     }
 }

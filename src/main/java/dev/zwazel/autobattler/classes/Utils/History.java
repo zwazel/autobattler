@@ -1,17 +1,20 @@
 package dev.zwazel.autobattler.classes.Utils;
 
+import dev.zwazel.autobattler.BattlerGen2;
+
 import java.util.ArrayList;
 
 public class History {
+    private final BattlerGen2 battler;
     private final Formation left;
     private final Formation right;
-
     private final ArrayList<ActionHistory> actionHistory;
 
-    public History(Formation left, Formation right) {
+    public History(Formation left, Formation right, BattlerGen2 battler) {
         this.left = left;
         this.right = right;
         this.actionHistory = new ArrayList<>();
+        this.battler = battler;
     }
 
     public Formation getLeft() {
@@ -20,6 +23,10 @@ public class History {
 
     public Formation getRight() {
         return right;
+    }
+
+    public BattlerGen2 getBattler() {
+        return battler;
     }
 
     public void addActionHistory(ActionHistory history) {

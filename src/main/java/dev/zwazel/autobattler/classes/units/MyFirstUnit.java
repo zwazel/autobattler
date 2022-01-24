@@ -8,14 +8,13 @@ import dev.zwazel.autobattler.classes.abilities.DefaultPunch;
 import dev.zwazel.autobattler.classes.enums.Action;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
+import dev.zwazel.autobattler.classes.enums.UnitTypes;
 
 import java.util.Random;
 
-import static dev.zwazel.autobattler.classes.enums.Side.ENEMY;
-
 public class MyFirstUnit extends Unit {
     public MyFirstUnit(long id, int priority, int level, String name, Vector position, BattlerGen2 battler, Side side) {
-        super(id, level, 10, name, "First Unit", 100, 100, 'u', position, battler.getGrid().getGridSize(), 1, battler, side, priority);
+        super(id, level, name, "First Unit", 100, 100, 'u', position, battler.getGrid().getGridSize(), 1, battler, side, priority, UnitTypes.MY_FIRST_UNIT);
         this.setAbilities(new Ability[]{new DefaultPunch(this)});
     }
 
@@ -27,11 +26,6 @@ public class MyFirstUnit extends Unit {
     @Override
     protected int getLevelEnergy(int energy, int level) {
         return (int) (energy + (energy * (level * 0.25)));
-    }
-
-    @Override
-    protected int getLevelDamage(int damage, int level) {
-        return (int) (damage + (damage * (level * 0.25)));
     }
 
     @Override

@@ -1,6 +1,7 @@
 package dev.zwazel.autobattler.classes.Utils;
 
 import com.google.gson.Gson;
+import dev.zwazel.autobattler.classes.Utils.json.HistoryToJson;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -11,7 +12,7 @@ import java.util.Date;
 public class Export {
     public void export(History history) throws IOException {
 //        var exportsFolder = getExportsFolder();
-        new Gson().toJson(history);
+        HistoryToJson.toJson(history);
 //        saveFile(exportsFolder, history);
     }
 

@@ -2,40 +2,37 @@ package dev.zwazel.autobattler.classes.Utils;
 
 import dev.zwazel.autobattler.classes.abilities.Ability;
 import dev.zwazel.autobattler.classes.enums.Action;
+import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.units.Unit;
 
-public class ActionHistory {
-    private final Action actionType;
-    private final Unit user;
-    private final Unit target;
-    private final Ability ability;
-    private final Vector position;
+public record ActionHistory(Action actionType,
+                            Unit user,
+                            Unit target,
+                            Ability ability,
+                            Vector position) {
 
-    public ActionHistory(Action actionType, Unit user, Unit target, Ability ability, Vector position) {
-        this.actionType = actionType;
-        this.user = user;
-        this.target = target;
-        this.ability = ability;
-        this.position = position;
-    }
-
-    public Action getActionType() {
+    @Override
+    public Action actionType() {
         return actionType;
     }
 
-    public Unit getUser() {
+    @Override
+    public Unit user() {
         return user;
     }
 
-    public Unit getTarget() {
+    @Override
+    public Unit target() {
         return target;
     }
 
-    public Ability getAbility() {
+    @Override
+    public Ability ability() {
         return ability;
     }
 
-    public Vector getPosition() {
+    @Override
+    public Vector position() {
         return position;
     }
 

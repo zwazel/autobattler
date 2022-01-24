@@ -66,7 +66,7 @@ public class BattlerGen2 {
             System.out.println(unit);
         }
 
-        history = new History(new Formation(new ArrayList<>(friendlyUnitList)), new Formation(new ArrayList<>(enemyUnitList)));
+        history = new History(new Formation(new ArrayList<>(friendlyUnitList)), new Formation(new ArrayList<>(enemyUnitList)), this);
 
         drawBoard();
         while (!fightFinished) {
@@ -106,7 +106,7 @@ public class BattlerGen2 {
 
         System.out.println("\nHISTORY\n");
 
-        System.out.println(history);
+//        System.out.println(history);
 
         try {
             new Export().export(history);

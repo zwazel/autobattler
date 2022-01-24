@@ -7,6 +7,9 @@ import dev.zwazel.autobattler.classes.Utils.Vector;
 import dev.zwazel.autobattler.classes.abilities.Ability;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
+import dev.zwazel.autobattler.classes.enums.UnitTypes;
+
+import java.util.Arrays;
 
 public abstract class Unit implements Obstacle {
     private final long ID;
@@ -19,18 +22,17 @@ public abstract class Unit implements Obstacle {
     private String name;
     private String description;
     private Ability[] abilities = new Ability[0];
-    private int damage;
     private Vector gridPosition;
     private Vector gridSize;
     private int speed;
     private BattlerGen2 battler;
     private State myState = State.ALIVE;
     private Unit lastHitter;
+    private final UnitTypes type;
 
-    public Unit(long id, int level, int damage, String name, String description, int health, int energy, char symbol, Vector position, Vector gridSize, int speed, BattlerGen2 battler, Side side, int priority) {
+    public Unit(long id, int level, String name, String description, int health, int energy, char symbol, Vector position, Vector gridSize, int speed, BattlerGen2 battler, Side side, int priority, UnitTypes type) {
         this.ID = id;
         this.level = level;
-        this.damage = getLevelDamage(damage, level - 1);
         this.health = getLevelHealth(health, level - 1);
         this.energy = getLevelEnergy(energy, level - 1);
         this.name = name;
@@ -42,6 +44,7 @@ public abstract class Unit implements Obstacle {
         this.battler = battler;
         this.side = side;
         this.priority = priority;
+        this.type = type;
     }
 
     public abstract ActionHistory run();
@@ -49,8 +52,6 @@ public abstract class Unit implements Obstacle {
     protected abstract int getLevelHealth(int health, int level);
 
     protected abstract int getLevelEnergy(int energy, int level);
-
-    protected abstract int getLevelDamage(int damage, int level);
 
     protected abstract Ability findSuitableAbility();
 
@@ -125,14 +126,6 @@ public abstract class Unit implements Obstacle {
         this.level = level;
     }
 
-    public int getDamage() {
-        return damage;
-    }
-
-    public void setDamage(int damage) {
-        this.damage = damage;
-    }
-
     public char getSymbol() {
         return symbol;
     }
@@ -197,12 +190,26 @@ public abstract class Unit implements Obstacle {
         this.lastHitter = lastHitter;
     }
 
+    public UnitTypes getType() {
+        return type;
+    }
+
     @Override
     public String toString() {
         return "Unit{" +
-                this.getName() +
-                "," + this.getSide() +
-                "," + this.getMyState() +
-                "}";
+                "ID=" + ID +
+                ", symbol=" + symbol +
+                ", name='" + name + '\'' +
+                ", priority=" + priority +
+                ", side=" + side +
+                ", level=" + level +
+                ", health=" + health +
+                ", energy=" + energy +
+                ", speed=" + speed +
+                ", myState=" + myState +
+                ", type=" + type +
+                ", gridPosition=" + gridPosition +
+                ", abilities=" + Arrays.toString(abilities) +
+                '}';
     }
 }

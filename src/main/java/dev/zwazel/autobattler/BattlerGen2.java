@@ -4,7 +4,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import dev.zwazel.autobattler.classes.Utils.*;
+import dev.zwazel.autobattler.classes.Utils.Formation;
+import dev.zwazel.autobattler.classes.Utils.GetFile;
+import dev.zwazel.autobattler.classes.Utils.UnitTypeParser;
+import dev.zwazel.autobattler.classes.Utils.Vector;
 import dev.zwazel.autobattler.classes.Utils.json.Export;
 import dev.zwazel.autobattler.classes.Utils.json.History;
 import dev.zwazel.autobattler.classes.Utils.map.Grid;
@@ -124,7 +127,7 @@ public class BattlerGen2 {
     }
 
     public boolean placeOccupied(Vector toGo) {
-        GridCell cell = grid.getGrid().get(toGo.toNumberId());
+        GridCell cell = grid.getGridCells()[toGo.getX()][toGo.getY()];
         return cell.getCurrentObstacle() != null;
     }
 

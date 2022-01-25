@@ -1,9 +1,7 @@
 package dev.zwazel.autobattler.classes.Utils.json;
 
 import com.google.gson.Gson;
-import dev.zwazel.autobattler.classes.Utils.ActionHistory;
 import dev.zwazel.autobattler.classes.Utils.Formation;
-import dev.zwazel.autobattler.classes.Utils.History;
 import dev.zwazel.autobattler.classes.units.Unit;
 
 import java.util.Iterator;

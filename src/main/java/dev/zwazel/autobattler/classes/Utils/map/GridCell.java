@@ -1,4 +1,4 @@
-package dev.zwazel.autobattler.classes.Utils;
+package dev.zwazel.autobattler.classes.Utils.map;
 
 import dev.zwazel.autobattler.classes.Obstacle;
 

@@ -1,7 +1,8 @@
-package dev.zwazel.autobattler.classes.Utils;
+package dev.zwazel.autobattler.classes.Utils.map;
+
+import dev.zwazel.autobattler.classes.Utils.Vector;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.PriorityQueue;
 
 public class FindPath {

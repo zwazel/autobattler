@@ -1,6 +1,7 @@
-package dev.zwazel.autobattler.classes.Utils;
+package dev.zwazel.autobattler.classes.Utils.json;
 
 import dev.zwazel.autobattler.BattlerGen2;
+import dev.zwazel.autobattler.classes.Utils.Formation;
 
 import java.util.ArrayList;
 

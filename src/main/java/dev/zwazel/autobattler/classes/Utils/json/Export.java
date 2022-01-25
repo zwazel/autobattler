@@ -1,6 +1,4 @@
-package dev.zwazel.autobattler.classes.Utils;
-
-import dev.zwazel.autobattler.classes.Utils.json.HistoryToJson;
+package dev.zwazel.autobattler.classes.Utils.json;
 
 import java.io.File;
 import java.io.FileWriter;

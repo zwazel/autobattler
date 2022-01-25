@@ -1,6 +1,6 @@
 package dev.zwazel.autobattler.classes.enums;
 
-public enum CurrentState {
+public enum GamePhase {
     THINKING,
     DOING;
 }

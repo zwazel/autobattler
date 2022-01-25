@@ -1,66 +1,73 @@
 package dev.zwazel.autobattler.classes.units;
 
-import dev.zwazel.autobattler.Battler;
+import dev.zwazel.autobattler.BattlerGen2;
+import dev.zwazel.autobattler.classes.Obstacle;
+import dev.zwazel.autobattler.classes.Utils.json.ActionHistory;
 import dev.zwazel.autobattler.classes.Utils.Vector;
 import dev.zwazel.autobattler.classes.abilities.Ability;
-import dev.zwazel.autobattler.classes.enums.Action;
 import dev.zwazel.autobattler.classes.enums.Side;
+import dev.zwazel.autobattler.classes.enums.State;
+import dev.zwazel.autobattler.classes.enums.UnitTypes;
 
 import java.util.Arrays;
 
-public abstract class Unit {
+public abstract class Unit implements Obstacle {
     private final long ID;
     private final char symbol;
     private final Side side;
-    private int baseHealth;
-    private int baseEnergy;
+    private int health;
+    private int energy;
     private int level;
     private int priority;
     private String name;
     private String description;
     private Ability[] abilities = new Ability[0];
-    private int baseDamage;
     private Vector gridPosition;
     private Vector gridSize;
-    private int baseSpeed;
-    private Battler battler;
-    private Action todoAction;
-    private Ability nextAbility;
-    private Unit targetUnit;
+    private int speed;
+    private BattlerGen2 battler;
+    private State myState = State.ALIVE;
+    private Unit lastHitter;
+    private final UnitTypes type;
 
-    public Unit(long id, int level, int baseDamage, String name, String description, int baseHealth, int baseEnergy, char symbol, Vector position, Vector gridSize, int baseSpeed, Battler battler, Side side, int priority) {
+    public Unit(long id, int level, String name, String description, int health, int energy, char symbol, Vector position, Vector gridSize, int speed, BattlerGen2 battler, Side side, int priority, UnitTypes type) {
         this.ID = id;
         this.level = level;
-        this.baseDamage = baseDamage;
-        this.baseHealth = baseHealth;
-        this.baseEnergy = baseEnergy;
+        this.health = getLevelHealth(health, level - 1);
+        this.energy = getLevelEnergy(energy, level - 1);
         this.name = name;
         this.description = description;
         this.symbol = symbol;
         this.gridPosition = position;
         this.gridSize = gridSize;
-        this.baseSpeed = baseSpeed;
+        this.speed = speed;
         this.battler = battler;
         this.side = side;
         this.priority = priority;
+        this.type = type;
     }
 
-    public abstract Ability findSuitableAbility();
+    public abstract ActionHistory run();
 
-    public abstract void moveTowards(Unit target);
+    protected abstract int getLevelHealth(int health, int level);
 
-    public abstract void move(Vector direction);
+    protected abstract int getLevelEnergy(int energy, int level);
 
-    public abstract void moveRandom();
+    protected abstract Ability findSuitableAbility();
 
-    public abstract void think();
+    protected abstract void moveTowards(Unit target);
 
-    public abstract void doWhatYouThoughtOf();
+    protected abstract void move(Vector direction);
 
-    public abstract Unit findTargetUnit();
+    protected abstract void moveRandom();
 
-    public void takeDamage(int damage) {
-        baseHealth -= damage;
+    protected abstract Unit findTargetUnit(Side side);
+
+    protected abstract void die();
+
+    public void takeDamage(int damage, Unit hitter) {
+        health -= damage;
+        this.lastHitter = hitter;
     }
 
     public long getID() {
@@ -83,20 +90,20 @@ public abstract class Unit {
         this.description = description;
     }
 
-    public int getBaseHealth() {
-        return baseHealth;
+    public int getHealth() {
+        return health;
     }
 
-    public void setBaseHealth(int baseHealth) {
-        this.baseHealth = baseHealth;
+    public void setHealth(int health) {
+        this.health = health;
     }
 
-    public int getBaseEnergy() {
-        return baseEnergy;
+    public int getEnergy() {
+        return energy;
     }
 
-    public void setBaseEnergy(int baseEnergy) {
-        this.baseEnergy = baseEnergy;
+    public void setEnergy(int energy) {
+        this.energy = energy;
     }
 
     public Ability[] getAbilities() {
@@ -119,14 +126,6 @@ public abstract class Unit {
         this.level = level;
     }
 
-    public int getBaseDamage() {
-        return baseDamage;
-    }
-
-    public void setBaseDamage(int baseDamage) {
-        this.baseDamage = baseDamage;
-    }
-
     public char getSymbol() {
         return symbol;
     }
@@ -147,48 +146,24 @@ public abstract class Unit {
         this.gridSize = gridSize;
     }
 
-    public int getBaseSpeed() {
-        return baseSpeed;
+    public int getSpeed() {
+        return speed;
     }
 
-    public void setBaseSpeed(int baseSpeed) {
-        this.baseSpeed = baseSpeed;
+    public void setSpeed(int speed) {
+        this.speed = speed;
     }
 
-    public Battler getBattler() {
+    public BattlerGen2 getBattler() {
         return battler;
     }
 
-    public void setBattler(Battler battler) {
+    public void setBattler(BattlerGen2 battler) {
         this.battler = battler;
     }
 
     public Side getSide() {
         return side;
-    }
-
-    public Action getTodoAction() {
-        return todoAction;
-    }
-
-    public void setTodoAction(Action todoAction) {
-        this.todoAction = todoAction;
-    }
-
-    public Ability getNextAbility() {
-        return nextAbility;
-    }
-
-    public void setNextAbility(Ability nextAbility) {
-        this.nextAbility = nextAbility;
-    }
-
-    public Unit getTargetUnit() {
-        return targetUnit;
-    }
-
-    public void setTargetUnit(Unit targetUnit) {
-        this.targetUnit = targetUnit;
     }
 
     public int getPriority() {
@@ -199,26 +174,42 @@ public abstract class Unit {
         this.priority = priority;
     }
 
+    public State getMyState() {
+        return myState;
+    }
+
+    public void setMyState(State myState) {
+        this.myState = myState;
+    }
+
+    public Unit getLastHitter() {
+        return lastHitter;
+    }
+
+    public void setLastHitter(Unit lastHitter) {
+        this.lastHitter = lastHitter;
+    }
+
+    public UnitTypes getType() {
+        return type;
+    }
+
     @Override
     public String toString() {
         return "Unit{" +
                 "ID=" + ID +
                 ", symbol=" + symbol +
-                ", side=" + side +
-                ", baseHealth=" + baseHealth +
-                ", baseEnergy=" + baseEnergy +
-                ", level=" + level +
                 ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", abilities=" + Arrays.toString(abilities) +
-                ", baseDamage=" + baseDamage +
+                ", priority=" + priority +
+                ", side=" + side +
+                ", level=" + level +
+                ", health=" + health +
+                ", energy=" + energy +
+                ", speed=" + speed +
+                ", myState=" + myState +
+                ", type=" + type +
                 ", gridPosition=" + gridPosition +
-                ", gridSize=" + gridSize +
-                ", baseSpeed=" + baseSpeed +
-                ", battler=" + battler +
-                ", todoAction=" + todoAction +
-                ", nextAbility=" + nextAbility +
-                ", targetUnit=" + targetUnit +
+                ", abilities=" + Arrays.toString(abilities) +
                 '}';
     }
 }

@@ -6,7 +6,6 @@ import dev.zwazel.autobattler.classes.Utils.json.Export;
 import dev.zwazel.autobattler.classes.Utils.json.History;
 import dev.zwazel.autobattler.classes.Utils.map.Grid;
 import dev.zwazel.autobattler.classes.Utils.map.GridCell;
-import dev.zwazel.autobattler.classes.enums.GamePhase;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
@@ -30,7 +29,6 @@ public class BattlerGen2 {
     private ArrayList<Unit> units;
     private History history;
     private boolean fightFinished = false;
-    private GamePhase gamePhase;
     private Side winningSide;
 
     public BattlerGen2() {
@@ -227,14 +225,6 @@ public class BattlerGen2 {
 
     public void setFightFinished(boolean fightFinished) {
         this.fightFinished = fightFinished;
-    }
-
-    public GamePhase getGamePhase() {
-        return gamePhase;
-    }
-
-    public void setGamePhase(GamePhase gamePhase) {
-        this.gamePhase = gamePhase;
     }
 
     public Side getWinningSide() {

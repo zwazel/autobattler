@@ -1,13 +1,7 @@
 package dev.zwazel.autobattler;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import dev.zwazel.autobattler.classes.Utils.Formation;
-import dev.zwazel.autobattler.classes.Utils.GetFile;
-import dev.zwazel.autobattler.classes.Utils.UnitTypeParser;
-import dev.zwazel.autobattler.classes.Utils.Vector;
+import com.google.gson.*;
+import dev.zwazel.autobattler.classes.Utils.*;
 import dev.zwazel.autobattler.classes.Utils.json.Export;
 import dev.zwazel.autobattler.classes.Utils.json.History;
 import dev.zwazel.autobattler.classes.Utils.map.Grid;
@@ -31,11 +25,13 @@ public class BattlerGen2 {
     private final Grid grid = new Grid(new Vector(9, 9));
     private final ArrayList<Unit> friendlyUnitList;
     private final ArrayList<Unit> enemyUnitList;
-    private final ArrayList<Unit> units;
+    private User friendlyUser;
+    private User enemyUser;
+    private ArrayList<Unit> units;
+    private History history;
     private boolean fightFinished = false;
     private GamePhase gamePhase;
     private Side winningSide;
-    private History history;
 
     public BattlerGen2() {
         friendlyUnitList = new ArrayList<>();
@@ -43,81 +39,88 @@ public class BattlerGen2 {
 
 //        getDataFromFormationPlan(FRIENDLY, "friendlyFormation.json");
 //        getDataFromFormationPlan(ENEMY, "enemyFormation.json");
-        getDataFromFormationPlan(FRIENDLY, "friendlyFormationBig.json");
-        getDataFromFormationPlan(ENEMY, "enemyFormationBig.json");
+        try {
+            friendlyUser = getDataFromFormationPlan(FRIENDLY, "friendlyFormationBig.json");
+            enemyUser = getDataFromFormationPlan(ENEMY, "enemyFormationBig.json");
 
-        friendlyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
-        enemyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
-        units = new ArrayList<>();
+            friendlyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
+            enemyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
+            units = new ArrayList<>();
 
-        boolean friendlies = Math.random() < 0.5;
-        int firstCounter = 0;
-        int secondCounter = 0;
-        for (int i = 0; i < friendlyUnitList.size() + enemyUnitList.size(); i++) {
-            boolean friendlyDone = firstCounter >= friendlyUnitList.size();
-            boolean enemyDone = secondCounter >= enemyUnitList.size();
+            System.out.println("friendlyUser = " + friendlyUser);
+            System.out.println("enemyUser = " + enemyUser);
 
-            if (friendlies) {
-                units.add(friendlyUnitList.get(firstCounter++));
-            } else {
-                units.add(enemyUnitList.get(secondCounter++));
-            }
+            boolean friendlies = Math.random() < 0.5;
+            int firstCounter = 0;
+            int secondCounter = 0;
+            for (int i = 0; i < friendlyUnitList.size() + enemyUnitList.size(); i++) {
+                boolean friendlyDone = firstCounter >= friendlyUnitList.size();
+                boolean enemyDone = secondCounter >= enemyUnitList.size();
 
-            friendlies = !friendlies;
-            if (friendlyDone || enemyDone) {
-                friendlies = !friendlies;
-            }
-        }
-
-        for (Unit unit : units) {
-            System.out.println(unit);
-        }
-
-        history = new History(new Formation(new ArrayList<>(friendlyUnitList)), new Formation(new ArrayList<>(enemyUnitList)), this);
-
-        drawBoard();
-        while (!fightFinished) {
-            ListIterator<Unit> unitIterator = units.listIterator();
-            while (unitIterator.hasNext()) {
-                Unit unit = unitIterator.next();
-                if (unit.getMyState() != State.ALIVE) {
-                    if (unit.getSide() == FRIENDLY) {
-                        friendlyUnitList.remove(unit);
-                    } else if (unit.getSide() == ENEMY) {
-                        enemyUnitList.remove(unit);
-                    }
-
-                    unitIterator.remove();
+                if (friendlies) {
+                    units.add(friendlyUnitList.get(firstCounter++));
                 } else {
-                    history.addActionHistory(unit.run());
+                    units.add(enemyUnitList.get(secondCounter++));
+                }
+
+                friendlies = !friendlies;
+                if (friendlyDone || enemyDone) {
+                    friendlies = !friendlies;
                 }
             }
 
-            if (friendlyUnitList.size() <= 0) {
-                winningSide = Side.ENEMY;
-                fightFinished = true;
-            } else if (enemyUnitList.size() <= 0) {
-                winningSide = FRIENDLY;
-                fightFinished = true;
+            for (Unit unit : units) {
+                System.out.println(unit);
             }
-        }
 
-        System.out.println("fight done!");
-        System.out.println("winningSide = " + winningSide);
-        System.out.println("surviving units: ");
-        for (Unit unit : units) {
-            System.out.println(unit);
-        }
+            history = new History(new Formation(friendlyUser, new ArrayList<>(friendlyUnitList)), new Formation(enemyUser, new ArrayList<>(enemyUnitList)), this);
 
-        drawBoard();
+            drawBoard();
+            while (!fightFinished) {
+                ListIterator<Unit> unitIterator = units.listIterator();
+                while (unitIterator.hasNext()) {
+                    Unit unit = unitIterator.next();
+                    if (unit.getMyState() != State.ALIVE) {
+                        if (unit.getSide() == FRIENDLY) {
+                            friendlyUnitList.remove(unit);
+                        } else if (unit.getSide() == ENEMY) {
+                            enemyUnitList.remove(unit);
+                        }
 
-        System.out.println("\nHISTORY\n");
+                        unitIterator.remove();
+                    } else {
+                        history.addActionHistory(unit.run());
+                    }
+                }
+
+                if (friendlyUnitList.size() <= 0) {
+                    winningSide = Side.ENEMY;
+                    fightFinished = true;
+                } else if (enemyUnitList.size() <= 0) {
+                    winningSide = FRIENDLY;
+                    fightFinished = true;
+                }
+            }
+
+            System.out.println("fight done!");
+            System.out.println("winningSide = " + winningSide);
+            System.out.println("surviving units: ");
+            for (Unit unit : units) {
+                System.out.println(unit);
+            }
+
+            drawBoard();
+
+            System.out.println("\nHISTORY\n");
 
 //        System.out.println(history);
 
-        try {
-            new Export().export(history);
-        } catch (IOException e) {
+            try {
+                new Export().export(history);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (URISyntaxException | FileNotFoundException | UnknownUnitType e) {
             e.printStackTrace();
         }
     }
@@ -186,25 +189,23 @@ public class BattlerGen2 {
         System.out.println(vertical);
     }
 
-    private void getDataFromFormationPlan(Side side, String fileName) {
-        try {
-            GetFile getFile = new GetFile();
-            File file = getFile.getFileFromResource(fileName);
-            Reader reader = new FileReader(file);
-            JsonElement jsonElement = JsonParser.parseReader(reader);
-            JsonObject jsonObject = jsonElement.getAsJsonObject();
-            JsonArray jsonArray = jsonObject.get("formation").getAsJsonArray();
-            for (int i = 0; i < jsonArray.size(); i++) {
-                JsonObject unit = jsonArray.get(i).getAsJsonObject();
-                Unit actualUnit = UnitTypeParser.getUnit(unit, this, side);
-                switch (side) {
-                    case FRIENDLY -> friendlyUnitList.add(actualUnit);
-                    case ENEMY -> enemyUnitList.add(actualUnit);
-                }
+    private User getDataFromFormationPlan(Side side, String fileName) throws URISyntaxException, FileNotFoundException, UnknownUnitType {
+        GetFile getFile = new GetFile();
+        File file = getFile.getFileFromResource(fileName);
+        Reader reader = new FileReader(file);
+        JsonElement jsonElement = JsonParser.parseReader(reader);
+        JsonObject jsonObject = jsonElement.getAsJsonObject();
+        JsonArray jsonArray = jsonObject.get("formation").getAsJsonArray();
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JsonObject unit = jsonArray.get(i).getAsJsonObject();
+            Unit actualUnit = UnitTypeParser.getUnit(unit, this, side);
+            switch (side) {
+                case FRIENDLY -> friendlyUnitList.add(actualUnit);
+                case ENEMY -> enemyUnitList.add(actualUnit);
             }
-        } catch (URISyntaxException | FileNotFoundException | UnknownUnitType e) {
-            e.printStackTrace();
         }
+
+        return new Gson().fromJson(jsonObject.get("user").getAsJsonObject(), User.class);
     }
 
     public Grid getGrid() {

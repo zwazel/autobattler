@@ -1,5 +1,6 @@
 package dev.zwazel.autobattler.classes.Utils.map;
 
+import dev.zwazel.autobattler.classes.Obstacle;
 import dev.zwazel.autobattler.classes.Utils.Vector;
 
 import java.util.Arrays;
@@ -20,6 +21,14 @@ public class Grid {
         }
 
         System.out.println(new GridGraph(this));
+    }
+
+    public void updateOccupiedGrid(Vector vector, Obstacle obstacle) {
+        gridCells[vector.getX()][vector.getX()].setCurrentObstacle(obstacle);
+    }
+
+    public void updateOccupiedGrid(int x, int y, Obstacle obstacle) {
+        gridCells[x][y].setCurrentObstacle(obstacle);
     }
 
     public Vector getGridSize() {

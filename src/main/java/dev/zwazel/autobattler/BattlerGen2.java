@@ -85,6 +85,7 @@ public class BattlerGen2 {
                         unitIterator.remove();
                     } else {
                         history.addActionHistory(unit.run());
+                        grid.updateOccupiedGrid(unit.getGridPosition(), unit);
                     }
                 }
 
@@ -194,6 +195,7 @@ public class BattlerGen2 {
         for (int i = 0; i < jsonArray.size(); i++) {
             JsonObject unit = jsonArray.get(i).getAsJsonObject();
             Unit actualUnit = UnitTypeParser.getUnit(unit, this, side);
+            grid.updateOccupiedGrid(actualUnit.getGridPosition(), actualUnit);
             switch (side) {
                 case FRIENDLY -> friendlyUnitList.add(actualUnit);
                 case ENEMY -> enemyUnitList.add(actualUnit);

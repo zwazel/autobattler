@@ -93,6 +93,22 @@
         - Something else
     - Schwäche
         - anotherone
+- Noel Schärer
+    - Humor
+        - idk
+    - Fähigkeiten
+        - Ist so klein das Fernkampfwaffen ihn nicht treffen
+    - Schwäche
+        - Ist klein
+- Parwiz
+    - Humor
+        - idk
+    - Fähigkeiten
+        - idk
+    - Schwäche
+        - Kommt immer zu spät in den Kampf, manchmal vergisst er es komplett oder verwechselt wo er eigentlich sein
+          sollte (geht ins falsche team? kommt in einem anderen kampf plötzlich unerwartet wo niemand ihn ausgewählt
+          hat?)
 - Leon
     - Humor
         - Deutscher Humor

@@ -104,7 +104,7 @@ public class BattlerGen2 {
                     winningSide = FRIENDLY;
                     fightFinished = true;
                 }
-                drawBoard();
+//                drawBoard();
                 roundCounter++;
             }
 

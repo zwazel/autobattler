@@ -45,7 +45,6 @@ public class MyFirstUnit extends Unit {
     @Override
     public void moveTowards(Unit target) {
         if (target != null) {
-            System.out.println("unit " + this.getID() + " searches steps");
             // TODO: 27.01.2022 findpath should return an array of vectors in the correct order!
             // TODO: 27.01.2022 currently, if we move more then 1, we move to the one the furthest away and then to the one that is the closest. -> stupid.
             Node node = new FindPath().getNextMoveSteps(this.getGridPosition(), target.getGridPosition(), this.getBattler().getGrid(), this.getSpeed());

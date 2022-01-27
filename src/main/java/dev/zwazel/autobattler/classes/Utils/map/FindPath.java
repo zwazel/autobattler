@@ -28,7 +28,7 @@ public class FindPath {
     }
 
     private String getNodeInfos(Node node) {
-        return node.getMyGridCell().getPosition()+",cost{"+node.getCost()+"}";
+        return node.getMyGridCell().getPosition() + ",cost{" + node.getCost() + "}";
     }
 
     private void expandNode(Node currentNode, Vector end) {

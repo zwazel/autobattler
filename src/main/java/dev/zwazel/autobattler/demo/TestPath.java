@@ -15,9 +15,11 @@ public class TestPath {
 
         grid.getGridCells()[1][0].setCurrentObstacle(new SimpleWall());
         grid.getGridCells()[1][1].setCurrentObstacle(new SimpleWall());
-        grid.getGridCells()[1][2].setCurrentObstacle(new SimpleWall());
-//        grid.getGridCells()[1][3].setCurrentObstacle(new SimpleWall());
+//        grid.getGridCells()[1][2].setCurrentObstacle(new SimpleWall());
+        grid.getGridCells()[1][3].setCurrentObstacle(new SimpleWall());
         grid.getGridCells()[1][4].setCurrentObstacle(new SimpleWall());
+        grid.getGridCells()[3][3].setCurrentObstacle(new SimpleWall());
+        grid.getGridCells()[4][3].setCurrentObstacle(new SimpleWall());
 
         Vector start = new Vector(0, 0);
         Vector end = new Vector(4, 4);
@@ -72,7 +74,7 @@ public class TestPath {
                     }
                 }
 
-                if(grid.getGridCells()[gridPositionNow.getX()][gridPositionNow.getY()].getCurrentObstacle() != null) {
+                if (grid.getGridCells()[gridPositionNow.getX()][gridPositionNow.getY()].getCurrentObstacle() != null) {
                     character = "/";
                 }
 

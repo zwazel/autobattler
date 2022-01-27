@@ -16,7 +16,6 @@ public class FindPath {
 
         while (!openList.isEmpty()) {
             Node currentNode = openList.poll();
-            System.out.println(getNodeInfos(currentNode));
             if (currentNode.getMyGridCell().getPosition().equals(end)) {
                 return currentNode;
             }
@@ -25,10 +24,6 @@ public class FindPath {
         }
 
         return null;
-    }
-
-    private String getNodeInfos(Node node) {
-        return node.getMyGridCell().getPosition() + ",cost{" + node.getCost() + "}";
     }
 
     private void expandNode(Node currentNode, Vector end) {

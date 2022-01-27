@@ -4,8 +4,10 @@ import com.google.gson.*;
 import dev.zwazel.autobattler.classes.Utils.*;
 import dev.zwazel.autobattler.classes.Utils.json.Export;
 import dev.zwazel.autobattler.classes.Utils.json.History;
+import dev.zwazel.autobattler.classes.Utils.map.FindPath;
 import dev.zwazel.autobattler.classes.Utils.map.Grid;
 import dev.zwazel.autobattler.classes.Utils.map.GridCell;
+import dev.zwazel.autobattler.classes.Utils.map.GridGraph;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
@@ -71,6 +73,7 @@ public class BattlerGen2 {
             history = new History(new Formation(friendlyUser, new ArrayList<>(friendlyUnitList)), new Formation(enemyUser, new ArrayList<>(enemyUnitList)), this);
 
             drawBoard();
+            int roundCounter = 0;
             while (!fightFinished) {
                 ListIterator<Unit> unitIterator = units.listIterator();
                 while (unitIterator.hasNext()) {
@@ -85,7 +88,7 @@ public class BattlerGen2 {
                         unitIterator.remove();
                     } else {
                         history.addActionHistory(unit.run());
-                        grid.updateOccupiedGrid(unit.getGridPosition(), unit);
+//                        grid.updateOccupiedGrid(unit.getGridPosition(), unit);
                     }
                 }
 
@@ -96,9 +99,10 @@ public class BattlerGen2 {
                     winningSide = FRIENDLY;
                     fightFinished = true;
                 }
+                roundCounter++;
             }
 
-            System.out.println("fight done!");
+            System.out.println("fight done after " + roundCounter + "!");
             System.out.println("winningSide = " + winningSide);
             System.out.println("surviving units: ");
             for (Unit unit : units) {
@@ -126,13 +130,19 @@ public class BattlerGen2 {
         return cell.getCurrentObstacle() != null;
     }
 
-    public Unit findClosestOther(Unit unit, Side sideToCheck, boolean includeDead) {
+    public Unit findClosestOther(Unit unit, Side sideToCheck, boolean checkIfReachable, boolean includeDead) {
         Unit closestUnit = null;
         Double shortestDistance = -1d;
         for (Unit unitChecking : units) {
             if (unitChecking != unit) {
                 if (unitChecking.getSide() == sideToCheck) {
                     if (includeDead || unitChecking.getMyState() != State.DEAD) {
+                        if (checkIfReachable) {
+                            if (!isReachable(unit.getGridPosition(), unitChecking.getGridPosition())) {
+                                System.out.println("not reachable");
+                                continue;
+                            }
+                        }
                         Double temp = unit.getGridPosition().getDistanceFrom(unitChecking.getGridPosition());
                         if (shortestDistance < 0 || temp < shortestDistance) {
                             shortestDistance = temp;
@@ -142,13 +152,12 @@ public class BattlerGen2 {
                 }
             }
         }
-
-//        if (closestUnit != null) {
-//            System.out.println("closest unit to unit " + unit.getID() + " = " + closestUnit.getID() + " with distance = " + shortestDistance);
-//        } else {
-//            System.out.println("no closest unit to unit " + unit.getID());
-//        }
         return closestUnit;
+    }
+
+    public boolean isReachable(Vector start, Vector end) {
+        FindPath path = new FindPath();
+        return (path.findPath(start, end, new GridGraph(grid)) != null);
     }
 
     private void drawBoard() {
@@ -191,7 +200,7 @@ public class BattlerGen2 {
         for (int i = 0; i < jsonArray.size(); i++) {
             JsonObject unit = jsonArray.get(i).getAsJsonObject();
             Unit actualUnit = UnitTypeParser.getUnit(unit, this, side);
-            grid.updateOccupiedGrid(actualUnit.getGridPosition(), actualUnit);
+//            grid.updateOccupiedGrid(actualUnit.getGridPosition(), actualUnit);
             switch (side) {
                 case FRIENDLY -> friendlyUnitList.add(actualUnit);
                 case ENEMY -> enemyUnitList.add(actualUnit);

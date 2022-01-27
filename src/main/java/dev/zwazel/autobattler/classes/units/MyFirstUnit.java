@@ -95,7 +95,7 @@ public class MyFirstUnit extends Unit {
 
     @Override
     public Unit findTargetUnit(Side side) {
-        return getBattler().findClosestOther(this, side, false);
+        return getBattler().findClosestOther(this, side, true, false);
     }
 
     @Override

@@ -158,11 +158,11 @@ public class BattlerGen2 {
 
         Vector gridPositionNow = new Vector(0, 0);
 
-        for (int row = 0; row <= grid.getHeight(); row++) {
+        for (int row = 0; row < grid.getHeight(); row++) {
             System.out.println();
             System.out.println(vertical);
 
-            for (int column = 0; column <= grid.getWidth(); column++) {
+            for (int column = 0; column < grid.getWidth(); column++) {
                 String character = " ";
                 gridPositionNow.setX(column);
                 gridPositionNow.setY(row);

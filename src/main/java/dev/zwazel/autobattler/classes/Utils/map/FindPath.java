@@ -33,7 +33,7 @@ public class FindPath {
 
     private void expandNode(Node currentNode, Vector end) {
         for (Node successor : currentNode.getMyNeighbors()) {
-            if (closedList.contains(successor)) {
+            if (closedList.contains(successor) || successor.getMyGridCell().getCurrentObstacle() != null) {
                 continue;
             }
 

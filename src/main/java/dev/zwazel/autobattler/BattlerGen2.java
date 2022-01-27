@@ -4,19 +4,18 @@ import com.google.gson.*;
 import dev.zwazel.autobattler.classes.Utils.*;
 import dev.zwazel.autobattler.classes.Utils.json.Export;
 import dev.zwazel.autobattler.classes.Utils.json.History;
-import dev.zwazel.autobattler.classes.Utils.map.FindPath;
-import dev.zwazel.autobattler.classes.Utils.map.Grid;
-import dev.zwazel.autobattler.classes.Utils.map.GridCell;
-import dev.zwazel.autobattler.classes.Utils.map.GridGraph;
+import dev.zwazel.autobattler.classes.Utils.map.*;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
+import dev.zwazel.autobattler.classes.units.PlaceboUnit;
 import dev.zwazel.autobattler.classes.units.Unit;
 
 import java.io.*;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.ListIterator;
 
 import static dev.zwazel.autobattler.classes.enums.Side.ENEMY;
@@ -78,17 +77,20 @@ public class BattlerGen2 {
                 ListIterator<Unit> unitIterator = units.listIterator();
                 while (unitIterator.hasNext()) {
                     Unit unit = unitIterator.next();
+                    Vector posBefore = unit.getGridPosition();
                     if (unit.getMyState() != State.ALIVE) {
                         if (unit.getSide() == FRIENDLY) {
                             friendlyUnitList.remove(unit);
                         } else if (unit.getSide() == ENEMY) {
                             enemyUnitList.remove(unit);
                         }
-
+                        grid.updateOccupiedGrid(posBefore, null);
                         unitIterator.remove();
                     } else {
                         history.addActionHistory(unit.run());
-//                        grid.updateOccupiedGrid(unit.getGridPosition(), unit);
+                        // TODO: 27.01.2022 uncomment once I figure out how to get to the closest around a unit
+                        grid.updateOccupiedGrid(posBefore, null);
+                        grid.updateOccupiedGrid(unit.getGridPosition(), unit);
                     }
                 }
 
@@ -99,6 +101,7 @@ public class BattlerGen2 {
                     winningSide = FRIENDLY;
                     fightFinished = true;
                 }
+                drawBoard();
                 roundCounter++;
             }
 
@@ -138,8 +141,28 @@ public class BattlerGen2 {
                 if (unitChecking.getSide() == sideToCheck) {
                     if (includeDead || unitChecking.getMyState() != State.DEAD) {
                         if (checkIfReachable) {
-                            if (!isReachable(unit.getGridPosition(), unitChecking.getGridPosition())) {
-                                System.out.println("not reachable");
+                            boolean done = false;
+                            GridGraph graph = new GridGraph(grid);
+                            Node targetNode = graph.getNodes()[unitChecking.getGridPosition().getX()][unitChecking.getGridPosition().getY()];
+                            LinkedList<Node> neighbors = targetNode.getMyNeighbors();
+                            System.out.println("checking if " + unit.getName() + " ("+unit.getID()+") can reach " + unitChecking.getName() + " ("+unitChecking.getID()+") at pos " + unitChecking.getGridPosition());
+                            System.out.println("neighbors.size() = " + neighbors.size());
+                            int counter = 1;
+                            for(Node node : neighbors) {
+                                Vector vector = node.getMyGridCell().getPosition();
+                                System.out.println("current neighbour : " + vector);
+                                if (isReachable(unit.getGridPosition(), vector)) {
+                                    done = true;
+                                    System.out.println(unit.getName() + " ("+unit.getID()+") can reach " + unitChecking.getName() + " ("+unitChecking.getID()+") at close pos " + vector);
+                                    closestUnit = new PlaceboUnit(vector, grid.getGridSize());
+                                    break;
+                                } else {
+                                    System.out.println("neighbour " + counter + " can't be reached");
+                                }
+                                counter++;
+                            }
+                            if(!done) {
+                                System.out.println(unit.getName() + " ("+unit.getID()+") can't reach " + unitChecking.getName() + " ("+unitChecking.getID()+")");
                                 continue;
                             }
                         }
@@ -175,6 +198,7 @@ public class BattlerGen2 {
                 String character = " ";
                 gridPositionNow.setX(column);
                 gridPositionNow.setY(row);
+                // TODO: 27.01.2022 once place occupied works, just take the current grid cell and then take the unit from there, if it has one!
                 for (Unit unit : units) {
                     if (!placedUnits.contains(unit) && unit.getGridPosition().equals(gridPositionNow)) {
                         placedUnits.add(unit);
@@ -200,7 +224,8 @@ public class BattlerGen2 {
         for (int i = 0; i < jsonArray.size(); i++) {
             JsonObject unit = jsonArray.get(i).getAsJsonObject();
             Unit actualUnit = UnitTypeParser.getUnit(unit, this, side);
-//            grid.updateOccupiedGrid(actualUnit.getGridPosition(), actualUnit);
+            // TODO: 27.01.2022 uncomment once we figure out how to get to closest point besides it
+            grid.updateOccupiedGrid(actualUnit.getGridPosition(), actualUnit);
             switch (side) {
                 case FRIENDLY -> friendlyUnitList.add(actualUnit);
                 case ENEMY -> enemyUnitList.add(actualUnit);

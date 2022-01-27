@@ -5,7 +5,7 @@
   },
   "formation": [
     {
-      "id": 1,
+      "id": 5,
       "type": "MY_FIRST_UNIT",
       "name": "Moritz",
       "level": 2,
@@ -16,7 +16,7 @@
       }
     },
     {
-      "id": 2,
+      "id": 6,
       "type": "MY_FIRST_UNIT",
       "name": "Magnus",
       "level": 1,
@@ -27,7 +27,7 @@
       }
     },
     {
-      "id": 3,
+      "id": 7,
       "type": "MY_FIRST_UNIT",
       "name": "Marc",
       "level": 1,
@@ -38,7 +38,7 @@
       }
     },
     {
-      "id": 4,
+      "id": 8,
       "type": "MY_FIRST_UNIT",
       "name": "Dennis",
       "level": 1,
@@ -49,7 +49,7 @@
       }
     },
     {
-      "id": 5,
+      "id": 9,
       "type": "MY_FIRST_UNIT",
       "name": "Nadina",
       "level": 1,

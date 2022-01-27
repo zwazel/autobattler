@@ -107,10 +107,6 @@ public class BattlerGen2 {
 
             drawBoard();
 
-            System.out.println("\nHISTORY\n");
-
-//        System.out.println(history);
-
             try {
                 new Export().export(history);
             } catch (IOException e) {

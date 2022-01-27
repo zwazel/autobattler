@@ -1,6 +1,7 @@
 package dev.zwazel.autobattler;
 
 import com.google.gson.*;
+import dev.zwazel.autobattler.classes.Obstacle;
 import dev.zwazel.autobattler.classes.Utils.*;
 import dev.zwazel.autobattler.classes.Utils.json.Export;
 import dev.zwazel.autobattler.classes.Utils.json.History;
@@ -8,6 +9,7 @@ import dev.zwazel.autobattler.classes.Utils.map.*;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
+import dev.zwazel.autobattler.classes.units.MyFirstUnit;
 import dev.zwazel.autobattler.classes.units.PlaceboUnit;
 import dev.zwazel.autobattler.classes.units.Unit;
 
@@ -88,7 +90,6 @@ public class BattlerGen2 {
                         unitIterator.remove();
                     } else {
                         history.addActionHistory(unit.run());
-                        // TODO: 27.01.2022 uncomment once I figure out how to get to the closest around a unit
                         grid.updateOccupiedGrid(posBefore, null);
                         grid.updateOccupiedGrid(unit.getGridPosition(), unit);
                     }
@@ -145,24 +146,15 @@ public class BattlerGen2 {
                             GridGraph graph = new GridGraph(grid);
                             Node targetNode = graph.getNodes()[unitChecking.getGridPosition().getX()][unitChecking.getGridPosition().getY()];
                             LinkedList<Node> neighbors = targetNode.getMyNeighbors();
-                            System.out.println("checking if " + unit.getName() + " ("+unit.getID()+") can reach " + unitChecking.getName() + " ("+unitChecking.getID()+") at pos " + unitChecking.getGridPosition());
-                            System.out.println("neighbors.size() = " + neighbors.size());
-                            int counter = 1;
-                            for(Node node : neighbors) {
+                            for (Node node : neighbors) {
                                 Vector vector = node.getMyGridCell().getPosition();
-                                System.out.println("current neighbour : " + vector);
                                 if (isReachable(unit.getGridPosition(), vector)) {
                                     done = true;
-                                    System.out.println(unit.getName() + " ("+unit.getID()+") can reach " + unitChecking.getName() + " ("+unitChecking.getID()+") at close pos " + vector);
                                     closestUnit = new PlaceboUnit(vector, grid.getGridSize());
                                     break;
-                                } else {
-                                    System.out.println("neighbour " + counter + " can't be reached");
                                 }
-                                counter++;
                             }
-                            if(!done) {
-                                System.out.println(unit.getName() + " ("+unit.getID()+") can't reach " + unitChecking.getName() + " ("+unitChecking.getID()+")");
+                            if (!done) {
                                 continue;
                             }
                         }
@@ -198,11 +190,14 @@ public class BattlerGen2 {
                 String character = " ";
                 gridPositionNow.setX(column);
                 gridPositionNow.setY(row);
-                // TODO: 27.01.2022 once place occupied works, just take the current grid cell and then take the unit from there, if it has one!
-                for (Unit unit : units) {
-                    if (!placedUnits.contains(unit) && unit.getGridPosition().equals(gridPositionNow)) {
-                        placedUnits.add(unit);
-                        character = "" + unit.getID();
+
+                GridCell cell = grid.getGridCells()[gridPositionNow.getX()][gridPositionNow.getY()];
+                Obstacle obstacle = cell.getCurrentObstacle();
+                if (obstacle != null) {
+                    if (obstacle.getClass() == MyFirstUnit.class) {
+                        character = "" + ((MyFirstUnit) obstacle).getID();
+                    } else {
+                        character = "/";
                     }
                 }
 

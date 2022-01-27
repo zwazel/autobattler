@@ -2,19 +2,24 @@ package dev.zwazel.autobattler.classes.units;
 
 import dev.zwazel.autobattler.BattlerGen2;
 import dev.zwazel.autobattler.classes.Obstacle;
-import dev.zwazel.autobattler.classes.Utils.json.ActionHistory;
 import dev.zwazel.autobattler.classes.Utils.Vector;
+import dev.zwazel.autobattler.classes.Utils.json.ActionHistory;
+import dev.zwazel.autobattler.classes.Utils.map.FindPath;
+import dev.zwazel.autobattler.classes.Utils.map.GridGraph;
+import dev.zwazel.autobattler.classes.Utils.map.Node;
 import dev.zwazel.autobattler.classes.abilities.Ability;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
 import dev.zwazel.autobattler.classes.enums.UnitTypes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public abstract class Unit implements Obstacle {
     private final long ID;
     private final char symbol;
     private final Side side;
+    private final UnitTypes type;
     private int health;
     private int energy;
     private int level;
@@ -28,7 +33,6 @@ public abstract class Unit implements Obstacle {
     private BattlerGen2 battler;
     private State myState = State.ALIVE;
     private Unit lastHitter;
-    private final UnitTypes type;
 
     public Unit(long id, int level, String name, String description, int health, int energy, char symbol, Vector position, Vector gridSize, int speed, BattlerGen2 battler, Side side, int priority, UnitTypes type) {
         this.ID = id;
@@ -46,6 +50,8 @@ public abstract class Unit implements Obstacle {
         this.priority = priority;
         this.type = type;
     }
+
+
 
     public abstract ActionHistory run();
 

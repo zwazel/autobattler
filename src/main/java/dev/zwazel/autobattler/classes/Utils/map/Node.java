@@ -13,6 +13,16 @@ public class Node {
         this.myNeighbors = new LinkedList<>();
     }
 
+    public int countHowManyPredecessors() {
+        Node node = this;
+        int counter = 0;
+        while(node.getPredecessor() != null) {
+            counter++;
+            node = node.getPredecessor();
+        }
+        return counter;
+    }
+
     public GridCell getMyGridCell() {
         return myGridCell;
     }

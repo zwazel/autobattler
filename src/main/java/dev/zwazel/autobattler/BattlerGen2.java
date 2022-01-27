@@ -5,7 +5,9 @@ import dev.zwazel.autobattler.classes.Obstacle;
 import dev.zwazel.autobattler.classes.Utils.*;
 import dev.zwazel.autobattler.classes.Utils.json.Export;
 import dev.zwazel.autobattler.classes.Utils.json.History;
-import dev.zwazel.autobattler.classes.Utils.map.*;
+import dev.zwazel.autobattler.classes.Utils.map.FindPath;
+import dev.zwazel.autobattler.classes.Utils.map.Grid;
+import dev.zwazel.autobattler.classes.Utils.map.GridCell;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
@@ -17,7 +19,6 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.ListIterator;
 
 import static dev.zwazel.autobattler.classes.enums.Side.ENEMY;
@@ -38,11 +39,11 @@ public class BattlerGen2 {
         friendlyUnitList = new ArrayList<>();
         enemyUnitList = new ArrayList<>();
 
-//        getDataFromFormationPlan(FRIENDLY, "friendlyFormation.json");
-//        getDataFromFormationPlan(ENEMY, "enemyFormation.json");
         try {
-            friendlyUser = getDataFromFormationPlan(FRIENDLY, "friendlyFormationBig.json");
-            enemyUser = getDataFromFormationPlan(ENEMY, "enemyFormationBig.json");
+            getDataFromFormationPlan(FRIENDLY, "friendlyFormation.json");
+            getDataFromFormationPlan(ENEMY, "enemyFormation.json");
+//            friendlyUser = getDataFromFormationPlan(FRIENDLY, "friendlyFormationBig.json");
+//            enemyUser = getDataFromFormationPlan(ENEMY, "enemyFormationBig.json");
 
             friendlyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
             enemyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
@@ -142,21 +143,12 @@ public class BattlerGen2 {
                 if (unitChecking.getSide() == sideToCheck) {
                     if (includeDead || unitChecking.getMyState() != State.DEAD) {
                         if (checkIfReachable) {
-                            boolean done = false;
-                            GridGraph graph = new GridGraph(grid);
-                            Node targetNode = graph.getNodes()[unitChecking.getGridPosition().getX()][unitChecking.getGridPosition().getY()];
-                            LinkedList<Node> neighbors = targetNode.getMyNeighbors();
-                            for (Node node : neighbors) {
-                                Vector vector = node.getMyGridCell().getPosition();
-                                if (isReachable(unit.getGridPosition(), vector)) {
-                                    done = true;
-                                    closestUnit = new PlaceboUnit(vector, grid.getGridSize());
-                                    break;
-                                }
-                            }
-                            if (!done) {
+                            FindPath path = new FindPath();
+                            Vector vector = path.findClosestNearbyNode(grid, unit, unitChecking);
+                            if (vector == null) {
                                 continue;
                             }
+                            closestUnit = new PlaceboUnit(vector, grid.getGridSize());
                         }
                         Double temp = unit.getGridPosition().getDistanceFrom(unitChecking.getGridPosition());
                         if (shortestDistance < 0 || temp < shortestDistance) {
@@ -170,10 +162,6 @@ public class BattlerGen2 {
         return closestUnit;
     }
 
-    public boolean isReachable(Vector start, Vector end) {
-        FindPath path = new FindPath();
-        return (path.findPath(start, end, new GridGraph(grid)) != null);
-    }
 
     private void drawBoard() {
         ArrayList<Unit> placedUnits = new ArrayList<>();

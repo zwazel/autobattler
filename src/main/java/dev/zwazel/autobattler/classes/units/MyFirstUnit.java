@@ -1,8 +1,10 @@
 package dev.zwazel.autobattler.classes.units;
 
 import dev.zwazel.autobattler.BattlerGen2;
-import dev.zwazel.autobattler.classes.Utils.json.ActionHistory;
 import dev.zwazel.autobattler.classes.Utils.Vector;
+import dev.zwazel.autobattler.classes.Utils.json.ActionHistory;
+import dev.zwazel.autobattler.classes.Utils.map.FindPath;
+import dev.zwazel.autobattler.classes.Utils.map.Node;
 import dev.zwazel.autobattler.classes.abilities.Ability;
 import dev.zwazel.autobattler.classes.abilities.DefaultPunch;
 import dev.zwazel.autobattler.classes.enums.Action;
@@ -43,9 +45,8 @@ public class MyFirstUnit extends Unit {
     @Override
     public void moveTowards(Unit target) {
         if (target != null) {
-            Vector dir = this.getGridPosition().directionTo(target.getGridPosition());
-//            System.out.println("direction " + this.getID() + " to " + target.getID() + " = " + dir);
-            move(dir);
+            Node node = new FindPath().getNextMoveSteps(this.getGridPosition(), target.getGridPosition(), this.getBattler().getGrid());
+            System.out.println("node = " + node);
         }
     }
 

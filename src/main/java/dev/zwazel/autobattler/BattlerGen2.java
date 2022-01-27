@@ -40,10 +40,10 @@ public class BattlerGen2 {
         enemyUnitList = new ArrayList<>();
 
         try {
-            getDataFromFormationPlan(FRIENDLY, "friendlyFormation.json");
-            getDataFromFormationPlan(ENEMY, "enemyFormation.json");
-//            friendlyUser = getDataFromFormationPlan(FRIENDLY, "friendlyFormationBig.json");
-//            enemyUser = getDataFromFormationPlan(ENEMY, "enemyFormationBig.json");
+//            getDataFromFormationPlan(FRIENDLY, "friendlyFormation.json");
+//            getDataFromFormationPlan(ENEMY, "enemyFormation.json");
+            friendlyUser = getDataFromFormationPlan(FRIENDLY, "friendlyFormationBig.json");
+            enemyUser = getDataFromFormationPlan(ENEMY, "enemyFormationBig.json");
 
             friendlyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
             enemyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
@@ -81,6 +81,7 @@ public class BattlerGen2 {
                 while (unitIterator.hasNext()) {
                     Unit unit = unitIterator.next();
                     Vector posBefore = unit.getGridPosition();
+                    // TODO: 27.01.2022 update the way units die, think about how it should work!
                     if (unit.getMyState() != State.ALIVE) {
                         if (unit.getSide() == FRIENDLY) {
                             friendlyUnitList.remove(unit);
@@ -107,14 +108,12 @@ public class BattlerGen2 {
                 roundCounter++;
             }
 
-            System.out.println("fight done after " + roundCounter + "!");
+            System.out.println("fight done after " + roundCounter + " turns!");
             System.out.println("winningSide = " + winningSide);
             System.out.println("surviving units: ");
             for (Unit unit : units) {
                 System.out.println(unit);
             }
-
-            drawBoard();
 
             try {
                 new Export().export(history);

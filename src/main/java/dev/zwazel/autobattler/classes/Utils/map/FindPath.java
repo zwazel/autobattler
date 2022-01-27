@@ -9,6 +9,7 @@ public class FindPath {
     PriorityQueue<Node> openList = new PriorityQueue<>(1, new NodeComparator());
     HashSet<Node> closedList = new HashSet<>();
 
+    // TODO: 27.01.2022 return array in correct, and not reversed, order!
     public Node findPath(Vector start, Vector end, GridGraph grid) {
         Node node = grid.getNodes()[start.getX()][start.getY()];
         node.setCost(0);
@@ -47,6 +48,7 @@ public class FindPath {
         }
     }
 
+    // TODO: 27.01.2022 return array in correct, and not reversed, order!
     public Node getNextMoveSteps(Vector start, Vector vectorToGo, Grid grid, int moveCount) {
         FindPath findPath = new FindPath();
         Node node = findPath.findPath(start, vectorToGo, new GridGraph(grid));
@@ -59,18 +61,12 @@ public class FindPath {
         }
 
         if (node != null) {
-            System.out.println("hierarchy full:");
-            printNodeHierarchy(node);
-
             int amountPredecessor = node.countHowManyPredecessors();
             if (amountPredecessor > moveCount) {
                 for (int i = amountPredecessor; i > moveCount; i--) {
                     node = node.getPredecessor();
                 }
             }
-
-            System.out.println("\nhierarchy with " + moveCount + " moves:");
-            printNodeHierarchy(node);
         }
 
         return node;
@@ -104,7 +100,7 @@ public class FindPath {
         int amountPredecessor = node.countHowManyPredecessors();
         int counter = 0;
         for (int i = amountPredecessor; i >= 0; i--) {
-            System.out.print("\n"+"\t".repeat(Math.max(0, counter++)) + node.getMyGridCell().getPosition());
+            System.out.print("\n" + "\t".repeat(Math.max(0, counter++)) + node.getMyGridCell().getPosition());
             node = node.getPredecessor();
         }
     }

@@ -46,12 +46,14 @@ public class MyFirstUnit extends Unit {
     public void moveTowards(Unit target) {
         if (target != null) {
             System.out.println("unit " + this.getID() + " searches steps");
-            Node node = new FindPath().getNextMoveSteps(this.getGridPosition(), target.getGridPosition(), this.getBattler().getGrid(), 1);
+            // TODO: 27.01.2022 findpath should return an array of vectors in the correct order!
+            // TODO: 27.01.2022 currently, if we move more then 1, we move to the one the furthest away and then to the one that is the closest. -> stupid.
+            Node node = new FindPath().getNextMoveSteps(this.getGridPosition(), target.getGridPosition(), this.getBattler().getGrid(), this.getSpeed());
             if (node != null) {
                 Vector currentPos = this.getGridPosition();
                 boolean reachedEndOfPath = false;
-                while(node != null && !reachedEndOfPath) {
-                    if(currentPos.equals(node.getMyGridCell().getPosition())) {
+                while (node != null && !reachedEndOfPath) {
+                    if (currentPos.equals(node.getMyGridCell().getPosition())) {
                         reachedEndOfPath = true;
                     } else {
                         move(node.getMyGridCell().getPosition());
@@ -64,11 +66,6 @@ public class MyFirstUnit extends Unit {
 
     @Override
     public void move(Vector direction) {
-        System.out.println("\nunit " + this.getID() + " moves {");
-        System.out.println("\tfrom " + this.getGridPosition());
-        System.out.println("\tto " + direction);
-        System.out.println("}");
-
         this.setGridPosition(direction);
     }
 
@@ -87,7 +84,7 @@ public class MyFirstUnit extends Unit {
 
     @Override
     public void die() {
-        System.out.println("unit " + this.getName() + " died! (" + this.getSide() + ")" + " last hitter: " + this.getLastHitter().getName());
+        System.out.println("unit " + this.getName() + "(" +this.getID()+ ")" + " died! (" + this.getSide() + ")" + " last hitter: " + this.getLastHitter().getName() + "(" +this.getLastHitter().getID()+ ")");
         setMyState(State.DEAD);
     }
 

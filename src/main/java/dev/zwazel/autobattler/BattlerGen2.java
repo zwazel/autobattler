@@ -21,7 +21,7 @@ import static dev.zwazel.autobattler.classes.enums.Side.ENEMY;
 import static dev.zwazel.autobattler.classes.enums.Side.FRIENDLY;
 
 public class BattlerGen2 {
-    private final Grid grid = new Grid(new Vector(9, 9));
+    private final Grid grid = new Grid(new Vector(10, 10));
     private final ArrayList<Unit> friendlyUnitList;
     private final ArrayList<Unit> enemyUnitList;
     private User friendlyUser;
@@ -154,7 +154,7 @@ public class BattlerGen2 {
     private void drawBoard() {
         ArrayList<Unit> placedUnits = new ArrayList<>();
         StringBuilder vertical = new StringBuilder();
-        vertical.append("-".repeat((grid.getWidth() + 1) * 4 + 1));
+        vertical.append("-".repeat((grid.getWidth()) * 4 + 1));
 
         Vector gridPositionNow = new Vector(0, 0);
 

@@ -51,7 +51,6 @@ public class Node {
     public String toString() {
         return "Node{" +
                 "myGridCell=" + myGridCell +
-                ", myNeighbors=" + myNeighbors +
                 ", cost=" + cost +
                 '}';
     }

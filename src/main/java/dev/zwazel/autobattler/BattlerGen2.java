@@ -144,7 +144,7 @@ public class BattlerGen2 {
                     if (includeDead || unitChecking.getMyState() != State.DEAD) {
                         if (checkIfReachable) {
                             FindPath path = new FindPath();
-                            Vector vector = path.findClosestNearbyNode(grid, unit, unitChecking);
+                            Vector vector = path.findClosestNearbyNode(grid, unit.getGridPosition(), unitChecking.getGridPosition());
                             if (vector == null) {
                                 continue;
                             }

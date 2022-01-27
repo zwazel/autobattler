@@ -51,8 +51,6 @@ public abstract class Unit implements Obstacle {
         this.type = type;
     }
 
-
-
     public abstract ActionHistory run();
 
     protected abstract int getLevelHealth(int health, int level);

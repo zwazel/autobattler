@@ -45,45 +45,31 @@ public class MyFirstUnit extends Unit {
     @Override
     public void moveTowards(Unit target) {
         if (target != null) {
-            Node node = new FindPath().getNextMoveSteps(this.getGridPosition(), target.getGridPosition(), this.getBattler().getGrid());
-            System.out.println("node = " + node);
+            System.out.println("unit " + this.getID() + " searches steps");
+            Node node = new FindPath().getNextMoveSteps(this.getGridPosition(), target.getGridPosition(), this.getBattler().getGrid(), 1);
+            if (node != null) {
+                Vector currentPos = this.getGridPosition();
+                boolean reachedEndOfPath = false;
+                while(node != null && !reachedEndOfPath) {
+                    if(currentPos.equals(node.getMyGridCell().getPosition())) {
+                        reachedEndOfPath = true;
+                    } else {
+                        move(node.getMyGridCell().getPosition());
+                        node = node.getPredecessor();
+                    }
+                }
+            }
         }
     }
 
     @Override
     public void move(Vector direction) {
-//        System.out.println("unit " + this.getID() + " is moving, direction = " + direction + ":");
-        Vector temp = new Vector(this.getGridPosition());
-        for (int i = 0; i < this.getSpeed(); i++) {
-            temp.add(direction);
-//            System.out.println("\ttemp = " + temp);
-            boolean placeOccupied = this.getBattler().placeOccupied(temp);
-//            System.out.println("\tplaceOccupied = " + placeOccupied);
-            boolean canChangeDir = direction.getX() != 0 && direction.getY() != 0;
-//            System.out.println("\tcanChangeDir = " + canChangeDir);
-            int counter = 0;
-            int tempDir = 0;
-            while (canChangeDir && placeOccupied) {
-                if (counter == 0) {
-                    tempDir = temp.getY();
-                    temp.setY(this.getGridPosition().getY());
-                } else {
-                    temp.setY(tempDir);
-                    temp.setX(this.getGridPosition().getX());
-                    canChangeDir = false;
-                }
-//                System.out.println("\ttemp after checking other direction = " + temp);
-                placeOccupied = this.getBattler().placeOccupied(temp);
-                counter++;
-            }
-            if (!placeOccupied && !temp.greaterThan(this.getGridSize()) && !temp.smallerThan(new Vector(0, 0))) {
-//                System.out.println("\tpos not occupied, moving to " + temp);
-                this.setGridPosition(temp);
-            } else {
-//                System.out.println("\tunit couldnt move!");
-                break;
-            }
-        }
+        System.out.println("\nunit " + this.getID() + " moves {");
+        System.out.println("\tfrom " + this.getGridPosition());
+        System.out.println("\tto " + direction);
+        System.out.println("}");
+
+        this.setGridPosition(direction);
     }
 
     @Override

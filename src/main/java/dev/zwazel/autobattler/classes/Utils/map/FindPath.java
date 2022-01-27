@@ -1,7 +1,6 @@
 package dev.zwazel.autobattler.classes.Utils.map;
 
 import dev.zwazel.autobattler.classes.Utils.Vector;
-import dev.zwazel.autobattler.classes.units.Unit;
 
 import java.util.HashSet;
 import java.util.PriorityQueue;
@@ -48,29 +47,48 @@ public class FindPath {
         }
     }
 
-    public Node getNextMoveSteps(Vector start, Vector vectorToGo, Grid grid) {
+    public Node getNextMoveSteps(Vector start, Vector vectorToGo, Grid grid, int moveCount) {
         FindPath findPath = new FindPath();
         Node node = findPath.findPath(start, vectorToGo, new GridGraph(grid));
 
-        if (node == null) return null;
+        if (node == null) {
+            vectorToGo = findClosestNearbyNode(grid, start, vectorToGo);
+            if (vectorToGo != null) {
+                node = findPath.findPath(start, vectorToGo, new GridGraph(grid));
+            }
+        }
 
-        System.out.println(node.countHowManyPredecessors());
+        if (node != null) {
+            System.out.println("hierarchy full:");
+            printNodeHierarchy(node);
+
+            int amountPredecessor = node.countHowManyPredecessors();
+            if (amountPredecessor > moveCount) {
+                for (int i = amountPredecessor; i > moveCount; i--) {
+                    node = node.getPredecessor();
+                }
+            }
+
+            System.out.println("\nhierarchy with " + moveCount + " moves:");
+            printNodeHierarchy(node);
+        }
+
         return node;
     }
 
-    public Vector findClosestNearbyNode(Grid grid, Unit unit, Unit unitChecking) {
+    public Vector findClosestNearbyNode(Grid grid, Vector start, Vector end) {
         GridGraph graph = new GridGraph(grid);
-        Node targetNode = graph.getNodes()[unitChecking.getGridPosition().getX()][unitChecking.getGridPosition().getY()];
+        Node targetNode = graph.getNodes()[end.getX()][end.getY()];
 
-        for(Node node : targetNode.getMyNeighbors()) {
-            node.setCost(node.getMyGridCell().getPosition().getDistanceFrom(unit.getGridPosition()));
+        for (Node node : targetNode.getMyNeighbors()) {
+            node.setCost(node.getMyGridCell().getPosition().getDistanceFrom(start));
         }
 
-        PriorityQueue<Node> neighbors = new PriorityQueue<>(targetNode.getMyNeighbors().size(),new NodeComparator());
+        PriorityQueue<Node> neighbors = new PriorityQueue<>(targetNode.getMyNeighbors().size(), new NodeComparator());
         neighbors.addAll(targetNode.getMyNeighbors());
         for (Node node : neighbors) {
             Vector vector = node.getMyGridCell().getPosition();
-            if (isReachable(unit.getGridPosition(), vector, grid)) {
+            if (isReachable(start, vector, grid)) {
                 return vector;
             }
         }
@@ -80,5 +98,14 @@ public class FindPath {
     public boolean isReachable(Vector start, Vector end, Grid grid) {
         FindPath path = new FindPath();
         return (path.findPath(start, end, new GridGraph(grid)) != null);
+    }
+
+    private void printNodeHierarchy(Node node) {
+        int amountPredecessor = node.countHowManyPredecessors();
+        int counter = 0;
+        for (int i = amountPredecessor; i >= 0; i--) {
+            System.out.print("\n"+"\t".repeat(Math.max(0, counter++)) + node.getMyGridCell().getPosition());
+            node = node.getPredecessor();
+        }
     }
 }

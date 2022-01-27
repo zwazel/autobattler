@@ -30,7 +30,7 @@ public class GridCell {
     @Override
     public String toString() {
         return "GridCell{" +
-                "currentObstacle=" + currentObstacle +
+                "position=" + position +
                 '}';
     }
 }

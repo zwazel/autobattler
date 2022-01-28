@@ -9,7 +9,6 @@ import dev.zwazel.autobattler.classes.abilities.Ability;
 import dev.zwazel.autobattler.classes.abilities.DefaultPunch;
 import dev.zwazel.autobattler.classes.enums.Action;
 import dev.zwazel.autobattler.classes.enums.Side;
-import dev.zwazel.autobattler.classes.enums.State;
 import dev.zwazel.autobattler.classes.enums.UnitTypes;
 
 import java.util.Random;
@@ -87,9 +86,12 @@ public class MyFirstUnit extends Unit {
     }
 
     @Override
-    public void die() {
-        System.out.println("unit " + this.getName() + "(" + this.getID() + ")" + " died! (" + this.getSide() + ")" + " last hitter: " + this.getLastHitter().getName() + "(" + this.getLastHitter().getID() + ")");
-        setMyState(State.DEAD);
+    public void takeDamage(Ability ability) {
+        this.setHealth(this.getHealth() - ability.getOutPutAmount());
+        this.setLastHitter(ability.getOwner());
+        if (this.getHealth() <= 0) {
+            die(ability);
+        }
     }
 
     @Override
@@ -98,33 +100,28 @@ public class MyFirstUnit extends Unit {
         Unit[] targets = new Unit[0];
         Ability suitableAbility = null;
         Vector[] targetPosition = new Vector[0];
-        if (this.getHealth() <= 0) {
-            die();
-            todoAction = Action.DIE;
-        } else {
 
-            for (Ability ability : getAbilities()) {
-                ability.doRound();
+        for (Ability ability : getAbilities()) {
+            ability.doRound();
+        }
+
+        suitableAbility = findSuitableAbility();
+
+        todoAction = (suitableAbility == null) ? Action.CHASE : Action.USE_ABILITY;
+        switch (todoAction) {
+            case CHASE -> {
+                Unit target = findTargetUnit(this.getSide().getOpposite());
+                if (target != null) {
+                    targets = new Unit[]{target};
+                    targetPosition = moveTowards(targets[0]);
+                }
             }
+            case USE_ABILITY -> {
+                targets = new Unit[]{findTargetUnit(suitableAbility.getTargetSide())};
+                suitableAbility.use(targets[0]);
+            }
+            case RETREAT -> {
 
-            suitableAbility = findSuitableAbility();
-
-            todoAction = (suitableAbility == null) ? Action.CHASE : Action.USE_ABILITY;
-            switch (todoAction) {
-                case CHASE -> {
-                    Unit target = findTargetUnit(this.getSide().getOpposite());
-                    if(target != null) {
-                        targets = new Unit[]{target};
-                        targetPosition = moveTowards(targets[0]);
-                    }
-                }
-                case USE_ABILITY -> {
-                    targets = new Unit[]{findTargetUnit(suitableAbility.getTargetSide())};
-                    suitableAbility.use(targets[0]);
-                }
-                case RETREAT -> {
-
-                }
             }
         }
         return new ActionHistory(todoAction, this, targets, suitableAbility, targetPosition);

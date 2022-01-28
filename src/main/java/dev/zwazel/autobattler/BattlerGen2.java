@@ -79,6 +79,7 @@ public class BattlerGen2 {
             while (!fightFinished) {
                 ListIterator<Unit> unitIterator = units.listIterator();
                 while (unitIterator.hasNext()) {
+                    System.out.println("NEW ROUND!");
                     Unit unit = unitIterator.next();
                     Vector posBefore = unit.getGridPosition();
                     // TODO: 27.01.2022 update the way units die, think about how it should work!
@@ -105,10 +106,10 @@ public class BattlerGen2 {
                     fightFinished = true;
                 }
                 drawBoard();
-                roundCounter++;
+                System.out.println("Round " + roundCounter++ + " done\n\n");
             }
 
-            System.out.println("fight done after " + roundCounter + " turns!");
+            System.out.println("fight done after " + (roundCounter-1) + " turns!");
             System.out.println("winningSide = " + winningSide);
             System.out.println("surviving units: ");
             for (Unit unit : units) {

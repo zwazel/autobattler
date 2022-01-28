@@ -67,11 +67,11 @@ public abstract class Unit implements Obstacle {
 
     protected abstract Unit findTargetUnit(Side side);
 
-    protected abstract void die();
+    public abstract void takeDamage(Ability ability);
 
-    public void takeDamage(int damage, Unit hitter) {
-        health -= damage;
-        this.lastHitter = hitter;
+    public void die(Ability ability) {
+        setMyState(State.DEAD);
+        System.out.println(ability.getRandomKillMessage(this));
     }
 
     public long getID() {

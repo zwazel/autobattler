@@ -5,6 +5,8 @@ import dev.zwazel.autobattler.classes.Utils.Vector;
 import dev.zwazel.autobattler.classes.enums.*;
 import dev.zwazel.autobattler.classes.units.Unit;
 
+import java.util.Random;
+
 public abstract class Ability extends RoundAffected {
     private final UsageType costType;
     private final AbilityOutputType outputType;
@@ -12,6 +14,8 @@ public abstract class Ability extends RoundAffected {
     private final int cooldown;
     private final Unit owner;
     private final Side targetSide;
+    private final String[] killMessages;
+    private final String[] useMessages;
     private int currentCooldown = 0;
     private AbilityType type;
     private int usageCostAmount;
@@ -30,18 +34,39 @@ public abstract class Ability extends RoundAffected {
         this.title = title;
         this.description = description;
         this.targetSide = targetSide;
+        this.killMessages = getKillMessages();
+        this.useMessages = getUseMessages();
+    }
+
+    public abstract String[] getUseMessages();
+
+    public String getRandomUseMessage(Unit target) {
+        Random rand = new Random();
+        return this.useMessages[rand.nextInt(this.useMessages.length)].replace("$targetName", target.getName());
+    }
+
+    public abstract String[] getKillMessages();
+
+    public String getRandomKillMessage(Unit victim) {
+        Random rand = new Random();
+        return this.killMessages[rand.nextInt(this.killMessages.length)].replace("$targetName", victim.getName());
     }
 
     public abstract int scaleOutputAmount(int level, int baseDamage);
 
     public abstract boolean canBeUsed(Unit target);
 
-    public abstract boolean use(Unit target);
+    public boolean use(Unit target) {
+        System.out.println(getRandomUseMessage(target));
+        return actuallyUse(target);
+    }
+
+    public abstract boolean actuallyUse(Unit target);
 
     public void doOutput(Unit target) {
         switch (this.getOutputType()) {
             case DAMAGE -> {
-                target.takeDamage(this.outPutAmount, owner);
+                target.takeDamage(this);
             }
             case HEAL -> {
 

@@ -55,7 +55,7 @@ public class PlaceboUnit extends Unit {
     }
 
     @Override
-    protected void die() {
+    public void takeDamage(Ability ability) {
 
     }
 }

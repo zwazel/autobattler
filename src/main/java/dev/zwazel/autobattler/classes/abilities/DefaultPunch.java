@@ -11,6 +11,20 @@ public class DefaultPunch extends Ability {
     }
 
     @Override
+    public String[] getUseMessages() {
+        return new String[]{
+                this.getOwner().getName() + " punches $targetName and did " + this.getOutPutAmount() + " damage!"
+        };
+    }
+
+    @Override
+    public String[] getKillMessages() {
+        return new String[]{
+                "$targetName got punched to death by " + this.getOwner().getName()
+        };
+    }
+
+    @Override
     public int scaleOutputAmount(int level, int baseDamage) {
         return (int) (baseDamage + (baseDamage * (level * 0.1)));
     }
@@ -26,7 +40,7 @@ public class DefaultPunch extends Ability {
     }
 
     @Override
-    public boolean use(Unit target) {
+    public boolean actuallyUse(Unit target) {
         if (canBeUsed(target)) {
             this.setCurrentCooldown(this.getCooldown());
             doOutput(target);

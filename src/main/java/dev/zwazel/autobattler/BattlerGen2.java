@@ -23,6 +23,7 @@ import java.util.ListIterator;
 
 import static dev.zwazel.autobattler.classes.enums.Side.ENEMY;
 import static dev.zwazel.autobattler.classes.enums.Side.FRIENDLY;
+import static dev.zwazel.autobattler.classes.enums.UnitTypes.NOT_EXISTENT;
 
 public class BattlerGen2 {
     private final Grid grid = new Grid(new Vector(10, 10));
@@ -40,10 +41,10 @@ public class BattlerGen2 {
         enemyUnitList = new ArrayList<>();
 
         try {
-            getDataFromFormationPlan(FRIENDLY, "friendlyFormation.json");
-            getDataFromFormationPlan(ENEMY, "enemyFormation.json");
-//            friendlyUser = getDataFromFormationPlan(FRIENDLY, "friendlyFormationBig.json");
-//            enemyUser = getDataFromFormationPlan(ENEMY, "enemyFormationBig.json");
+//            getDataFromFormationPlan(FRIENDLY, "friendlyFormation.json");
+//            getDataFromFormationPlan(ENEMY, "enemyFormation.json");
+            friendlyUser = getDataFromFormationPlan(FRIENDLY, "friendlyFormationBig.json");
+            enemyUser = getDataFromFormationPlan(ENEMY, "enemyFormationBig.json");
 
             friendlyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
             enemyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
@@ -79,7 +80,6 @@ public class BattlerGen2 {
             while (!fightFinished) {
                 ListIterator<Unit> unitIterator = units.listIterator();
                 while (unitIterator.hasNext()) {
-                    System.out.println("NEW ROUND!");
                     Unit unit = unitIterator.next();
                     Vector posBefore = unit.getGridPosition();
                     // TODO: 27.01.2022 update the way units die, think about how it should work!
@@ -142,7 +142,7 @@ public class BattlerGen2 {
         for (Unit unitChecking : units) {
             if (unitChecking != unit) {
                 if (unitChecking.getSide() == sideToCheck) {
-                    if (includeDead || unitChecking.getMyState() != State.DEAD) {
+                    if ((includeDead || unitChecking.getMyState() != State.DEAD)) {
                         if (checkIfReachable) {
                             FindPath path = new FindPath();
                             Vector vector = path.findClosestNearbyNode(grid, unit.getGridPosition(), unitChecking.getGridPosition());

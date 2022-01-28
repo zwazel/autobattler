@@ -52,7 +52,7 @@ public class HistoryToJson {
                 "}";
 
         json += ",\"target\":{" +
-                ((actionHistory.target() == null) ?
+                ((actionHistory.targets().length > 0) ?
                         "\"id\":\"undefined\"" : "\"id\":" + actionHistory.target().getID() + "," +
                         "\"side\":\"" + actionHistory.target().getSide() + "\"") +
                 "}";

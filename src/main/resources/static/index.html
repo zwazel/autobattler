@@ -2,38 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Hallo</title>
+    <title>Autobattler</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="gamefield.js"></script>
 </head>
 <body>
-<div id="container">
+<div class="container" id="container">
+    <h1>Autobattler</h1>
+    <div id="gamearea">
+        <table id="gameboard">
+        </table>
+    </div>
+    <button type="button" class="btn btn-outline-primary" onclick="setRandomCharacter()">Set random character</button>
 </div>
-<!--<script type="text/javascript" src="playHistory.js"></script>-->
-<table id="gameboard">
-    <tr class="boardRow">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr class="boardRow">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr class="boardRow">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr class="boardRow">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-</table>
+<script>drawField(10, 10)</script>
 </body>
 </html>

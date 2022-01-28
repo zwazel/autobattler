@@ -43,26 +43,34 @@ public class MyFirstUnit extends Unit {
     }
 
     @Override
-    public void moveTowards(Unit target) {
+    public Vector[] moveTowards(Unit target) {
         if (target != null) {
             Node[] nodes = new FindPath().getNextMoveSteps(this.getGridPosition(), target.getGridPosition(), this.getBattler().getGrid(), this.getSpeed());
             if (nodes.length > 0) {
-                for (Node node : nodes) {
+                Vector[] vectors = new Vector[nodes.length];
+                for (int i = 0; i < nodes.length; i++) {
+                    Node node = nodes[i];
+                    vectors[i] = node.getMyGridCell().getPosition();
                     move(node.getMyGridCell().getPosition(), false);
                 }
+                return vectors;
             }
         }
+        return new Vector[0];
     }
 
     @Override
-    public void move(Vector direction, boolean checkIfOccupied) {
+    public boolean move(Vector direction, boolean checkIfOccupied) {
         if (!checkIfOccupied) {
             this.setGridPosition(direction);
+            return true;
         } else {
             if (!this.getBattler().placeOccupied(direction)) {
                 this.setGridPosition(direction);
+                return true;
             }
         }
+        return false;
     }
 
     @Override
@@ -117,6 +125,6 @@ public class MyFirstUnit extends Unit {
                 }
             }
         }
-        return new ActionHistory(todoAction, this, target, suitableAbility, targetPosition);
+        return new ActionHistory(todoAction, this, new Unit[]{target}, suitableAbility, new Vector[]{targetPosition});
     }
 }

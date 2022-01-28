@@ -35,13 +35,13 @@ public class PlaceboUnit extends Unit {
     }
 
     @Override
-    protected void moveTowards(Unit target) {
-
+    protected Vector[] moveTowards(Unit target) {
+        return new Vector[0];
     }
 
     @Override
-    protected void move(Vector direction, boolean checkIfOccupied) {
-
+    protected boolean move(Vector direction, boolean checkIfOccupied) {
+        return false;
     }
 
     @Override

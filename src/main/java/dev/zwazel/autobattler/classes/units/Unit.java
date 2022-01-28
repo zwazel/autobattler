@@ -59,9 +59,9 @@ public abstract class Unit implements Obstacle {
 
     protected abstract Ability findSuitableAbility();
 
-    protected abstract void moveTowards(Unit target);
+    protected abstract Vector[] moveTowards(Unit target);
 
-    protected abstract void move(Vector direction, boolean checkIfOccupied);
+    protected abstract boolean move(Vector direction, boolean checkIfOccupied);
 
     protected abstract void moveRandom();
 

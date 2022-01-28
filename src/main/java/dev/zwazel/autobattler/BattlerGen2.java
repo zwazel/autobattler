@@ -134,7 +134,7 @@ public class BattlerGen2 {
         return cell.getCurrentObstacle() != null;
     }
 
-    // TODO: 28.01.2022 use a pathfinding like algorithm that goes from current node of unit and checks all the neighbours if there is someone, the first one found is considered the closest one 
+    // TODO: 28.01.2022 use a pathfinding like algorithm that goes from current node of unit and checks all the neighbours if there is someone, the first one found is considered the closest one
     public Unit findClosestOther(Unit unit, Side sideToCheck, boolean checkIfReachable, boolean includeDead) {
         Unit closestUnit = null;
         Double shortestDistance = -1d;

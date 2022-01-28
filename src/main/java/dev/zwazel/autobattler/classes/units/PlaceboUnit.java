@@ -1,6 +1,5 @@
 package dev.zwazel.autobattler.classes.units;
 
-import dev.zwazel.autobattler.BattlerGen2;
 import dev.zwazel.autobattler.classes.Utils.Vector;
 import dev.zwazel.autobattler.classes.Utils.json.ActionHistory;
 import dev.zwazel.autobattler.classes.abilities.Ability;
@@ -12,7 +11,7 @@ import dev.zwazel.autobattler.classes.enums.UnitTypes;
  */
 public class PlaceboUnit extends Unit {
     public PlaceboUnit(Vector position, Vector gridSize) {
-        super(-1, -1, "", "", -1, -1, '-', position, gridSize,-1,null, Side.ENEMY,-1,UnitTypes.NOT_EXISTENT);
+        super(-1, -1, "", "", -1, -1, '-', position, gridSize, -1, null, Side.ENEMY, -1, UnitTypes.NOT_EXISTENT);
     }
 
     @Override
@@ -41,7 +40,7 @@ public class PlaceboUnit extends Unit {
     }
 
     @Override
-    protected void move(Vector direction) {
+    protected void move(Vector direction, boolean checkIfOccupied) {
 
     }
 

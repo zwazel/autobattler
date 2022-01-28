@@ -9,8 +9,7 @@ public class FindPath {
     PriorityQueue<Node> openList = new PriorityQueue<>(1, new NodeComparator());
     HashSet<Node> closedList = new HashSet<>();
 
-    // TODO: 27.01.2022 return array in correct, and not reversed, order!
-    public Node findPath(Vector start, Vector end, GridGraph grid) {
+    public Node[] findPath(Vector start, Vector end, GridGraph grid) {
         Node node = grid.getNodes()[start.getX()][start.getY()];
         node.setCost(0);
         openList.add(node);
@@ -18,13 +17,13 @@ public class FindPath {
         while (!openList.isEmpty()) {
             Node currentNode = openList.poll();
             if (currentNode.getMyGridCell().getPosition().equals(end)) {
-                return currentNode;
+                return getPathInCorrectOrder(currentNode, true);
             }
             closedList.add(currentNode);
             expandNode(currentNode, end);
         }
 
-        return null;
+        return new Node[0];
     }
 
     private void expandNode(Node currentNode, Vector end) {
@@ -48,28 +47,27 @@ public class FindPath {
         }
     }
 
-    // TODO: 27.01.2022 return array in correct, and not reversed, order!
-    public Node getNextMoveSteps(Vector start, Vector vectorToGo, Grid grid, int moveCount) {
+    public Node[] getNextMoveSteps(Vector start, Vector vectorToGo, Grid grid, int moveCount) {
+        if (moveCount <= 0) {
+            return new Node[0];
+        }
         FindPath findPath = new FindPath();
-        Node node = findPath.findPath(start, vectorToGo, new GridGraph(grid));
+        Node[] path = findPath.findPath(start, vectorToGo, new GridGraph(grid));
 
-        if (node == null) {
+        if (path.length <= 0) {
             vectorToGo = findClosestNearbyNode(grid, start, vectorToGo);
             if (vectorToGo != null) {
-                node = findPath.findPath(start, vectorToGo, new GridGraph(grid));
+                path = findPath.findPath(start, vectorToGo, new GridGraph(grid));
             }
         }
 
-        if (node != null) {
-            int amountPredecessor = node.countHowManyPredecessors();
-            if (amountPredecessor > moveCount) {
-                for (int i = amountPredecessor; i > moveCount; i--) {
-                    node = node.getPredecessor();
-                }
-            }
+        if (path.length > 0) {
+            Node[] nodes = new Node[moveCount];
+            System.arraycopy(path, 0, nodes, 0, moveCount);
+            return nodes;
         }
 
-        return node;
+        return new Node[0];
     }
 
     public Vector findClosestNearbyNode(Grid grid, Vector start, Vector end) {
@@ -103,5 +101,19 @@ public class FindPath {
             System.out.print("\n" + "\t".repeat(Math.max(0, counter++)) + node.getMyGridCell().getPosition());
             node = node.getPredecessor();
         }
+        System.out.println();
+    }
+
+    private Node[] getPathInCorrectOrder(Node node, boolean excludeStart) {
+        int amountPredecessor = node.countHowManyPredecessors() + 1;
+        if (excludeStart) amountPredecessor--;
+        Node[] nodes = new Node[amountPredecessor];
+
+        for (int i = amountPredecessor - 1; i >= 0; i--) {
+            nodes[i] = node;
+            node = node.getPredecessor();
+        }
+
+        return nodes;
     }
 }

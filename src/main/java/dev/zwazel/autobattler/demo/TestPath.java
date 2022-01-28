@@ -7,44 +7,34 @@ import dev.zwazel.autobattler.classes.Utils.map.GridGraph;
 import dev.zwazel.autobattler.classes.Utils.map.Node;
 import dev.zwazel.autobattler.classes.units.SimpleWall;
 
-import java.util.ArrayList;
-
 public class TestPath {
     public static void main(String[] args) {
         Grid grid = new Grid(new Vector(5, 5));
 
         grid.getGridCells()[1][0].setCurrentObstacle(new SimpleWall());
         grid.getGridCells()[1][1].setCurrentObstacle(new SimpleWall());
-//        grid.getGridCells()[1][2].setCurrentObstacle(new SimpleWall());
+        grid.getGridCells()[1][2].setCurrentObstacle(new SimpleWall());
         grid.getGridCells()[1][3].setCurrentObstacle(new SimpleWall());
-        grid.getGridCells()[1][4].setCurrentObstacle(new SimpleWall());
+//        grid.getGridCells()[1][4].setCurrentObstacle(new SimpleWall());
         grid.getGridCells()[3][3].setCurrentObstacle(new SimpleWall());
-        grid.getGridCells()[4][3].setCurrentObstacle(new SimpleWall());
+        grid.getGridCells()[3][4].setCurrentObstacle(new SimpleWall());
+//        grid.getGridCells()[4][3].setCurrentObstacle(new SimpleWall());
 
         Vector start = new Vector(0, 0);
         Vector end = new Vector(4, 4);
-        ArrayList<Node> nodes = new ArrayList<>();
 
         FindPath findPath = new FindPath();
-        Node node = findPath.findPath(start, end, new GridGraph(grid));
+        Node[] path = findPath.findPath(start, end, new GridGraph(grid));
 
         System.out.println("PATH");
-        if (node == null) {
+        if (path.length <= 0) {
             System.out.println("no path found");
-        } else {
-            nodes.add(node);
-            while (node != null) {
-                node = node.getPredecessor();
-                if (node != null) {
-                    nodes.add(node);
-                }
-            }
         }
         System.out.println("PATH VISUALIZED");
-        drawGrid(grid, nodes, start, end);
+        drawGrid(grid, path, start, end);
     }
 
-    private static void drawGrid(Grid grid, ArrayList<Node> nodes, Vector start, Vector end) {
+    private static void drawGrid(Grid grid, Node[] path, Vector start, Vector end) {
         StringBuilder vertical = new StringBuilder();
         vertical.append("-".repeat((grid.getWidth()) * 4 + 1));
 
@@ -64,8 +54,7 @@ public class TestPath {
                 } else if (gridPositionNow.equals(end)) {
                     character = "X";
                 } else {
-                    for (int i = nodes.size() - 2; i >= 0; i--) {
-                        Node node = nodes.get(i);
+                    for (Node node : path) {
                         Vector nodePos = node.getMyGridCell().getPosition();
                         if (nodePos.equals(gridPositionNow)) {
                             character = "~";

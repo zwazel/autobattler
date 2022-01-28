@@ -61,7 +61,7 @@ public abstract class Unit implements Obstacle {
 
     protected abstract void moveTowards(Unit target);
 
-    protected abstract void move(Vector direction);
+    protected abstract void move(Vector direction, boolean checkIfOccupied);
 
     protected abstract void moveRandom();
 

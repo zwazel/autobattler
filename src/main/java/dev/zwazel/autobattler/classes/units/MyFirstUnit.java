@@ -45,27 +45,24 @@ public class MyFirstUnit extends Unit {
     @Override
     public void moveTowards(Unit target) {
         if (target != null) {
-            // TODO: 27.01.2022 findpath should return an array of vectors in the correct order!
-            // TODO: 27.01.2022 currently, if we move more then 1, we move to the one the furthest away and then to the one that is the closest. -> stupid.
-            Node node = new FindPath().getNextMoveSteps(this.getGridPosition(), target.getGridPosition(), this.getBattler().getGrid(), this.getSpeed());
-            if (node != null) {
-                Vector currentPos = this.getGridPosition();
-                boolean reachedEndOfPath = false;
-                while (node != null && !reachedEndOfPath) {
-                    if (currentPos.equals(node.getMyGridCell().getPosition())) {
-                        reachedEndOfPath = true;
-                    } else {
-                        move(node.getMyGridCell().getPosition());
-                        node = node.getPredecessor();
-                    }
+            Node[] nodes = new FindPath().getNextMoveSteps(this.getGridPosition(), target.getGridPosition(), this.getBattler().getGrid(), this.getSpeed());
+            if (nodes.length > 0) {
+                for (Node node : nodes) {
+                    move(node.getMyGridCell().getPosition(), false);
                 }
             }
         }
     }
 
     @Override
-    public void move(Vector direction) {
-        this.setGridPosition(direction);
+    public void move(Vector direction, boolean checkIfOccupied) {
+        if (!checkIfOccupied) {
+            this.setGridPosition(direction);
+        } else {
+            if (!this.getBattler().placeOccupied(direction)) {
+                this.setGridPosition(direction);
+            }
+        }
     }
 
     @Override
@@ -73,7 +70,7 @@ public class MyFirstUnit extends Unit {
         Random rand = new Random();
         int n = rand.nextInt(Vector.DIRECTION.values().length);
         Vector direction = Vector.DIRECTION.values()[n].getDirection();
-        move(direction);
+        move(direction, true);
     }
 
     @Override
@@ -83,7 +80,7 @@ public class MyFirstUnit extends Unit {
 
     @Override
     public void die() {
-        System.out.println("unit " + this.getName() + "(" +this.getID()+ ")" + " died! (" + this.getSide() + ")" + " last hitter: " + this.getLastHitter().getName() + "(" +this.getLastHitter().getID()+ ")");
+        System.out.println("unit " + this.getName() + "(" + this.getID() + ")" + " died! (" + this.getSide() + ")" + " last hitter: " + this.getLastHitter().getName() + "(" + this.getLastHitter().getID() + ")");
         setMyState(State.DEAD);
     }
 

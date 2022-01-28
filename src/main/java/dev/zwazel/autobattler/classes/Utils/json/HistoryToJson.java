@@ -2,8 +2,10 @@ package dev.zwazel.autobattler.classes.Utils.json;
 
 import com.google.gson.Gson;
 import dev.zwazel.autobattler.classes.Utils.Formation;
+import dev.zwazel.autobattler.classes.Utils.Vector;
 import dev.zwazel.autobattler.classes.units.Unit;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 public class HistoryToJson {
@@ -44,34 +46,45 @@ public class HistoryToJson {
     private static String actionHistoryToJson(ActionHistory actionHistory) {
         Gson gson = new Gson();
 
-        String json = "{";
+        StringBuilder json = new StringBuilder("{");
 
-        json += "\"user\":{" +
-                "\"id\":" + actionHistory.user().getID() + "," +
-                "\"side\":\"" + actionHistory.user().getSide() + "\"" +
-                "}";
+        json.append("\"user\":{" + "\"id\":").append(actionHistory.user().getID()).append(",").append("\"side\":\"").append(actionHistory.user().getSide()).append("\"").append("}");
 
-        json += ",\"target\":{" +
-                ((actionHistory.target() == null) ?
-                        "\"id\":\"undefined\"" : "\"id\":" + actionHistory.target().getID() + "," +
-                        "\"side\":\"" + actionHistory.target().getSide() + "\"") +
-                "}";
+//        System.out.println("HALLO DA GIBT ERROR");
+//        System.out.println(Arrays.toString(actionHistory.targets()));
 
-        json += ",\"ability\":{" +
-                ((actionHistory.ability() == null) ?
-                        "\"title\":\"undefined\"" : "\"title\":\"" + actionHistory.ability().getTitle() + "\"" +
-                        ",\"targetSide\":\"" + actionHistory.ability().getTargetSide() + "\"" +
-                        ",\"outPutType\":" + "\"" + actionHistory.ability().getOutputType() + "\""
-                ) +
-                "}";
+        json.append(",\"targets\":[");
+        int counter = 0;
+        for (Unit unit : actionHistory.targets()) {
+            json.append("{\"id\":").append(unit.getID()).append(",").append("\"side\":\"").append(unit.getSide()).append("\"").append("}");
+            if (counter < actionHistory.targets().length) {
+                counter++;
+                json.append(",");
+            }
+        }
+        json.append("]");
 
-        json += ",\"type\":" + "\"" + actionHistory.actionType() + "\"";
+        json.append(",\"ability\":{").append((actionHistory.ability() == null) ?
+                "\"title\":\"undefined\"" : "\"title\":\"" + actionHistory.ability().getTitle() + "\"" +
+                ",\"targetSide\":\"" + actionHistory.ability().getTargetSide() + "\"" +
+                ",\"outPutType\":" + "\"" + actionHistory.ability().getOutputType() + "\"").append("}");
 
-        json += ",\"position\":" + gson.toJson(actionHistory.position());
+        json.append(",\"type\":" + "\"").append(actionHistory.actionType()).append("\"");
 
-        json += "}";
+        json.append(",\"positions\":[");
+        counter = 0;
+        for (Vector position : actionHistory.positions()) {
+            json.append(gson.toJson(position));
+            if (counter < actionHistory.positions().length) {
+                counter++;
+                json.append(",");
+            }
+        }
+        json.append("]");
 
-        return json;
+        json.append("}");
+
+        return json.toString();
     }
 
     private static String formationToJson(Formation formation) {

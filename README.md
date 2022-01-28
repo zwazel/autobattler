@@ -16,6 +16,13 @@
     - Zusätzlichen Schaden an "anderst Farbigen"
 - Kindsmisshandler
     - Extra Damage an Kinder
+- Grösse
+    - Klein
+        - Wird selten von Fernkampfwaffen getroffen
+        - Macht weniger schaden an grossen
+    - Gross
+        - Macht starken schaden an kleinen
+        - Trifft selten kleine
 
 ## Unit ideas
 
@@ -32,7 +39,9 @@
     - Fähigkeiten
         - Ice hockey, rammt immer gegner und schadet sich dabei selber. knockt sich teilweise selber aus für einen
           Moment
+    - Eigenschaften
         - Rassist
+        - Gross
 - Dennis
     - Humor
         - Schwarzer Humor
@@ -65,6 +74,8 @@
         - Deutscher Humor
     - Schwächen
         - hat schwäche gegenüber frauen, ist simp. wird abgelenkt
+            - Wenn er Nadina sieht, egal auf welchem Team sie ist, geht er zu ihr und vergisst das er kämpfen sollte (
+              das er eine Aufgabe hat)
 - Moritz
     - Humor
         - Flachwitze (aber extrem stark, doppelter effekt)
@@ -82,10 +93,13 @@
         - Schadensfreude
         - Meme-affin
     - Fähigkeiten
-        - extra schaden an kinder
-        - rassist, mehr damage an "anderst farbige"
+        - idk
     - Schwäche
         - 02 simp
+    - Eigenschaften
+        - Rassist
+        - Gross
+        - Kindsmisshandler
 - Nadina
     - Humor
         - Something
@@ -93,6 +107,22 @@
         - Something else
     - Schwäche
         - anotherone
+- Noel Schärer
+    - Humor
+        - idk
+    - Fähigkeiten
+        - Ist so klein das Fernkampfwaffen ihn nicht treffen
+    - Schwäche
+        - Ist klein
+- Parwiz
+    - Humor
+        - idk
+    - Fähigkeiten
+        - idk
+    - Schwäche
+        - Kommt immer zu spät in den Kampf, manchmal vergisst er es komplett oder verwechselt wo er eigentlich sein
+          sollte (geht ins falsche team? kommt in einem anderen kampf plötzlich unerwartet wo niemand ihn ausgewählt
+          hat?)
 - Leon
     - Humor
         - Deutscher Humor

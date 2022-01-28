@@ -1,8 +1,10 @@
 package dev.zwazel.autobattler.classes.units;
 
 import dev.zwazel.autobattler.BattlerGen2;
-import dev.zwazel.autobattler.classes.Utils.json.ActionHistory;
 import dev.zwazel.autobattler.classes.Utils.Vector;
+import dev.zwazel.autobattler.classes.Utils.json.ActionHistory;
+import dev.zwazel.autobattler.classes.Utils.map.FindPath;
+import dev.zwazel.autobattler.classes.Utils.map.Node;
 import dev.zwazel.autobattler.classes.abilities.Ability;
 import dev.zwazel.autobattler.classes.abilities.DefaultPunch;
 import dev.zwazel.autobattler.classes.enums.Action;
@@ -41,48 +43,34 @@ public class MyFirstUnit extends Unit {
     }
 
     @Override
-    public void moveTowards(Unit target) {
+    public Vector[] moveTowards(Unit target) {
         if (target != null) {
-            Vector dir = this.getGridPosition().directionTo(target.getGridPosition());
-//            System.out.println("direction " + this.getID() + " to " + target.getID() + " = " + dir);
-            move(dir);
+            Node[] nodes = new FindPath().getNextMoveSteps(this.getGridPosition(), target.getGridPosition(), this.getBattler().getGrid(), this.getSpeed());
+            if (nodes.length > 0) {
+                Vector[] vectors = new Vector[nodes.length];
+                for (int i = 0; i < nodes.length; i++) {
+                    Node node = nodes[i];
+                    vectors[i] = node.getMyGridCell().getPosition();
+                    move(node.getMyGridCell().getPosition(), false);
+                }
+                return vectors;
+            }
         }
+        return new Vector[0];
     }
 
     @Override
-    public void move(Vector direction) {
-//        System.out.println("unit " + this.getID() + " is moving, direction = " + direction + ":");
-        Vector temp = new Vector(this.getGridPosition());
-        for (int i = 0; i < this.getSpeed(); i++) {
-            temp.add(direction);
-//            System.out.println("\ttemp = " + temp);
-            boolean placeOccupied = this.getBattler().placeOccupied(temp);
-//            System.out.println("\tplaceOccupied = " + placeOccupied);
-            boolean canChangeDir = direction.getX() != 0 && direction.getY() != 0;
-//            System.out.println("\tcanChangeDir = " + canChangeDir);
-            int counter = 0;
-            int tempDir = 0;
-            while (canChangeDir && placeOccupied) {
-                if (counter == 0) {
-                    tempDir = temp.getY();
-                    temp.setY(this.getGridPosition().getY());
-                } else {
-                    temp.setY(tempDir);
-                    temp.setX(this.getGridPosition().getX());
-                    canChangeDir = false;
-                }
-//                System.out.println("\ttemp after checking other direction = " + temp);
-                placeOccupied = this.getBattler().placeOccupied(temp);
-                counter++;
-            }
-            if (!placeOccupied && !temp.greaterThan(this.getGridSize()) && !temp.smallerThan(new Vector(0, 0))) {
-//                System.out.println("\tpos not occupied, moving to " + temp);
-                this.setGridPosition(temp);
-            } else {
-//                System.out.println("\tunit couldnt move!");
-                break;
+    public boolean move(Vector direction, boolean checkIfOccupied) {
+        if (!checkIfOccupied) {
+            this.setGridPosition(direction);
+            return true;
+        } else {
+            if (!this.getBattler().placeOccupied(direction)) {
+                this.setGridPosition(direction);
+                return true;
             }
         }
+        return false;
     }
 
     @Override
@@ -90,26 +78,26 @@ public class MyFirstUnit extends Unit {
         Random rand = new Random();
         int n = rand.nextInt(Vector.DIRECTION.values().length);
         Vector direction = Vector.DIRECTION.values()[n].getDirection();
-        move(direction);
+        move(direction, true);
     }
 
     @Override
     public Unit findTargetUnit(Side side) {
-        return getBattler().findClosestOther(this, side, false);
+        return getBattler().findClosestOther(this, side, true, false);
     }
 
     @Override
     public void die() {
-        System.out.println("unit " + this.getName() + " died! (" + this.getSide() + ")" + " last hitter: " + this.getLastHitter().getName());
+        System.out.println("unit " + this.getName() + "(" + this.getID() + ")" + " died! (" + this.getSide() + ")" + " last hitter: " + this.getLastHitter().getName() + "(" + this.getLastHitter().getID() + ")");
         setMyState(State.DEAD);
     }
 
     @Override
     public ActionHistory run() {
         Action todoAction = null;
-        Unit target = null;
+        Unit[] targets = new Unit[0];
         Ability suitableAbility = null;
-        Vector targetPosition = null;
+        Vector[] targetPosition = new Vector[0];
         if (this.getHealth() <= 0) {
             die();
             todoAction = Action.DIE;
@@ -124,19 +112,21 @@ public class MyFirstUnit extends Unit {
             todoAction = (suitableAbility == null) ? Action.CHASE : Action.USE_ABILITY;
             switch (todoAction) {
                 case CHASE -> {
-                    target = findTargetUnit(this.getSide().getOpposite());
-                    moveTowards(target);
-                    targetPosition = this.getGridPosition();
+                    Unit target = findTargetUnit(this.getSide().getOpposite());
+                    if(target != null) {
+                        targets = new Unit[]{target};
+                        targetPosition = moveTowards(targets[0]);
+                    }
                 }
                 case USE_ABILITY -> {
-                    target = findTargetUnit(suitableAbility.getTargetSide());
-                    suitableAbility.use(target);
+                    targets = new Unit[]{findTargetUnit(suitableAbility.getTargetSide())};
+                    suitableAbility.use(targets[0]);
                 }
                 case RETREAT -> {
 
                 }
             }
         }
-        return new ActionHistory(todoAction, this, target, suitableAbility, targetPosition);
+        return new ActionHistory(todoAction, this, targets, suitableAbility, targetPosition);
     }
 }

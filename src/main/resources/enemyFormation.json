@@ -1,14 +1,14 @@
 {
   "user": {
     "id": 0,
-    "username": "Enemy"
+    "username": "Mütz"
   },
   "formation": [
     {
-      "id": 1,
+      "id": 2,
       "type": "MY_FIRST_UNIT",
       "name": "Moritz",
-      "level": 100,
+      "level": 2,
       "priority": 1,
       "position": {
         "x": 8,

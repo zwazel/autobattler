@@ -4,8 +4,5 @@ public enum Action {
     CHASE,
     USE_ABILITY,
     RETREAT,
-    DIE;
-
-    Action() {
-    }
+    DIE
 }

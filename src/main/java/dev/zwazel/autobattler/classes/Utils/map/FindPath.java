@@ -62,8 +62,9 @@ public class FindPath {
         }
 
         if (path.length > 0) {
-            Node[] nodes = new Node[moveCount];
-            System.arraycopy(path, 0, nodes, 0, moveCount);
+            int length = Math.min(path.length, moveCount);
+            Node[] nodes = new Node[length];
+            System.arraycopy(path, 0, nodes, 0, length);
             return nodes;
         }
 

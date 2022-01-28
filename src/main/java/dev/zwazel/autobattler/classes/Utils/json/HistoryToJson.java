@@ -72,8 +72,13 @@ public class HistoryToJson {
         json.append(",\"type\":" + "\"").append(actionHistory.actionType()).append("\"");
 
         json.append(",\"positions\":[");
+        counter = 0;
         for (Vector position : actionHistory.positions()) {
             json.append(gson.toJson(position));
+            if (counter < actionHistory.positions().length) {
+                counter++;
+                json.append(",");
+            }
         }
         json.append("]");
 

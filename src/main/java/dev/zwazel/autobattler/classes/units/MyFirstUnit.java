@@ -112,8 +112,11 @@ public class MyFirstUnit extends Unit {
             todoAction = (suitableAbility == null) ? Action.CHASE : Action.USE_ABILITY;
             switch (todoAction) {
                 case CHASE -> {
-                    targets = new Unit[]{findTargetUnit(this.getSide().getOpposite())};
-                    targetPosition = moveTowards(targets[0]);
+                    Unit target = findTargetUnit(this.getSide().getOpposite());
+                    if(target != null) {
+                        targets = new Unit[]{target};
+                        targetPosition = moveTowards(targets[0]);
+                    }
                 }
                 case USE_ABILITY -> {
                     targets = new Unit[]{findTargetUnit(suitableAbility.getTargetSide())};

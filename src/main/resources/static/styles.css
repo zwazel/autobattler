@@ -26,12 +26,12 @@
 #gameboard tr td {
     height: 100px;
     width: 100px;
-    background-image: url("../img/grassTile.png");
+    background-image: url("../img/grassTextuteTile.jpg");
     text-align: center;
 }
 
 #gameboard tr td:hover {
-    background: linear-gradient(rgba(122, 122, 122, 0.5), rgba(122, 122, 122, 0.5)), url("../img/grassTile.png");
+    background: linear-gradient(rgba(122, 122, 122, 0.5), rgba(122, 122, 122, 0.5)), url("../img/grassTextuteTile.jpg");
 }
 
 .boardRow {
@@ -49,8 +49,12 @@ table {
     padding: 0;
 }
 
-.characterIcon {
+.characterIconImage {
     width: 90px;
     height: 90px;
     text-align: center;
+    padding: 0;
+    margin: 0;
 }
+
+

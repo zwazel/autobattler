@@ -1,6 +1,6 @@
 let rows;
 let columns;
-const characterImageHtml = "<img src=\"../img/circle_01.png\" class=\"characterIcon\">";
+const characterImageHtml = "characterIcon.html";
 
 function drawField(_rows, _columns) {
     rows = _rows;
@@ -25,6 +25,6 @@ function setRandomCharacter(){
     const gameBoad = document.getElementById("gameboard")
     let rowPos = Math.floor(Math.random() * rows + 1);
     let columnPos = Math.floor(Math.random() * columns + 1);
-    let specificCell = gameBoad.rows[rowPos].cells[columnPos].innerHTML = characterImageHtml;
+    $(gameBoad.rows[rowPos].cells[columnPos]).load("characterIcon.html");
 
 }

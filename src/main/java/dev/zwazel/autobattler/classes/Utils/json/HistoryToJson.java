@@ -5,7 +5,6 @@ import dev.zwazel.autobattler.classes.Utils.Formation;
 import dev.zwazel.autobattler.classes.Utils.Vector;
 import dev.zwazel.autobattler.classes.units.Unit;
 
-import java.util.Arrays;
 import java.util.Iterator;
 
 public class HistoryToJson {
@@ -91,7 +90,7 @@ public class HistoryToJson {
         Gson gson = new Gson();
         StringBuilder json = new StringBuilder("[");
 
-        Iterator<Unit> iterator = formation.getUnits().iterator();
+        Iterator<Unit> iterator = formation.units().iterator();
         while (iterator.hasNext()) {
             Unit unit = iterator.next();
             json.append("{");

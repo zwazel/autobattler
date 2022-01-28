@@ -11,7 +11,7 @@ import dev.zwazel.autobattler.classes.enums.UnitTypes;
  */
 public class PlaceboUnit extends Unit {
     public PlaceboUnit(Vector position, Vector gridSize) {
-        super(-1, -1, "", "", -1, -1, '-', position, gridSize, -1, null, Side.ENEMY, -1, UnitTypes.NOT_EXISTENT);
+        super(-1, -1, "I SHOULDNT BE HERE I AM PLACEBO!!", "", -1, -1, '-', position, gridSize, -1, null, Side.ENEMY, -1, UnitTypes.NOT_EXISTENT);
     }
 
     @Override

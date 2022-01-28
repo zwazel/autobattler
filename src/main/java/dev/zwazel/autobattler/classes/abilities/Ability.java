@@ -40,13 +40,8 @@ public abstract class Ability extends RoundAffected {
 
     public abstract String[] getUseMessages();
 
-    // TODO: 28.01.2022 bug
+    // TODO: 28.01.2022 bug: THEY ATTACK PLACEBO UNITS??? HOW AND WHY???
     public String getRandomUseMessage(Unit target) {
-        if (target.getName().isEmpty() || target.getName().isBlank()) {
-            System.out.println("error!!!");
-            System.out.println("target=\n"+target);
-            System.out.println("this=\n" + this.owner);
-        }
         Random rand = new Random();
         return this.useMessages[rand.nextInt(this.useMessages.length)].replace("$targetName", target.getName());
     }

@@ -15,3 +15,22 @@
     border: 1px solid #ddd;
     text-align: center;
 }
+
+#gameboard{
+border-spacing: 0px;
+}
+#gameboard tr td{
+    /*border: 3px solid pink;*/
+    width: 100px;
+    height: 100px;
+    background-image: url("../img/grassTile.png");
+    text-align: center;
+}
+#gameboard tr td:hover{
+    background:linear-gradient(rgba(122, 122, 122, 0.5), rgba(122, 122, 122,0.5)), url("../img/grassTile.png");
+}
+
+.boardRow{
+}
+.cell:hover{
+}

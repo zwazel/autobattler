@@ -129,7 +129,7 @@ public class BattlerGen2 {
     }
 
     public static void main(String[] args) {
-        new BattlerGen2(true, new Vector(10, 10));
+        new BattlerGen2(true, new Vector(15, 10));
     }
 
     public boolean placeOccupied(Vector toGo) {

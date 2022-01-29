@@ -74,14 +74,8 @@ function initUnits(units) {
     for (let i = 0; i < units.length; i++) {
         let unit = units[i];
         let unitPos = unit.position;
-        let currentCell = $(gameBoard.rows[unitPos.y].cells[unitPos.x]).children(".unitCellWrapper").append(getUnitIcon(unit.id, unit.name));
+        $(gameBoard.rows[unitPos.y].cells[unitPos.x]).children(".unitCellWrapper").append(getUnitIcon(unit.id, unit.name));
     }
-}
-
-function setRandomCharacter() {
-    let rowPos = Math.floor(Math.random() * rows + 1);
-    let columnPos = Math.floor(Math.random() * columns + 1);
-    $(gameBoard.rows[rowPos].cells[columnPos]).load(characterImageHtml);
 }
 
 loadGridSize()

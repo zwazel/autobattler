@@ -15,7 +15,7 @@
     <name>autobattler</name>
     <description>A basic autobattler</description>
     <properties>
-        <java.version>17</java.version>
+        <java.version>17.0.2</java.version>
     </properties>
     <dependencies>
         <dependency>
@@ -73,8 +73,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>17</source>
-                    <target>17</target>
+                    <source>17.0.2</source>
+                    <target>17.0.2</target>
                 </configuration>
             </plugin>
         </plugins>

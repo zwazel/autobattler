@@ -7,32 +7,32 @@ public class GridGraph {
     private final Node[][] nodes;
 
     public GridGraph(Grid grid) {
-        int rows = grid.getHeight();
         int cols = grid.getWidth();
+        int rows = grid.getHeight();
 
-        nodes = new Node[rows][cols];
+        nodes = new Node[cols][rows];
 
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+        for (int i = 0; i < cols; i++) {
+            for (int j = 0; j < rows; j++) {
                 nodes[i][j] = new Node(grid.getGridCells()[i][j]);
             }
         }
 
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < cols; c++) {
-                Node n = nodes[r][c];
+        for (int c = 0; c < cols; c++) {
+            for (int r = 0; r < rows; r++) {
+                Node n = nodes[c][r];
                 List<Node> neighbors = n.getMyNeighbors();
-                if (r > 0) {     // has north
-                    neighbors.add(nodes[r - 1][c]);
+                if (c > 0) {     // has north
+                    neighbors.add(nodes[c - 1][r]);
                 }
-                if (r < rows - 1) { // has south
-                    neighbors.add(nodes[r + 1][c]);
+                if (c < cols - 1) { // has south
+                    neighbors.add(nodes[c + 1][r]);
                 }
-                if (c > 0) {     // has west
-                    neighbors.add(nodes[r][c - 1]);
+                if (r > 0) {     // has west
+                    neighbors.add(nodes[c][r - 1]);
                 }
-                if (c < cols - 1) { // has east
-                    neighbors.add(nodes[r][c + 1]);
+                if (r < rows - 1) { // has east
+                    neighbors.add(nodes[c][r + 1]);
                 }
             }
         }

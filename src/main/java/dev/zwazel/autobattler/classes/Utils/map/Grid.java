@@ -13,9 +13,9 @@ public class Grid {
     public Grid(Vector size) {
         width = size.getX();
         height = size.getY();
-        gridCells = new GridCell[height][width];
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
+        gridCells = new GridCell[width][height];
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
                 gridCells[i][j] = new GridCell(i, j);
             }
         }

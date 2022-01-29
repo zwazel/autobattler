@@ -129,7 +129,7 @@ public class BattlerGen2 {
     }
 
     public static void main(String[] args) {
-        new BattlerGen2(true, new Vector(15, 10));
+        new BattlerGen2(true, new Vector(10, 10));
     }
 
     public boolean placeOccupied(Vector toGo) {
@@ -211,7 +211,6 @@ public class BattlerGen2 {
         for (int i = 0; i < jsonArray.size(); i++) {
             JsonObject unit = jsonArray.get(i).getAsJsonObject();
             Unit actualUnit = UnitTypeParser.getUnit(unit, this, side);
-            // TODO: 27.01.2022 uncomment once we figure out how to get to closest point besides it
             grid.updateOccupiedGrid(actualUnit.getGridPosition(), actualUnit);
             switch (side) {
                 case FRIENDLY -> friendlyUnitList.add(actualUnit);

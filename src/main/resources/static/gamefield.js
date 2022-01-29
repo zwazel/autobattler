@@ -25,9 +25,9 @@ function drawField(_rows, _columns) {
     const htmlforCell = "<td></td>"
     let gameBoardBuildingSting = "";
 
-    for (let i = 1; i <= rows; i++) {
+    for (let i = 1; i <= columns; i++) {
         gameBoardBuildingSting += htmlForRow;
-        for (let j = 1; j <= columns; j++) {
+        for (let j = 1; j <= rows; j++) {
             gameBoardBuildingSting += htmlforCell;
         }
         gameBoardBuildingSting += "</tr>";

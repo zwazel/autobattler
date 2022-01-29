@@ -21,7 +21,7 @@ function drawField(_rows, _columns) {
     gameBoad.innerHTML = gameBoardBuildingSting
 }
 
-function setRandomCharacter(){
+function setRandomCharacter() {
     const gameBoad = document.getElementById("gameboard")
     let rowPos = Math.floor(Math.random() * rows + 1);
     let columnPos = Math.floor(Math.random() * columns + 1);

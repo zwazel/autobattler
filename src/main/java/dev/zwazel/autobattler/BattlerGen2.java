@@ -128,7 +128,7 @@ public class BattlerGen2 {
     }
 
     public static void main(String[] args) {
-        new BattlerGen2(false);
+        new BattlerGen2(true);
     }
 
     public boolean placeOccupied(Vector toGo) {

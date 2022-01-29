@@ -1,17 +1,60 @@
-:root {
-    --grid-cols: 1;
-    --grid-rows: 1;
+/*:root {*/
+/*    --grid-cols: 1;*/
+/*    --grid-rows: 1;*/
+/*}*/
+
+#gamearea {
+    width: 100%;
 }
 
 #container {
-    display: grid;
-    grid-gap: 1em;
-    grid-template-rows: repeat(var(--grid-rows), 1fr);
-    grid-template-columns: repeat(var(--grid-cols), 1fr);
+    color: black;
+    text-align: center
 }
 
-.grid-item {
-    padding: 1em;
-    border: 1px solid #ddd;
+/*.grid-item {*/
+/*    padding: 1em;*/
+/*    border: 1px solid #ddd;*/
+/*    text-align: center;*/
+/*}*/
+
+#gameboard {
+    border: 5px solid black;
+    padding: 0px;
+}
+
+#gameboard tr td {
+    height: 100px;
+    width: 100px;
+    background-image: url("../img/grassTextuteTile.jpg");
     text-align: center;
 }
+
+#gameboard tr td:hover {
+    background: linear-gradient(rgba(122, 122, 122, 0.5), rgba(122, 122, 122, 0.5)), url("../img/grassTextuteTile.jpg");
+}
+
+.boardRow {
+}
+
+.cell:hover {
+}
+
+body {
+    background-image: url("../img/woodTexture.jpg");
+}
+
+table {
+    margin: 0;
+    padding: 0;
+}
+
+.characterIconImage {
+    width: 90px;
+    height: 90px;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+}
+
+

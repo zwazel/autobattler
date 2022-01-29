@@ -56,7 +56,7 @@ public class HistoryToJson {
         int counter = 0;
         for (Unit unit : actionHistory.targets()) {
             json.append("{\"id\":").append(unit.getID()).append(",").append("\"side\":\"").append(unit.getSide()).append("\"").append("}");
-            if (counter < actionHistory.targets().length) {
+            if (counter < actionHistory.targets().length-1) {
                 counter++;
                 json.append(",");
             }
@@ -74,7 +74,7 @@ public class HistoryToJson {
         counter = 0;
         for (Vector position : actionHistory.positions()) {
             json.append(gson.toJson(position));
-            if (counter < actionHistory.positions().length) {
+            if (counter < actionHistory.positions().length-1) {
                 counter++;
                 json.append(",");
             }

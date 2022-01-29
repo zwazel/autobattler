@@ -24,7 +24,7 @@ import static dev.zwazel.autobattler.classes.enums.Side.ENEMY;
 import static dev.zwazel.autobattler.classes.enums.Side.FRIENDLY;
 
 public class BattlerGen2 {
-    private final Grid grid = new Grid(new Vector(10, 10));
+    private final Grid grid;
     private final ArrayList<Unit> friendlyUnitList;
     private final ArrayList<Unit> enemyUnitList;
     private User friendlyUser;
@@ -34,9 +34,10 @@ public class BattlerGen2 {
     private boolean fightFinished = false;
     private Side winningSide;
 
-    public BattlerGen2(boolean createJson) {
+    public BattlerGen2(boolean createJson, Vector gridSize) {
         friendlyUnitList = new ArrayList<>();
         enemyUnitList = new ArrayList<>();
+        grid = new Grid(gridSize);
 
         try {
 //            getDataFromFormationPlan(FRIENDLY, "friendlyFormation.json");
@@ -128,7 +129,7 @@ public class BattlerGen2 {
     }
 
     public static void main(String[] args) {
-        new BattlerGen2(true);
+        new BattlerGen2(true, new Vector(10, 10));
     }
 
     public boolean placeOccupied(Vector toGo) {

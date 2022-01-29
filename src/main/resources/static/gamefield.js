@@ -2,6 +2,21 @@ let rows;
 let columns;
 const characterImageHtml = "characterIcon.html";
 
+async function loadGridSize() {
+    let response = await fetch("http://localhost:8080/getFightHistory");
+
+    if (response.ok) { // if HTTP-status is 200-299
+        // get the response body (the method explained below)
+        let json = await response.json();
+        let entity = JSON.parse(json.entity);
+        console.log(entity)
+        console.log(entity.gridSize)
+        drawField(entity.gridSize.x, entity.gridSize.y)
+    } else {
+        alert("HTTP-Error: " + response.status);
+    }
+}
+
 function drawField(_rows, _columns) {
     rows = _rows;
     columns = _columns;
@@ -26,5 +41,6 @@ function setRandomCharacter() {
     let rowPos = Math.floor(Math.random() * rows + 1);
     let columnPos = Math.floor(Math.random() * columns + 1);
     $(gameBoad.rows[rowPos].cells[columnPos]).load(characterImageHtml);
-
 }
+
+loadGridSize()

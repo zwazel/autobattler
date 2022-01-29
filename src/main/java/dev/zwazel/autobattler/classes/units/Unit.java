@@ -4,15 +4,12 @@ import dev.zwazel.autobattler.BattlerGen2;
 import dev.zwazel.autobattler.classes.Obstacle;
 import dev.zwazel.autobattler.classes.Utils.Vector;
 import dev.zwazel.autobattler.classes.Utils.json.ActionHistory;
-import dev.zwazel.autobattler.classes.Utils.map.FindPath;
-import dev.zwazel.autobattler.classes.Utils.map.GridGraph;
-import dev.zwazel.autobattler.classes.Utils.map.Node;
 import dev.zwazel.autobattler.classes.abilities.Ability;
+import dev.zwazel.autobattler.classes.enums.Action;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
 import dev.zwazel.autobattler.classes.enums.UnitTypes;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public abstract class Unit implements Obstacle, Cloneable {
@@ -68,9 +65,10 @@ public abstract class Unit implements Obstacle, Cloneable {
 
     public abstract void takeDamage(Ability ability);
 
-    public void die(Ability ability) {
+    public ActionHistory die(Ability ability) {
         setMyState(State.DEAD);
         System.out.println(ability.getRandomKillMessage(this));
+        return new ActionHistory(Action.DIE, this, new Unit[0], null, new Vector[]{this.getGridPosition()});
     }
 
     public long getID() {

@@ -3,11 +3,13 @@ package dev.zwazel.autobattler;
 import com.google.gson.*;
 import dev.zwazel.autobattler.classes.Obstacle;
 import dev.zwazel.autobattler.classes.Utils.*;
+import dev.zwazel.autobattler.classes.Utils.json.ActionHistory;
 import dev.zwazel.autobattler.classes.Utils.json.Export;
 import dev.zwazel.autobattler.classes.Utils.json.History;
 import dev.zwazel.autobattler.classes.Utils.map.FindPath;
 import dev.zwazel.autobattler.classes.Utils.map.Grid;
 import dev.zwazel.autobattler.classes.Utils.map.GridCell;
+import dev.zwazel.autobattler.classes.enums.Action;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
@@ -90,6 +92,7 @@ public class BattlerGen2 {
                             enemyUnitList.remove(unit);
                         }
                         grid.updateOccupiedGrid(posBefore, null);
+                        history.addActionHistory(new ActionHistory(Action.DIE, unit, new Unit[0], null, new Vector[]{unit.getGridPosition()}));
                         unitIterator.remove();
                     } else {
                         history.addActionHistory(unit.run());

@@ -5,8 +5,8 @@ let index = 0;
 let historyPlaybackSpeed = 50; // speed in ms (i think)
 let movementDelay = historyPlaybackSpeed / 2;
 
-let unitsLeft
-let unitsRight
+let unitsLeft = []
+let unitsRight = []
 
 async function loadGridSize() {
     let response = await fetch("http://localhost:8080/getFightHistory");
@@ -18,20 +18,20 @@ async function loadGridSize() {
         console.log(entity)
         drawField(entity.gridSize.x, entity.gridSize.y)
 
-        unitsLeft = entity.unitsLeft;
-        unitsRight = entity.unitsRight;
-        initUnits(unitsLeft)
-        initUnits(unitsRight)
+        await initUnits(entity.unitsLeft)
+        await initUnits(entity.unitsRight)
+
+        let timeStart = new Date().getTime();
         manageHistoryPlayback(entity.history)
     } else {
         alert("HTTP-Error: " + response.status);
     }
 }
 
-async function manageHistoryPlayback(history) {
+function manageHistoryPlayback(history) {
     if (index < history.length) {
-        setTimeout(function () {
-            playHistory(history)
+        setTimeout(async function () {
+            await playHistory(history)
         }, historyPlaybackSpeed);
     } else {
         console.log("WE DONE")
@@ -48,12 +48,15 @@ async function playHistory(history) {
         unit = findUnit(unitsLeft, unit.id)
     }
 
-    console.log(unit)
-
     if (unit !== undefined) {
-        await moveUnit(unit, historyObject.positions)
+        if (historyObject.type === "DIE") {
+            console.log("UNIT DIED: " + unit.name + "(" + unit.id + ")")
+            await removeUnit(unit)
+        } else {
+            await moveUnit(unit, historyObject.positions)
+        }
 
-        await manageHistoryPlayback(history);
+        manageHistoryPlayback(history);
     } else {
         alert("UNIT UNDEFINED!")
     }
@@ -63,6 +66,12 @@ async function initUnits(units) {
     for (let i = 0; i < units.length; i++) {
         let unit = units[i];
         let unitPos = unit.position;
+        unit = new MyFirstUnit(unit.side, unit.id, unit.name, unit.level, new Position(unitPos.x, unitPos.y), unit.priority)
+        if (unit.side === "ENEMY") {
+            unitsRight.push(unit)
+        } else {
+            unitsLeft.push(unit)
+        }
         await placeUnit(unit, unitPos);
     }
 
@@ -100,6 +109,8 @@ async function moveUnit(unit, positions) {
 
 async function placeUnit(unit, position) {
     $(gameBoard.rows[position.y].cells[position.x]).children(".unitCellWrapper").append(getUnitIcon(unit.id, unit.name));
+
+    unit.position = new Position(position.x, position.y);
 
     return new Promise((resolve) => {
         resolve();

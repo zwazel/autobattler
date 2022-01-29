@@ -8,6 +8,7 @@ import dev.zwazel.autobattler.classes.units.Unit;
 import java.util.Iterator;
 
 public class HistoryToJson {
+    // TODO: 29.01.2022 ADD WINNER INFORMATION!! 
     public static String toJson(History history) {
         Gson gson = new Gson();
         String json = "{\"gridSize\":" + gson.toJson(history.getBattler().getGrid().getGridSize()) + ",";
@@ -42,6 +43,7 @@ public class HistoryToJson {
         return json;
     }
 
+    // TODO: 29.01.2022 ADD OUTPUT AMOUNT
     private static String actionHistoryToJson(ActionHistory actionHistory) {
         Gson gson = new Gson();
 
@@ -86,6 +88,7 @@ public class HistoryToJson {
         return json.toString();
     }
 
+    // TODO: 29.01.2022 ADD HEALTH AND ENERGY 
     private static String formationToJson(Formation formation) {
         Gson gson = new Gson();
         StringBuilder json = new StringBuilder("[");
@@ -99,7 +102,8 @@ public class HistoryToJson {
                     .append(",\"name\":").append("\"").append(unit.getName()).append("\"")
                     .append(",\"level\":").append(unit.getLevel())
                     .append(",\"priority\":").append(unit.getPriority())
-                    .append(",\"position\":").append(gson.toJson(unit.getGridPosition()));
+                    .append(",\"position\":").append(gson.toJson(unit.getGridPosition()))
+                    .append(",\"side\":\"").append(unit.getSide()).append("\"");
             json.append("}");
             if (iterator.hasNext()) {
                 json.append(",");

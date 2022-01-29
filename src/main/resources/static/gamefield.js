@@ -25,6 +25,6 @@ function setRandomCharacter() {
     const gameBoad = document.getElementById("gameboard")
     let rowPos = Math.floor(Math.random() * rows + 1);
     let columnPos = Math.floor(Math.random() * columns + 1);
-    $(gameBoad.rows[rowPos].cells[columnPos]).load("characterIcon.html");
+    $(gameBoad.rows[rowPos].cells[columnPos]).load(characterImageHtml);
 
 }

@@ -23,7 +23,6 @@ import java.util.ListIterator;
 
 import static dev.zwazel.autobattler.classes.enums.Side.ENEMY;
 import static dev.zwazel.autobattler.classes.enums.Side.FRIENDLY;
-import static dev.zwazel.autobattler.classes.enums.UnitTypes.NOT_EXISTENT;
 
 public class BattlerGen2 {
     private final Grid grid = new Grid(new Vector(10, 10));
@@ -36,7 +35,7 @@ public class BattlerGen2 {
     private boolean fightFinished = false;
     private Side winningSide;
 
-    public BattlerGen2() {
+    public BattlerGen2(boolean createJson) {
         friendlyUnitList = new ArrayList<>();
         enemyUnitList = new ArrayList<>();
 
@@ -109,7 +108,7 @@ public class BattlerGen2 {
                 System.out.println("Round " + roundCounter++ + " done\n\n");
             }
 
-            System.out.println("fight done after " + (roundCounter-1) + " turns!");
+            System.out.println("fight done after " + (roundCounter - 1) + " turns!");
             System.out.println("winningSide = " + winningSide);
             System.out.println("surviving units: ");
             for (Unit unit : units) {
@@ -127,7 +126,7 @@ public class BattlerGen2 {
     }
 
     public static void main(String[] args) {
-        new BattlerGen2();
+        new BattlerGen2(true);
     }
 
     public boolean placeOccupied(Vector toGo) {

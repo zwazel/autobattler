@@ -45,6 +45,7 @@ public class MyFirstUnit extends Unit {
     @Override
     public Vector[] moveTowards(Unit target) {
         if (target != null) {
+            System.out.println(this.getName() + "(" + this.getID() + ")" + " searches path");
             Node[] nodes = new FindPath().getNextMoveSteps(this.getGridPosition(), target.getGridPosition(), this.getBattler().getGrid(), this.getSpeed());
             if (nodes.length > 0) {
                 Vector[] vectors = new Vector[nodes.length];
@@ -112,10 +113,8 @@ public class MyFirstUnit extends Unit {
         switch (todoAction) {
             case CHASE -> {
                 Unit target = findTargetUnit(this.getSide().getOpposite());
-                if (target != null) {
-                    targets = new Unit[]{target};
-                    targetPositions = moveTowards(targets[0]);
-                }
+                targets = new Unit[]{target};
+                targetPositions = moveTowards(targets[0]);
             }
             case USE_ABILITY -> {
                 targets = new Unit[]{findTargetUnit(suitableAbility.getTargetSide())};
@@ -125,12 +124,12 @@ public class MyFirstUnit extends Unit {
 
             }
         }
-        System.out.println(this.getName() + "("+this.getID()+"), action="+todoAction);
-        System.out.println("\ttarget="+ Arrays.toString(targets));
-        if(targets.length > 0) {
+        System.out.println(this.getName() + "(" + this.getID() + "), action=" + todoAction);
+        System.out.println("\ttarget=" + Arrays.toString(targets));
+        if (targets.length > 0) {
             System.out.println("\t\tdistance=" + targets[0].getGridPosition().getDistanceFrom(this.getGridPosition()));
         }
-        System.out.println("\tpositions="+ Arrays.toString(targetPositions));
+        System.out.println("\tpositions=" + Arrays.toString(targetPositions));
         return new ActionHistory(todoAction, this, targets, suitableAbility, targetPositions);
     }
 }

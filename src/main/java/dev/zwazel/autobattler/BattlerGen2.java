@@ -71,10 +71,6 @@ public class BattlerGen2 {
                 }
             }
 
-            for (Unit unit : units) {
-                System.out.println(unit);
-            }
-
             history = new History(new Formation(friendlyUser, new ArrayList<>(friendlyUnitList)), new Formation(enemyUser, new ArrayList<>(enemyUnitList)), this);
 
             drawBoard();
@@ -109,15 +105,11 @@ public class BattlerGen2 {
                     fightFinished = true;
                 }
                 drawBoard();
-                System.out.println("Round " + roundCounter++ + " done\n\n");
+                roundCounter++;
             }
 
-            System.out.println("fight done after " + (roundCounter - 1) + " turns!");
+            System.out.println("fight done after " + (roundCounter) + " turns!");
             System.out.println("winningSide = " + winningSide);
-            System.out.println("surviving units: ");
-            for (Unit unit : units) {
-                System.out.println(unit);
-            }
 
             if (createJson) {
                 try {
@@ -144,6 +136,7 @@ public class BattlerGen2 {
     public Unit findClosestOther(Unit unit, Side sideToCheck, boolean checkIfReachable, boolean includeDead) {
         Unit closestUnit = null;
         Double shortestDistance = -1d;
+        System.out.println(unit.getName() + "(" + unit.getID() + ")" + " searches closest other");
         for (Unit unitChecking : units) {
             if (unitChecking != unit) {
                 if (unitChecking.getSide() == sideToCheck) {
@@ -164,9 +157,7 @@ public class BattlerGen2 {
                 }
             }
         }
-        if (closestUnit == null) {
-            System.out.println(unit.getName() + "(" + unit.getID() + ")" + " found no close unit!");
-        }
+        System.out.println("closestUnit = " + closestUnit);
         return closestUnit;
     }
 

@@ -58,12 +58,9 @@ function getUnitIcon(unitId, unitName) {
 }
 
 function initUnits(units) {
-    console.log(units)
     for (let i = 0; i < units.length; i++) {
         let unit = units[i];
-        console.log(unit)
         let unitPos = unit.position;
-        console.log(unitPos)
         $(gameBoard.rows[unitPos.y].cells[unitPos.x]).append(getUnitIcon(unit.id, unit.name));
     }
 }

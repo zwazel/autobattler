@@ -12,10 +12,6 @@
 - Sprachen
     - Englisch
     - Deutsch
-- Rassist
-    - Zusätzlichen Schaden an "anderst Farbigen"
-- Kindsmisshandler
-    - Extra Damage an Kinder
 - Grösse
     - Klein
         - Wird selten von Fernkampfwaffen getroffen
@@ -40,7 +36,6 @@
         - Ice hockey, rammt immer gegner und schadet sich dabei selber. knockt sich teilweise selber aus für einen
           Moment
     - Eigenschaften
-        - Rassist
         - Gross
 - Dennis
     - Humor
@@ -97,9 +92,7 @@
     - Schwäche
         - 02 simp
     - Eigenschaften
-        - Rassist
         - Gross
-        - Kindsmisshandler
 - Nadina
     - Humor
         - Something

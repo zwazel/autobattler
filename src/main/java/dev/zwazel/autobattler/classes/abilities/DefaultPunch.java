@@ -13,14 +13,14 @@ public class DefaultPunch extends Ability {
     @Override
     public String[] getUseMessages() {
         return new String[]{
-                this.getOwner().getName() + " punches $targetName and did " + this.getOutPutAmount() + " damage!"
+                this.getOwner().getName() + "(" + this.getOwner().getID() + ")" + " punches $targetName($id) and did " + this.getOutPutAmount() + " damage!"
         };
     }
 
     @Override
     public String[] getKillMessages() {
         return new String[]{
-                "$targetName got punched to death by " + this.getOwner().getName()
+                "$targetName($id) got punched to death by " + this.getOwner().getName() + "(" + this.getOwner().getID() + ")"
         };
     }
 

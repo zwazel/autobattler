@@ -12,7 +12,6 @@ import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.units.MyFirstUnit;
-import dev.zwazel.autobattler.classes.units.PlaceboUnit;
 import dev.zwazel.autobattler.classes.units.Unit;
 
 import java.io.*;
@@ -49,7 +48,8 @@ public class BattlerGen2 {
             enemyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
             units = new ArrayList<>();
 
-            boolean friendlies = Math.random() < 0.5;
+//            boolean friendlies = Math.random() < 0.5;
+            boolean friendlies = false;
             int firstCounter = 0;
             int secondCounter = 0;
             for (int i = 0; i < friendlyUnitList.size() + enemyUnitList.size(); i++) {
@@ -115,10 +115,12 @@ public class BattlerGen2 {
                 System.out.println(unit);
             }
 
-            try {
-                new Export().export(history);
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (createJson) {
+                try {
+                    new Export().export(history);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         } catch (URISyntaxException | FileNotFoundException | UnknownUnitType e) {
             e.printStackTrace();
@@ -126,7 +128,7 @@ public class BattlerGen2 {
     }
 
     public static void main(String[] args) {
-        new BattlerGen2(true);
+        new BattlerGen2(false);
     }
 
     public boolean placeOccupied(Vector toGo) {
@@ -148,7 +150,6 @@ public class BattlerGen2 {
                             if (vector == null) {
                                 continue;
                             }
-                            closestUnit = new PlaceboUnit(vector, grid.getGridSize());
                         }
                         Double temp = unit.getGridPosition().getDistanceFrom(unitChecking.getGridPosition());
                         if (shortestDistance < 0 || temp < shortestDistance) {
@@ -159,12 +160,14 @@ public class BattlerGen2 {
                 }
             }
         }
+        if (closestUnit == null) {
+            System.out.println(unit.getName() + "(" + unit.getID() + ")" + " found no close unit!");
+        }
         return closestUnit;
     }
 
 
     private void drawBoard() {
-        ArrayList<Unit> placedUnits = new ArrayList<>();
         StringBuilder vertical = new StringBuilder();
         vertical.append("-".repeat((grid.getWidth()) * 4 + 1));
 

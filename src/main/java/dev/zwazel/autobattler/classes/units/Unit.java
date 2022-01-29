@@ -32,7 +32,6 @@ public abstract class Unit implements Obstacle {
     private int speed;
     private BattlerGen2 battler;
     private State myState = State.ALIVE;
-    private Unit lastHitter;
 
     public Unit(long id, int level, String name, String description, int health, int energy, char symbol, Vector position, Vector gridSize, int speed, BattlerGen2 battler, Side side, int priority, UnitTypes type) {
         this.ID = id;
@@ -184,14 +183,6 @@ public abstract class Unit implements Obstacle {
 
     public void setMyState(State myState) {
         this.myState = myState;
-    }
-
-    public Unit getLastHitter() {
-        return lastHitter;
-    }
-
-    public void setLastHitter(Unit lastHitter) {
-        this.lastHitter = lastHitter;
     }
 
     public UnitTypes getType() {

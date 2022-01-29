@@ -11,6 +11,7 @@ import dev.zwazel.autobattler.classes.enums.Action;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.UnitTypes;
 
+import java.util.Arrays;
 import java.util.Random;
 
 public class MyFirstUnit extends Unit {
@@ -61,6 +62,7 @@ public class MyFirstUnit extends Unit {
     @Override
     public boolean move(Vector direction, boolean checkIfOccupied) {
         if (!checkIfOccupied) {
+//            System.out.println(this.getName() + "(" + this.getID() + ")" + " moves from " + this.getGridPosition() + " to " + direction);
             this.setGridPosition(direction);
             return true;
         } else {
@@ -88,7 +90,6 @@ public class MyFirstUnit extends Unit {
     @Override
     public void takeDamage(Ability ability) {
         this.setHealth(this.getHealth() - ability.getOutPutAmount());
-        this.setLastHitter(ability.getOwner());
         if (this.getHealth() <= 0) {
             die(ability);
         }
@@ -99,7 +100,7 @@ public class MyFirstUnit extends Unit {
         Action todoAction = null;
         Unit[] targets = new Unit[0];
         Ability suitableAbility = null;
-        Vector[] targetPosition = new Vector[0];
+        Vector[] targetPositions = new Vector[0];
 
         for (Ability ability : getAbilities()) {
             ability.doRound();
@@ -113,7 +114,7 @@ public class MyFirstUnit extends Unit {
                 Unit target = findTargetUnit(this.getSide().getOpposite());
                 if (target != null) {
                     targets = new Unit[]{target};
-                    targetPosition = moveTowards(targets[0]);
+                    targetPositions = moveTowards(targets[0]);
                 }
             }
             case USE_ABILITY -> {
@@ -124,6 +125,12 @@ public class MyFirstUnit extends Unit {
 
             }
         }
-        return new ActionHistory(todoAction, this, targets, suitableAbility, targetPosition);
+        System.out.println(this.getName() + "("+this.getID()+"), action="+todoAction);
+        System.out.println("\ttarget="+ Arrays.toString(targets));
+        if(targets.length > 0) {
+            System.out.println("\t\tdistance=" + targets[0].getGridPosition().getDistanceFrom(this.getGridPosition()));
+        }
+        System.out.println("\tpositions="+ Arrays.toString(targetPositions));
+        return new ActionHistory(todoAction, this, targets, suitableAbility, targetPositions);
     }
 }

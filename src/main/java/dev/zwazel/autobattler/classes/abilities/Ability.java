@@ -40,17 +40,20 @@ public abstract class Ability extends RoundAffected {
 
     public abstract String[] getUseMessages();
 
-    // TODO: 28.01.2022 bug: THEY ATTACK PLACEBO UNITS??? HOW AND WHY???
     public String getRandomUseMessage(Unit target) {
         Random rand = new Random();
-        return this.useMessages[rand.nextInt(this.useMessages.length)].replace("$targetName", target.getName());
+        return finalizeString(this.useMessages[rand.nextInt(this.useMessages.length)], target);
     }
 
     public abstract String[] getKillMessages();
 
-    public String getRandomKillMessage(Unit victim) {
+    public String getRandomKillMessage(Unit target) {
         Random rand = new Random();
-        return this.killMessages[rand.nextInt(this.killMessages.length)].replace("$targetName", victim.getName());
+        return finalizeString(this.killMessages[rand.nextInt(this.killMessages.length)], target);
+    }
+
+    private String finalizeString(String s, Unit target) {
+        return s.replace("$targetName", target.getName()).replace("$id", "" + target.getID());
     }
 
     public abstract int scaleOutputAmount(int level, int baseDamage);
@@ -79,8 +82,8 @@ public abstract class Ability extends RoundAffected {
     }
 
     public boolean isInRange(Vector target) {
-        Double range = this.getOwner().getGridPosition().getDistanceFrom(target);
-        return range <= this.range;
+        Double distance = this.getOwner().getGridPosition().getDistanceFrom(target);
+        return distance <= this.range;
     }
 
     public boolean isInRange(Unit target) {

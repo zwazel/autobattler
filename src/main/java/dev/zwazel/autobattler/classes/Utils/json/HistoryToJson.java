@@ -8,7 +8,7 @@ import dev.zwazel.autobattler.classes.units.Unit;
 import java.util.Iterator;
 
 public class HistoryToJson {
-    // TODO: 29.01.2022 ADD WINNER INFORMATION!! 
+    // TODO: 29.01.2022 ADD WINNER INFORMATION!!
     public static String toJson(History history) {
         Gson gson = new Gson();
         String json = "{\"gridSize\":" + gson.toJson(history.getBattler().getGrid().getGridSize()) + ",";

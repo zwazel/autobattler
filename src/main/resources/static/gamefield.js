@@ -1,6 +1,12 @@
 let rows;
 let columns;
 const gameBoard = document.getElementById("gameboard")
+let index = 0;
+let historyPlaybackSpeed = 50; // speed in ms (i think)
+let movementDelay = historyPlaybackSpeed / 2;
+
+let unitsLeft
+let unitsRight
 
 async function loadGridSize() {
     let response = await fetch("http://localhost:8080/getFightHistory");
@@ -11,16 +17,102 @@ async function loadGridSize() {
         let entity = JSON.parse(json.entity);
         console.log(entity)
         drawField(entity.gridSize.x, entity.gridSize.y)
-        initUnits(entity.unitsLeft)
-        initUnits(entity.unitsRight)
-        // playHistory()
+
+        unitsLeft = entity.unitsLeft;
+        unitsRight = entity.unitsRight;
+        initUnits(unitsLeft)
+        initUnits(unitsRight)
+        manageHistoryPlayback(entity.history)
     } else {
         alert("HTTP-Error: " + response.status);
     }
 }
 
-function playHistory(history) {
+async function manageHistoryPlayback(history) {
+    if (index < history.length) {
+        setTimeout(function () {
+            playHistory(history)
+        }, historyPlaybackSpeed);
+    } else {
+        console.log("WE DONE")
+    }
+}
 
+async function playHistory(history) {
+    let historyObject = history[index++];
+    let unit = historyObject.user;
+
+    if (unit.side === "ENEMY") {
+        unit = findUnit(unitsRight, unit.id)
+    } else {
+        unit = findUnit(unitsLeft, unit.id)
+    }
+
+    console.log(unit)
+
+    if (unit !== undefined) {
+        await moveUnit(unit, historyObject.positions)
+
+        await manageHistoryPlayback(history);
+    } else {
+        alert("UNIT UNDEFINED!")
+    }
+}
+
+async function initUnits(units) {
+    for (let i = 0; i < units.length; i++) {
+        let unit = units[i];
+        let unitPos = unit.position;
+        await placeUnit(unit, unitPos);
+    }
+
+    return new Promise((resolve) => {
+        resolve();
+    })
+}
+
+function findUnit(array, id) {
+    for (let i = 0; i < array.length; i++) {
+        let unit = array[i];
+        if (unit.id === id) return unit;
+    }
+    return undefined;
+}
+
+async function moveUnit(unit, positions) {
+    for (let i = 0; i < positions.length; i++) {
+        let position = positions[i];
+        if (i === 0) {
+            await removeUnit(unit)
+            await placeUnit(unit, position)
+        } else {
+            setTimeout(async function () {
+                await removeUnit(unit)
+                await placeUnit(unit, position)
+            }, movementDelay);
+        }
+    }
+
+    return new Promise((resolve) => {
+        resolve();
+    })
+}
+
+async function placeUnit(unit, position) {
+    $(gameBoard.rows[position.y].cells[position.x]).children(".unitCellWrapper").append(getUnitIcon(unit.id, unit.name));
+
+    return new Promise((resolve) => {
+        resolve();
+    })
+}
+
+async function removeUnit(unit) {
+    let unitPos = unit.position;
+    $(gameBoard.rows[unitPos.y].cells[unitPos.x]).children(".unitCellWrapper").empty();
+
+    return new Promise((resolve) => {
+        resolve();
+    })
 }
 
 function drawField(_rows, _columns) {
@@ -68,14 +160,6 @@ function getUnitIcon(unitId, unitName) {
     wrapper.append(divP, imgDiv)
 
     return wrapper
-}
-
-function initUnits(units) {
-    for (let i = 0; i < units.length; i++) {
-        let unit = units[i];
-        let unitPos = unit.position;
-        $(gameBoard.rows[unitPos.y].cells[unitPos.x]).children(".unitCellWrapper").append(getUnitIcon(unit.id, unit.name));
-    }
 }
 
 loadGridSize()

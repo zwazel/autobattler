@@ -90,7 +90,7 @@ public class HistoryToJson {
         Gson gson = new Gson();
         StringBuilder json = new StringBuilder("[");
 
-        Iterator<Unit> iterator = formation.units().iterator();
+        Iterator<Unit> iterator = formation.getUnits().iterator();
         while (iterator.hasNext()) {
             Unit unit = iterator.next();
             json.append("{");

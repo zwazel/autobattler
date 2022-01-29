@@ -11,7 +11,7 @@ async function loadGridSize() {
         let entity = JSON.parse(json.entity);
         drawField(entity.gridSize.x, entity.gridSize.y)
         initUnits(entity.unitsLeft)
-        // initUnits(entity.unitsRight)
+        initUnits(entity.unitsRight)
     } else {
         alert("HTTP-Error: " + response.status);
     }

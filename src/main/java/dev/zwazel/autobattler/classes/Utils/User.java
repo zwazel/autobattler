@@ -17,7 +17,6 @@ public class User {
     }
 
     public User(String username, String password) {
-        System.out.println("hello");
         this.username = username;
         this.password = SHA256.getHexStringInstant(password);
     }
@@ -43,7 +42,6 @@ public class User {
     }
 
     public void setPassword(String password) {
-        System.out.println("hello2");
         this.password = SHA256.getHexStringInstant(password);
     }
 

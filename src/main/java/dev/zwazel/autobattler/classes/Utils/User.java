@@ -17,20 +17,34 @@ public class User {
     }
 
     public User(String username, String password) {
+        System.out.println("hello");
         this.username = username;
-        this.password = password;
+        this.password = SHA256.getHexStringInstant(password);
     }
 
     public long getId() {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getUsername() {
         return username;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        System.out.println("hello2");
+        this.password = SHA256.getHexStringInstant(password);
     }
 
     @Override

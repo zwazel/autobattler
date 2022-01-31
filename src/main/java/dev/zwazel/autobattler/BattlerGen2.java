@@ -108,8 +108,8 @@ public class BattlerGen2 {
                 roundCounter++;
             }
 
-            System.out.println("fight done after " + (roundCounter) + " turns!");
-            System.out.println("winningSide = " + winningSide);
+            
+            
 
             if (createJson) {
                 try {
@@ -136,7 +136,7 @@ public class BattlerGen2 {
     public Unit findClosestOther(Unit unit, Side sideToCheck, boolean checkIfReachable, boolean includeDead) {
         Unit closestUnit = null;
         Double shortestDistance = -1d;
-        System.out.println(unit.getName() + "(" + unit.getID() + ")" + " searches closest other");
+        
         for (Unit unitChecking : units) {
             if (unitChecking != unit) {
                 if (unitChecking.getSide() == sideToCheck) {
@@ -157,7 +157,7 @@ public class BattlerGen2 {
                 }
             }
         }
-        System.out.println("closestUnit = " + closestUnit);
+        
         return closestUnit;
     }
 
@@ -169,8 +169,8 @@ public class BattlerGen2 {
         Vector gridPositionNow = new Vector(0, 0);
 
         for (int row = 0; row < grid.getHeight(); row++) {
-            System.out.println();
-            System.out.println(vertical);
+            
+            
 
             for (int column = 0; column < grid.getWidth(); column++) {
                 String character = " ";
@@ -191,8 +191,8 @@ public class BattlerGen2 {
             }
             System.out.print("|");
         }
-        System.out.println();
-        System.out.println(vertical);
+        
+        
     }
 
     private User getDataFromFormationPlan(Side side, String fileName) throws URISyntaxException, FileNotFoundException, UnknownUnitType {

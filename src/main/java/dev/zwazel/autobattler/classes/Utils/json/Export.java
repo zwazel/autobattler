@@ -17,14 +17,14 @@ public class Export {
         var folder = new File("exports");
 
         if (folder.exists()) {
-            System.out.println("Exports folder already exists.");
+            
             return folder;
         }
 
         var created = folder.mkdirs();
 
         if (!created) {
-            System.out.println("Could not create Exports folder!");
+            
         }
 
         return folder;
@@ -36,7 +36,7 @@ public class Export {
         var created = file.createNewFile();
 
         if (!created) {
-            System.out.println("Could not create file!");
+            
         }
 
         var fileWriter = new FileWriter(file);

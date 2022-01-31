@@ -26,11 +26,11 @@ public class TestPath {
         FindPath findPath = new FindPath();
         Node[] path = findPath.findPath(start, end, new GridGraph(grid));
 
-        System.out.println("PATH");
+        
         if (path.length <= 0) {
-            System.out.println("no path found");
+            
         }
-        System.out.println("PATH VISUALIZED");
+        
         drawGrid(grid, path, start, end);
     }
 
@@ -41,8 +41,8 @@ public class TestPath {
         Vector gridPositionNow = new Vector(0, 0);
 
         for (int row = 0; row < grid.getHeight(); row++) {
-            System.out.println();
-            System.out.println(vertical);
+            
+            
 
             gridPositionNow.setY(row);
             for (int column = 0; column < grid.getWidth(); column++) {
@@ -71,7 +71,7 @@ public class TestPath {
             }
             System.out.print("|");
         }
-        System.out.println();
-        System.out.println(vertical);
+        
+        
     }
 }

@@ -51,8 +51,8 @@ public class HistoryToJson {
 
         json.append("\"user\":{" + "\"id\":").append(actionHistory.user().getID()).append(",").append("\"side\":\"").append(actionHistory.user().getSide()).append("\"").append("}");
 
-//        System.out.println("HALLO DA GIBT ERROR");
-//        System.out.println(Arrays.toString(actionHistory.targets()));
+//        
+//        
 
         json.append(",\"targets\":[");
         int counter = 0;

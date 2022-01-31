@@ -31,7 +31,7 @@ public class FindPath {
         for (Node successor : currentNode.getMyNeighbors()) {
             if (closedList.contains(successor) || successor.getMyGridCell().getCurrentObstacle() != null) {
                 if (successor.getMyGridCell().getCurrentObstacle() != null) {
-                    System.out.println("successor has obstacle : " + successor);
+                    
                 }
                 continue;
             }
@@ -64,12 +64,12 @@ public class FindPath {
                 path = findPath.findPath(start, vectorToGo, new GridGraph(grid));
 
                 if (path.length > 0) {
-                    System.out.println("FOUND PATH");
+                    
                 } else {
-                    System.out.println("DIDNT FIND PATH");
+                    
                 }
             } else {
-                System.out.println("NO CLOSEST SHIT, CAN'T FIND PATH");
+                
             }
         }
 
@@ -77,7 +77,7 @@ public class FindPath {
             int length = Math.min(path.length, moveCount);
             Node[] nodes = new Node[length];
             System.arraycopy(path, 0, nodes, 0, length);
-            System.out.println("nodes = " + Arrays.toString(nodes));
+            
 
             return nodes;
         }
@@ -92,19 +92,19 @@ public class FindPath {
 
         for (Node node : targetNode.getMyNeighbors()) {
             double cost = node.getMyGridCell().getPosition().getDistanceFrom(start);
-            System.out.println("distance cost = " +cost);
+            
             node.setCost(cost);
         }
 
         PriorityQueue<Node> neighbors = new PriorityQueue<>(targetNode.getMyNeighbors().size(), new NodeComparator());
         neighbors.addAll(targetNode.getMyNeighbors());
-        System.out.println("neighbors = " + neighbors);
-        System.out.println("finding close nearby nodes");
+        
+        
         for (Node node : neighbors) {
             Vector vector = node.getMyGridCell().getPosition();
-            System.out.println("checking " + vector);
+            
             if (isReachable(start, vector, grid)) {
-                System.out.println("IS REACHABLE " + vector);
+                
                 return vector;
             }
         }
@@ -123,7 +123,7 @@ public class FindPath {
             System.out.print("\n" + "\t".repeat(Math.max(0, counter++)) + node.getMyGridCell().getPosition());
             node = node.getPredecessor();
         }
-        System.out.println();
+        
     }
 
     private Node[] getPathInCorrectOrder(Node node, boolean excludeStart) {

@@ -67,7 +67,7 @@ public abstract class Unit implements Obstacle, Cloneable {
 
     public ActionHistory die(Ability ability) {
         setMyState(State.DEAD);
-        System.out.println(ability.getRandomKillMessage(this));
+        
         return new ActionHistory(Action.DIE, this, new Unit[0], null, new Vector[]{this.getGridPosition()});
     }
 

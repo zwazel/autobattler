@@ -9,7 +9,7 @@ let unitsLeft = []
 let unitsRight = []
 
 async function loadGridSize() {
-    let response = await fetch("http://localhost:8080/getFightHistory");
+    let response = await fetch("https://zwazels-autobattler.herokuapp.com//getFightHistory");
 
     if (response.ok) { // if HTTP-status is 200-299
         // get the response body (the method explained below)

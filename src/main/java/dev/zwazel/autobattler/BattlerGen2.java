@@ -51,8 +51,8 @@ public class BattlerGen2 {
             enemyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
             units = new ArrayList<>();
 
-//            boolean friendlies = Math.random() < 0.5;
-            boolean friendlies = false;
+            boolean friendlies = Math.random() < 0.5;
+//            boolean friendlies = false;
             int firstCounter = 0;
             int secondCounter = 0;
             for (int i = 0; i < friendlyUnitList.size() + enemyUnitList.size(); i++) {

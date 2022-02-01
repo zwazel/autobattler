@@ -10,7 +10,6 @@ async function addUser() {
         method: 'post',
         headers: {
             'Content-Type': 'application/json'
-            // 'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: JSON.stringify({'username': username, 'password': password})
     });

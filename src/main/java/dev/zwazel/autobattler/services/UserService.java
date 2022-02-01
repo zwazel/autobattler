@@ -26,7 +26,7 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    @GetMapping(path = "/getAllUsers", produces = "application/json")
+    @GetMapping(path = "/getAll", produces = "application/json")
     public Iterable<User> getAllUsers() {
         return userRepository.findAll();
     }

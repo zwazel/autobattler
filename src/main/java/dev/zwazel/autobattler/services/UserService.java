@@ -1,7 +1,7 @@
 package dev.zwazel.autobattler.services;
 
 import dev.zwazel.autobattler.classes.Utils.User;
-import dev.zwazel.autobattler.classes.Utils.database.UserRepository;
+import dev.zwazel.autobattler.classes.Utils.database.repositories.UserRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;

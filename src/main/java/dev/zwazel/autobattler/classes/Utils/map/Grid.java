@@ -10,6 +10,10 @@ public class Grid {
     private final int width;
     private final int height;
 
+    public Grid(int x, int y) {
+        this(new Vector(x, y));
+    }
+
     public Grid(Vector size) {
         width = size.getX();
         height = size.getY();

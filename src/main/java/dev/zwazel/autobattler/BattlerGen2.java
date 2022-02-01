@@ -36,6 +36,12 @@ public class BattlerGen2 {
     private boolean fightFinished = false;
     private Side winningSide;
 
+    public BattlerGen2() {
+        grid = new Grid(new Vector(0, 0));
+        friendlyUnitList = new ArrayList<>();
+        enemyUnitList = new ArrayList<>();
+    }
+
     public BattlerGen2(boolean createJson, Vector gridSize) {
         friendlyUnitList = new ArrayList<>();
         enemyUnitList = new ArrayList<>();

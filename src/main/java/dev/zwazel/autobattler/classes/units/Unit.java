@@ -10,6 +10,7 @@ import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
 import dev.zwazel.autobattler.classes.enums.UnitTypes;
 
+import javax.persistence.Entity;
 import java.util.Arrays;
 
 public abstract class Unit implements Obstacle, Cloneable {

@@ -18,7 +18,7 @@ import javax.persistence.*;
 })
 public class FormationEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
     @Type(type = "jsonb")
@@ -26,7 +26,6 @@ public class FormationEntity {
     private String formationJson;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
     private User user;
 
     public FormationEntity(String formationJson, User user) {
@@ -41,11 +40,23 @@ public class FormationEntity {
         return user;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public long getId() {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getFormationJson() {
         return formationJson;
+    }
+
+    public void setFormationJson(String formationJson) {
+        this.formationJson = formationJson;
     }
 }

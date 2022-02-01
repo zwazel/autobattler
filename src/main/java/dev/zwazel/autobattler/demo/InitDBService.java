@@ -9,6 +9,9 @@ import dev.zwazel.autobattler.classes.Utils.map.Grid;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.units.Unit;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,27 +23,34 @@ import java.util.ArrayList;
 import static dev.zwazel.autobattler.classes.enums.Side.ENEMY;
 import static dev.zwazel.autobattler.classes.enums.Side.FRIENDLY;
 
-public class InitDB {
+@RestController()
+@RequestMapping("/init")
+public class InitDBService {
+    private final UserRepository userRepository;
     private Grid grid = new Grid(10, 10);
     private ArrayList<Unit> friendlyUnitList = new ArrayList<>();
     private ArrayList<Unit> enemyUnitList = new ArrayList<>();
     private DemoBattler demoBattler = new DemoBattler();
-    private UserRepository userRepository;
 
-    public InitDB() {
+    public InitDBService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @GetMapping(path = "initDB", produces = "text/plain")
+    public String initDB() {
         try {
             User userLeft = getDataFromFormationPlan(FRIENDLY, "friendlyFormation.json");
             User userRight = getDataFromFormationPlan(ENEMY, "enemyFormation.json");
 
             userRepository.save(userLeft);
             userRepository.save(userRight);
+
+            return "DB Initialized";
         } catch (URISyntaxException | FileNotFoundException | UnknownUnitType e) {
             e.printStackTrace();
-        }
-    }
 
-    public static void main(String[] args) {
-        InitDB initDB = new InitDB();
+            return "DB initialization failed";
+        }
     }
 
     private User getDataFromFormationPlan(Side side, String fileName) throws URISyntaxException, FileNotFoundException, UnknownUnitType {

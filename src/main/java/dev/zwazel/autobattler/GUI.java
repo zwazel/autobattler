@@ -43,7 +43,7 @@ public class GUI extends Canvas {
         this.scalar = scalar;
         this.unitIterator = battlerGen2.getUnits().listIterator();
 
-        frame.setSize(grid.getWidth() * scalar, grid.getHeight() * scalar);
+        frame.setSize((grid.getWidth() * scalar) + scalar * 2, (grid.getHeight() * scalar) + scalar * 3);
 
         frame.add(this, BorderLayout.CENTER);
 
@@ -100,8 +100,16 @@ public class GUI extends Canvas {
     @Override
     public void paint(Graphics g) {
         Grid grid = battlerGen2.getGrid();
+        // draw border of the map/grid
         g.drawRect(0, 0, grid.getWidth() * scalar, grid.getHeight() * scalar);
 
+        // Draw start (where the unit initially was)
+        if (start != null) {
+            g.setColor(colorStart);
+            g.fillRect(start.getX() * scalar, start.getY() * scalar, scalar, scalar);
+        }
+
+        // draw all the units
         Vector gridPositionNow = new Vector(0, 0);
         for (int row = 0; row < grid.getHeight(); row++) {
             gridPositionNow.setY(row * scalar);
@@ -144,16 +152,7 @@ public class GUI extends Canvas {
             }
         }
 
-        if (start != null) {
-            g.setColor(colorStart);
-            g.fillRect(start.getX() * scalar, start.getY() * scalar, scalar, scalar);
-        }
-
-//        if (end != null) {
-//            g.setColor(Color.BLUE);
-//            g.fillRect(end.getX() * scalar, end.getY() * scalar, scalar, scalar);
-//        }
-
+        // draw the path
         Vector nodeBefore = null;
         for (Node n : nodes) {
             if (nodeBefore == null) {

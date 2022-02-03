@@ -163,7 +163,7 @@ public class BattlerGen2 {
         doTurn(unitIterator, unit, createHistory);
     }
 
-    public Unit doTurn(Iterator<Unit> unitIterator, Unit unit, boolean createHistory) {
+    public ActionHistory doTurn(Iterator<Unit> unitIterator, Unit unit, boolean createHistory) {
         Vector posBefore = unit.getGridPosition();
         // TODO: 27.01.2022 update the way units die, think about how it should work!
         if (unit.getMyState() != State.ALIVE) {
@@ -184,7 +184,7 @@ public class BattlerGen2 {
             }
             grid.updateOccupiedGrid(posBefore, null);
             grid.updateOccupiedGrid(unit.getGridPosition(), unit);
-            return actionHistory.targets()[0];
+            return actionHistory;
         }
         return null;
     }

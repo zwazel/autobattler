@@ -5,6 +5,7 @@ import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.units.MyFirstUnit;
 import dev.zwazel.autobattler.classes.units.Unit;
 import dev.zwazel.autobattler.classes.utils.Vector;
+import dev.zwazel.autobattler.classes.utils.json.ActionHistory;
 import dev.zwazel.autobattler.classes.utils.map.*;
 
 import javax.swing.*;
@@ -23,12 +24,21 @@ public class GUI extends Canvas {
     private Unit currentUnit = null;
     private Unit lastUnit = null;
     private Unit target = null;
+    private boolean currentUnitMoved = false;
+
+    private boolean differentiateSide = true;
+    private boolean differentiateLastUnit = false;
+    private boolean differentiateCurrentUnit = true;
+    private boolean differentiateTarget = true;
+    private boolean showLastPosition = true;
+    private boolean differentiateEnd = true;
 
     private JFrame frame = new JFrame();
 
     private Label currentUnitLabel = new Label("Current Unit = ");
     private Label lastUnitLabel = new Label("Last Unit = ");
     private Label targetLabel = new Label("Target = ");
+    private Label currentAction = new Label("Current Action = ");
 
     private Color colorStart = Color.cyan;
     private Color colorCurrentUnit = Color.blue;
@@ -57,24 +67,34 @@ public class GUI extends Canvas {
                 }
                 currentUnit = unitIterator.next();
                 this.currentUnitLabel.setText("Current Unit = " + currentUnit.getName() + " (" + currentUnit.getID() + ")");
-                start = currentUnit.getGridPosition();
-                Unit target = battlerGen2.doTurn(unitIterator, currentUnit, false);
+                if (showLastPosition) {
+                    start = currentUnit.getGridPosition();
+                }
+                ActionHistory actionHistory = battlerGen2.doTurn(unitIterator, currentUnit, false);
+                if (!showLastPosition) {
+                    start = currentUnit.getGridPosition();
+                }
+                Unit target = actionHistory.targets()[0];
                 if (target != null) {
                     end = target.getGridPosition();
                     this.target = target;
                     FindPath findPath = new FindPath();
                     nodes = findPath.findPath(currentUnit.getGridPosition(), findPath.findClosestNearbyNode(grid, currentUnit.getGridPosition(), end), new GridGraph(grid));
                     this.targetLabel.setText("Target = " + target.getName() + " (" + target.getID() + "), at " + end);
+                    this.currentAction.setText("Current Action = " + actionHistory.actionType());
                 } else {
                     end = null;
                     nodes = new Node[0];
                     this.targetLabel.setText("Target = ");
+                    this.currentAction.setText("Current Action = ");
                 }
 
                 if (!start.equals(currentUnit.getGridPosition())) {
                     currentUnitLabel.setText(currentUnitLabel.getText() + ", moved from " + start + " to " + currentUnit.getGridPosition());
+                    currentUnitMoved = true;
                 } else {
-                    currentUnitLabel.setText(currentUnitLabel.getText() + ", stayed at " + currentUnit.getGridPosition());
+                    currentUnitLabel.setText(currentUnitLabel.getText() + ", stayed at " + currentUnit.getGridPosition() + ", ");
+                    currentUnitMoved = false;
                 }
             }
 
@@ -91,6 +111,7 @@ public class GUI extends Canvas {
         labelPanel.add(currentUnitLabel);
         labelPanel.add(lastUnitLabel);
         labelPanel.add(targetLabel);
+        labelPanel.add(currentAction);
         frame.add(labelPanel, BorderLayout.NORTH);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -104,7 +125,7 @@ public class GUI extends Canvas {
         g.drawRect(0, 0, grid.getWidth() * scalar, grid.getHeight() * scalar);
 
         // Draw start (where the unit initially was)
-        if (start != null) {
+        if (start != null && currentUnitMoved && showLastPosition) {
             g.setColor(colorStart);
             g.fillRect(start.getX() * scalar, start.getY() * scalar, scalar, scalar);
         }
@@ -122,24 +143,31 @@ public class GUI extends Canvas {
                     if (!obstacle.equals(currentUnit) && !obstacle.equals(lastUnit) && !obstacle.equals(target)) {
                         if (obstacle.getClass() == MyFirstUnit.class) {
                             MyFirstUnit unit = (MyFirstUnit) obstacle;
-                            if (unit.getSide() == Side.FRIENDLY) {
-                                // friendlies
-                                g.setColor(colorFriendly);
+                            if (differentiateSide) {
+                                if (unit.getSide() == Side.FRIENDLY) {
+                                    // friendlies
+                                    g.setColor(colorFriendly);
+                                } else {
+                                    // enemies
+                                    g.setColor(colorEnemy);
+                                }
                             } else {
-                                // enemies
-                                g.setColor(colorEnemy);
+                                g.setColor(colorFriendly);
                             }
                         }
                     } else {
                         if (obstacle.equals(currentUnit)) {
                             // current unit
-                            g.setColor(colorCurrentUnit);
-                        } else if (obstacle.equals(lastUnit)) {
+                            System.out.println("current unit");
+                            differentiateFriendlyAndEnemy(g, currentUnit, differentiateCurrentUnit, colorCurrentUnit);
+                        } else if (obstacle.equals(lastUnit) && !lastUnit.equals(target)) {
                             // last unit
-                            g.setColor(colorLastUnit);
+                            System.out.println("last unit");
+                            differentiateFriendlyAndEnemy(g, lastUnit, differentiateLastUnit, colorLastUnit);
                         } else {
                             // target unit
-                            g.setColor(colorTarget);
+                            System.out.println("target unit");
+                            differentiateFriendlyAndEnemy(g, target, differentiateTarget, colorTarget);
                         }
                     }
                     g.fillRect(gridPositionNow.getX(), gridPositionNow.getY(), scalar, scalar);
@@ -156,7 +184,7 @@ public class GUI extends Canvas {
         Vector nodeBefore = null;
         for (Node n : nodes) {
             if (nodeBefore == null) {
-                nodeBefore = start;
+                nodeBefore = currentUnit.getGridPosition();
             }
             g.setColor(Color.BLACK);
             g.drawRect(n.getMyGridCell().getPosition().getX() * scalar, n.getMyGridCell().getPosition().getY() * scalar, scalar, scalar);
@@ -170,6 +198,23 @@ public class GUI extends Canvas {
         if (nodeBefore != null) {
             g.setColor(Color.RED);
             g.drawLine(nodeBefore.getX() * scalar + (scalar / 2), nodeBefore.getY() * scalar + (scalar / 2), end.getX() * scalar + (scalar / 2), end.getY() * scalar + (scalar / 2));
+        }
+    }
+
+    private void differentiateFriendlyAndEnemy(Graphics g, Unit unit, boolean shouldDifferentiate, Color colorIfDifferentiate) {
+        System.out.println("shouldDifferentiate = " + shouldDifferentiate + ", colorIfDifferentiate = " + colorIfDifferentiate);
+        if (shouldDifferentiate) {
+            g.setColor(colorIfDifferentiate);
+        } else {
+            if (differentiateSide) {
+                if (unit.getSide() == Side.FRIENDLY) {
+                    g.setColor(colorFriendly);
+                } else {
+                    g.setColor(colorEnemy);
+                }
+            } else {
+                g.setColor(colorFriendly);
+            }
         }
     }
 }

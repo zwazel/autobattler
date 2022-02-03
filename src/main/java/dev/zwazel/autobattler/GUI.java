@@ -37,10 +37,10 @@ public class GUI extends Canvas {
                 lastUnit = currentUnit;
                 currentUnit = unitIterator.next();
                 battlerGen2.doTurn(unitIterator, currentUnit, false);
-            } else {
-                if (!battlerGen2.isFightFinished()) {
-                    unitIterator = battlerGen2.getUnits().listIterator();
-                }
+            }
+
+            if (!battlerGen2.isFightFinished() && !unitIterator.hasNext()) {
+                unitIterator = battlerGen2.getUnits().listIterator();
             }
             repaint();
         });
@@ -56,9 +56,6 @@ public class GUI extends Canvas {
         g.drawRect(0, 0, grid.getWidth() * scalar, grid.getHeight() * scalar);
 
         Vector gridPositionNow = new Vector(0, 0);
-        System.out.println("------------------");
-        System.out.println("currentUnit = " + currentUnit);
-        System.out.println("lastUnit = " + lastUnit);
         for (int row = 0; row < grid.getHeight(); row++) {
             gridPositionNow.setY(row * scalar);
             for (int column = 0; column < grid.getWidth(); column++) {
@@ -66,14 +63,13 @@ public class GUI extends Canvas {
 
                 GridCell gridCell = grid.getGridCells()[column][row];
                 if (gridCell.getCurrentObstacle() != null) {
-                    System.out.println("obstacle = " + gridCell.getCurrentObstacle());
-                    if (!gridCell.getCurrentObstacle().equals(currentUnit) || !gridCell.getCurrentObstacle().equals(lastUnit)) {
+                    if (!gridCell.getCurrentObstacle().equals(currentUnit) && !gridCell.getCurrentObstacle().equals(lastUnit)) {
                         g.setColor(Color.black);
                     } else {
                         if (gridCell.getCurrentObstacle().equals(currentUnit)) {
-                            g.setColor(Color.PINK);
-                        } else {
                             g.setColor(Color.YELLOW);
+                        } else {
+                            g.setColor(Color.PINK);
                         }
                     }
                     g.fillRect(gridPositionNow.getX(), gridPositionNow.getY(), scalar, scalar);

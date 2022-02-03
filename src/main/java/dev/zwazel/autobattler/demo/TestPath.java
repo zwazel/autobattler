@@ -7,9 +7,6 @@ import dev.zwazel.autobattler.classes.utils.map.Grid;
 import dev.zwazel.autobattler.classes.utils.map.GridGraph;
 import dev.zwazel.autobattler.classes.utils.map.Node;
 
-import javax.swing.*;
-import java.awt.*;
-
 public class TestPath {
     public static void main(String[] args) {
         Grid grid = new Grid(new Vector(5, 5));
@@ -34,20 +31,10 @@ public class TestPath {
             System.out.println("no path found");
         }
         System.out.println("PATH VISUALIZED");
-        drawGrid(grid, path, start, end, true);
+        drawGrid(grid, path, start, end);
     }
 
-    private static void drawGrid(Grid grid, Node[] path, Vector start, Vector end, boolean gui) {
-        if (gui) {
-            int scalar = 50;
-            JFrame frame = new JFrame();
-            frame.setSize(grid.getWidth()*scalar, grid.getHeight()*scalar);
-            MyCanvas myCanvas = new MyCanvas(path, start, end, grid, scalar);
-            frame.add(myCanvas, BorderLayout.CENTER);
-
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setVisible(true);
-        }
+    private static void drawGrid(Grid grid, Node[] path, Vector start, Vector end) {
         StringBuilder vertical = new StringBuilder();
         vertical.append("-".repeat((grid.getWidth()) * 4 + 1));
 

@@ -42,13 +42,15 @@ public class Vector {
         this.y += vector.getY();
     }
 
-    public void subtract(int num) {
-        subtract(new Vector(num, num));
+    public Vector subtract(int num) {
+        return subtract(new Vector(num, num));
     }
 
-    public void subtract(Vector vector) {
+    public Vector subtract(Vector vector) {
         this.x -= vector.getX();
         this.y -= vector.getY();
+
+        return this;
     }
 
     public void multiply(int num) {

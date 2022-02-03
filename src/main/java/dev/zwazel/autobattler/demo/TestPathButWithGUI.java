@@ -1,18 +1,17 @@
 package dev.zwazel.autobattler.demo;
 
+import dev.zwazel.autobattler.classes.units.SimpleWall;
 import dev.zwazel.autobattler.classes.utils.Vector;
-import dev.zwazel.autobattler.classes.utils.map.FindPath;
-import dev.zwazel.autobattler.classes.utils.map.Grid;
-import dev.zwazel.autobattler.classes.utils.map.GridGraph;
-import dev.zwazel.autobattler.classes.utils.map.Node;
+import dev.zwazel.autobattler.classes.utils.map.*;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.DecimalFormat;
 
 
-public class MyCanvas extends Canvas implements MouseListener {
+public class TestPathButWithGUI extends Canvas implements MouseListener {
     private static final DecimalFormat df = new DecimalFormat("0.00");
     private Node[] nodes;
     private Vector start;
@@ -20,7 +19,11 @@ public class MyCanvas extends Canvas implements MouseListener {
     private Grid grid;
     private int scalar;
 
-    public MyCanvas(Node[] nodes, Vector start, Vector end, Grid grid, int scalar) {
+    public TestPathButWithGUI(Vector start, Vector end, Grid grid, int scalar) {
+        this(new FindPath().findPath(start, end, new GridGraph(grid)), start, end, grid, scalar);
+    }
+
+    public TestPathButWithGUI(Node[] nodes, Vector start, Vector end, Grid grid, int scalar) {
         this.nodes = nodes;
         this.start = start;
         this.end = end;
@@ -29,9 +32,25 @@ public class MyCanvas extends Canvas implements MouseListener {
         this.addMouseListener(this);
     }
 
+    public static void main(String[] args) {
+        Grid grid = new Grid(10, 10);
+        int scalar = 50;
+
+
+        JFrame frame = new JFrame();
+        frame.setSize(grid.getWidth() * scalar, grid.getHeight() * scalar);
+        TestPathButWithGUI testPathButWithGUI = new TestPathButWithGUI(new Vector(0, 0), grid.getGridSize().subtract(1), grid, scalar);
+        frame.add(testPathButWithGUI, BorderLayout.CENTER);
+
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+
     @Override
     public void paint(Graphics g) {
         g.setColor(Color.black);
+        g.drawRect(0, 0, grid.getWidth() * scalar, grid.getHeight() * scalar);
+
         Vector gridPositionNow = new Vector(0, 0);
         for (int row = 0; row < grid.getHeight(); row++) {
             gridPositionNow.setY(row * scalar);
@@ -44,7 +63,7 @@ public class MyCanvas extends Canvas implements MouseListener {
             }
         }
 
-        g.setColor(Color.PINK);
+        g.setColor(Color.GREEN);
         g.fillRect(start.getX() * scalar, start.getY() * scalar, scalar, scalar);
 
         g.setColor(Color.BLUE);
@@ -72,6 +91,7 @@ public class MyCanvas extends Canvas implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
+
     }
 
     @Override
@@ -80,11 +100,30 @@ public class MyCanvas extends Canvas implements MouseListener {
         int y = e.getY();
 
         // clamp x and y to the width and height of the grid
-        x = Math.min(x, (grid.getWidth()-1) * scalar);
-        y = Math.min(y, (grid.getHeight()-1) * scalar);
+        x = Math.min(x, (grid.getWidth() - 1) * scalar);
+        y = Math.min(y, (grid.getHeight() - 1) * scalar);
 
-        if(e.getButton() == MouseEvent.BUTTON1) {
+        if (e.getButton() == MouseEvent.BUTTON3) {
             this.end = new Vector(x / scalar, y / scalar);
+
+            FindPath findPath = new FindPath();
+            this.nodes = findPath.findPath(start, end, new GridGraph(grid));
+
+            repaint();
+        } else if (e.getButton() == MouseEvent.BUTTON1) {
+            this.start = new Vector(x / scalar, y / scalar);
+
+            FindPath findPath = new FindPath();
+            this.nodes = findPath.findPath(start, end, new GridGraph(grid));
+
+            repaint();
+        } else if (e.getButton() == MouseEvent.BUTTON2) {
+            GridCell gridCell = this.grid.getGridCells()[x / scalar][y / scalar];
+            if (gridCell.getCurrentObstacle() != null) {
+                gridCell.setCurrentObstacle(null);
+            } else {
+                gridCell.setCurrentObstacle(new SimpleWall());
+            }
 
             FindPath findPath = new FindPath();
             this.nodes = findPath.findPath(start, end, new GridGraph(grid));
@@ -105,45 +144,5 @@ public class MyCanvas extends Canvas implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
 
-    }
-
-    public Node[] getNodes() {
-        return nodes;
-    }
-
-    public void setNodes(Node[] nodes) {
-        this.nodes = nodes;
-    }
-
-    public Vector getStart() {
-        return start;
-    }
-
-    public void setStart(Vector start) {
-        this.start = start;
-    }
-
-    public Vector getEnd() {
-        return end;
-    }
-
-    public void setEnd(Vector end) {
-        this.end = end;
-    }
-
-    public Grid getGrid() {
-        return grid;
-    }
-
-    public void setGrid(Grid grid) {
-        this.grid = grid;
-    }
-
-    public int getScalar() {
-        return scalar;
-    }
-
-    public void setScalar(int scalar) {
-        this.scalar = scalar;
     }
 }

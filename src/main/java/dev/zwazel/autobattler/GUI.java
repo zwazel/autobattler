@@ -1,10 +1,11 @@
 package dev.zwazel.autobattler;
 
+import dev.zwazel.autobattler.classes.Obstacle;
+import dev.zwazel.autobattler.classes.enums.Side;
+import dev.zwazel.autobattler.classes.units.MyFirstUnit;
 import dev.zwazel.autobattler.classes.units.Unit;
 import dev.zwazel.autobattler.classes.utils.Vector;
-import dev.zwazel.autobattler.classes.utils.map.Grid;
-import dev.zwazel.autobattler.classes.utils.map.GridCell;
-import dev.zwazel.autobattler.classes.utils.map.Node;
+import dev.zwazel.autobattler.classes.utils.map.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,6 +22,13 @@ public class GUI extends Canvas {
     private Vector end = null;
     private Unit currentUnit = null;
     private Unit lastUnit = null;
+    private Unit target = null;
+
+    private Color colorFriendly = Color.green;
+    private Color colorEnemy = Color.pink;
+    private Color colorCurrentUnit = Color.cyan;
+    private Color colorTarget = Color.red;
+    private Color colorLastUnit = Color.yellow;
 
     public GUI(BattlerGen2 battlerGen2, int scalar) {
         this.battlerGen2 = battlerGen2;
@@ -33,10 +41,23 @@ public class GUI extends Canvas {
         frame.add(this, BorderLayout.CENTER);
         Button nextButton = new Button("Next");
         nextButton.addActionListener(e -> {
+            System.out.println("------------------");
             if (unitIterator.hasNext()) {
                 lastUnit = currentUnit;
                 currentUnit = unitIterator.next();
-                battlerGen2.doTurn(unitIterator, currentUnit, false);
+                start = currentUnit.getGridPosition();
+                Unit target = battlerGen2.doTurn(unitIterator, currentUnit, false);
+                if (target != null) {
+                    end = target.getGridPosition();
+                    this.target = target;
+                    FindPath findPath = new FindPath();
+                    nodes = findPath.findPath(currentUnit.getGridPosition(), findPath.findClosestNearbyNode(grid, currentUnit.getGridPosition(), end), new GridGraph(grid));
+                    System.out.println("currentUnit = " + currentUnit);
+                    System.out.println("target = " + target);
+                } else {
+                    end = null;
+                    nodes = new Node[0];
+                }
             }
 
             if (!battlerGen2.isFightFinished() && !unitIterator.hasNext()) {
@@ -63,30 +84,49 @@ public class GUI extends Canvas {
 
                 GridCell gridCell = grid.getGridCells()[column][row];
                 if (gridCell.getCurrentObstacle() != null) {
-                    if (!gridCell.getCurrentObstacle().equals(currentUnit) && !gridCell.getCurrentObstacle().equals(lastUnit)) {
-                        g.setColor(Color.black);
+                    Obstacle obstacle = gridCell.getCurrentObstacle();
+                    if (!obstacle.equals(currentUnit) && !obstacle.equals(lastUnit) && !obstacle.equals(target)) {
+                        if (obstacle.getClass() == MyFirstUnit.class) {
+                            MyFirstUnit unit = (MyFirstUnit) obstacle;
+                            if (unit.getSide() == Side.FRIENDLY) {
+                                // friendlies
+                                g.setColor(colorFriendly);
+                            } else {
+                                // enemies
+                                g.setColor(colorEnemy);
+                            }
+                        }
                     } else {
-                        if (gridCell.getCurrentObstacle().equals(currentUnit)) {
-                            g.setColor(Color.YELLOW);
+                        if (obstacle.equals(currentUnit)) {
+                            // current unit
+                            g.setColor(colorCurrentUnit);
+                        } else if (obstacle.equals(lastUnit)) {
+                            // last unit
+                            g.setColor(colorLastUnit);
                         } else {
-                            g.setColor(Color.PINK);
+                            // target unit
+                            g.setColor(colorTarget);
                         }
                     }
                     g.fillRect(gridPositionNow.getX(), gridPositionNow.getY(), scalar, scalar);
+                    g.setColor(Color.BLACK);
+                    if (obstacle.getClass() == MyFirstUnit.class) {
+                        MyFirstUnit unit = (MyFirstUnit) obstacle;
+                        g.drawString(unit.getName() + "(" + unit.getID() + ")", gridPositionNow.getX(), gridPositionNow.getY());
+                    }
                 }
             }
         }
-        System.out.println("---------------------------------");
 
-        if (start != null) {
-            g.setColor(Color.GREEN);
-            g.fillRect(start.getX() * scalar, start.getY() * scalar, scalar, scalar);
-        }
-
-        if (end != null) {
-            g.setColor(Color.BLUE);
-            g.fillRect(end.getX() * scalar, end.getY() * scalar, scalar, scalar);
-        }
+//        if (start != null) {
+//            g.setColor(Color.PINK);
+//            g.fillRect(start.getX() * scalar, start.getY() * scalar, scalar, scalar);
+//        }
+//
+//        if (end != null) {
+//            g.setColor(Color.BLUE);
+//            g.fillRect(end.getX() * scalar, end.getY() * scalar, scalar, scalar);
+//        }
 
         Vector nodeBefore = null;
         for (Node n : nodes) {

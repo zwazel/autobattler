@@ -49,10 +49,10 @@ public class BattlerGen2 {
         grid = new Grid(gridSize);
 
         try {
-            getDataFromFormationPlan(FRIENDLY, "friendlyFormation.json");
-            getDataFromFormationPlan(ENEMY, "enemyFormation.json");
-//            friendlyUser = getDataFromFormationPlan(FRIENDLY, "friendlyFormationBig.json");
-//            enemyUser = getDataFromFormationPlan(ENEMY, "enemyFormationBig.json");
+//            getDataFromFormationPlan(FRIENDLY, "friendlyFormation.json");
+//            getDataFromFormationPlan(ENEMY, "enemyFormation.json");
+            friendlyUser = getDataFromFormationPlan(FRIENDLY, "friendlyFormationBig.json");
+            enemyUser = getDataFromFormationPlan(ENEMY, "enemyFormationBig.json");
 
             friendlyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
             enemyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
@@ -163,7 +163,7 @@ public class BattlerGen2 {
         doTurn(unitIterator, unit, createHistory);
     }
 
-    public void doTurn(Iterator<Unit> unitIterator, Unit unit, boolean createHistory) {
+    public Unit doTurn(Iterator<Unit> unitIterator, Unit unit, boolean createHistory) {
         Vector posBefore = unit.getGridPosition();
         // TODO: 27.01.2022 update the way units die, think about how it should work!
         if (unit.getMyState() != State.ALIVE) {
@@ -184,7 +184,9 @@ public class BattlerGen2 {
             }
             grid.updateOccupiedGrid(posBefore, null);
             grid.updateOccupiedGrid(unit.getGridPosition(), unit);
+            return actionHistory.targets()[0];
         }
+        return null;
     }
 
     private void drawBoard() {

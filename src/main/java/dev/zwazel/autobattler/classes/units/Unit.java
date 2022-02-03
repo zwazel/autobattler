@@ -11,7 +11,6 @@ import dev.zwazel.autobattler.classes.utils.Vector;
 import dev.zwazel.autobattler.classes.utils.json.ActionHistory;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 public abstract class Unit implements Obstacle, Cloneable {
     private final long ID;

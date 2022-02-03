@@ -16,7 +16,7 @@ import java.util.Random;
 
 public class MyFirstUnit extends Unit {
     public MyFirstUnit(long id, int priority, int level, String name, Vector position, BattlerGen2 battler, Side side) {
-        super(id, level, name, "First Unit", 100, 100, 'u', position, battler.getGrid().getGridSize(), 1, battler, side, priority, UnitTypes.MY_FIRST_UNIT);
+        super(id, level, name, "First Unit", 10, 100, 'u', position, battler.getGrid().getGridSize(), 1, battler, side, priority, UnitTypes.MY_FIRST_UNIT);
         this.setAbilities(new Ability[]{new DefaultPunch(this)});
     }
 

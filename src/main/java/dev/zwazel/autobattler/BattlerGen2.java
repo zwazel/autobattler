@@ -2,6 +2,12 @@ package dev.zwazel.autobattler;
 
 import com.google.gson.*;
 import dev.zwazel.autobattler.classes.Obstacle;
+import dev.zwazel.autobattler.classes.enums.Action;
+import dev.zwazel.autobattler.classes.enums.Side;
+import dev.zwazel.autobattler.classes.enums.State;
+import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
+import dev.zwazel.autobattler.classes.units.MyFirstUnit;
+import dev.zwazel.autobattler.classes.units.Unit;
 import dev.zwazel.autobattler.classes.utils.*;
 import dev.zwazel.autobattler.classes.utils.json.ActionHistory;
 import dev.zwazel.autobattler.classes.utils.json.Export;
@@ -9,12 +15,6 @@ import dev.zwazel.autobattler.classes.utils.json.History;
 import dev.zwazel.autobattler.classes.utils.map.FindPath;
 import dev.zwazel.autobattler.classes.utils.map.Grid;
 import dev.zwazel.autobattler.classes.utils.map.GridCell;
-import dev.zwazel.autobattler.classes.enums.Action;
-import dev.zwazel.autobattler.classes.enums.Side;
-import dev.zwazel.autobattler.classes.enums.State;
-import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
-import dev.zwazel.autobattler.classes.units.MyFirstUnit;
-import dev.zwazel.autobattler.classes.units.Unit;
 
 import java.io.*;
 import java.net.URISyntaxException;

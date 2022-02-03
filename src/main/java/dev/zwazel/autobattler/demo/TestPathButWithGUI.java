@@ -13,11 +13,11 @@ import java.text.DecimalFormat;
 
 public class TestPathButWithGUI extends Canvas implements MouseListener {
     private static final DecimalFormat df = new DecimalFormat("0.00");
+    private final Grid grid;
+    private final int scalar;
     private Node[] nodes;
     private Vector start;
     private Vector end;
-    private Grid grid;
-    private int scalar;
 
     public TestPathButWithGUI(Vector start, Vector end, Grid grid, int scalar) {
         this(new FindPath().findPath(start, end, new GridGraph(grid)), start, end, grid, scalar);

@@ -198,7 +198,6 @@ public class GUI extends Canvas {
     }
 
     private void differentiateFriendlyAndEnemy(Graphics g, Unit unit, boolean shouldDifferentiate, Color colorIfDifferentiate) {
-        System.out.println("shouldDifferentiate = " + shouldDifferentiate + ", colorIfDifferentiate = " + colorIfDifferentiate);
         if (shouldDifferentiate) {
             g.setColor(colorIfDifferentiate);
         } else {

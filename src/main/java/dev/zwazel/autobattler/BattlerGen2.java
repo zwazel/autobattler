@@ -83,8 +83,6 @@ public class BattlerGen2 {
 
             if (runWithGUI) {
                 GUI gui = new GUI(this, 50);
-
-
             } else {
                 drawBoard();
                 while (!fightFinished) {

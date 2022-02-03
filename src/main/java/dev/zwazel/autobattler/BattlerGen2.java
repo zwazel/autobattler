@@ -42,7 +42,7 @@ public class BattlerGen2 {
         enemyUnitList = new ArrayList<>();
     }
 
-    public BattlerGen2(boolean createJson, Vector gridSize) {
+    public BattlerGen2(boolean createJson, boolean runWithGUI, Vector gridSize) {
         friendlyUnitList = new ArrayList<>();
         enemyUnitList = new ArrayList<>();
         grid = new Grid(gridSize);
@@ -130,7 +130,7 @@ public class BattlerGen2 {
     }
 
     public static void main(String[] args) {
-        new BattlerGen2(true, new Vector(10, 10));
+        new BattlerGen2(false, true, new Vector(10, 10));
     }
 
     public boolean placeOccupied(Vector toGo) {

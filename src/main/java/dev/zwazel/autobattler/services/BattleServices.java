@@ -13,7 +13,7 @@ import javax.ws.rs.core.Response;
 public class BattleServices {
     @GetMapping(path = "/getFightHistory")
     public Response getFightHistory() {
-        BattlerGen2 battler = new BattlerGen2(false, new Vector(10, 10));
+        BattlerGen2 battler = new BattlerGen2(false, false, new Vector(10, 10));
         History history = battler.getHistory();
         return Response.ok().entity(HistoryToJson.toJson(history)).build();
     }

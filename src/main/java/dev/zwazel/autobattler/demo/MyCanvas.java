@@ -1,7 +1,9 @@
 package dev.zwazel.autobattler.demo;
 
 import dev.zwazel.autobattler.classes.utils.Vector;
+import dev.zwazel.autobattler.classes.utils.map.FindPath;
 import dev.zwazel.autobattler.classes.utils.map.Grid;
+import dev.zwazel.autobattler.classes.utils.map.GridGraph;
 import dev.zwazel.autobattler.classes.utils.map.Node;
 
 import java.awt.*;
@@ -12,11 +14,11 @@ import java.text.DecimalFormat;
 
 public class MyCanvas extends Canvas implements MouseListener {
     private static final DecimalFormat df = new DecimalFormat("0.00");
-    private final Node[] nodes;
-    private final Vector start;
-    private final Vector end;
-    private final Grid grid;
-    private final int scalar;
+    private Node[] nodes;
+    private Vector start;
+    private Vector end;
+    private Grid grid;
+    private int scalar;
 
     public MyCanvas(Node[] nodes, Vector start, Vector end, Grid grid, int scalar) {
         this.nodes = nodes;
@@ -77,7 +79,18 @@ public class MyCanvas extends Canvas implements MouseListener {
         int x = e.getX();
         int y = e.getY();
 
-        System.out.println("Mouse Clicked: " + x + " " + y);
+        // clamp x and y to the width and height of the grid
+        x = Math.min(x, (grid.getWidth()-1) * scalar);
+        y = Math.min(y, (grid.getHeight()-1) * scalar);
+
+        if(e.getButton() == MouseEvent.BUTTON1) {
+            this.end = new Vector(x / scalar, y / scalar);
+
+            FindPath findPath = new FindPath();
+            this.nodes = findPath.findPath(start, end, new GridGraph(grid));
+
+            repaint();
+        }
     }
 
     @Override
@@ -92,5 +105,45 @@ public class MyCanvas extends Canvas implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
 
+    }
+
+    public Node[] getNodes() {
+        return nodes;
+    }
+
+    public void setNodes(Node[] nodes) {
+        this.nodes = nodes;
+    }
+
+    public Vector getStart() {
+        return start;
+    }
+
+    public void setStart(Vector start) {
+        this.start = start;
+    }
+
+    public Vector getEnd() {
+        return end;
+    }
+
+    public void setEnd(Vector end) {
+        this.end = end;
+    }
+
+    public Grid getGrid() {
+        return grid;
+    }
+
+    public void setGrid(Grid grid) {
+        this.grid = grid;
+    }
+
+    public int getScalar() {
+        return scalar;
+    }
+
+    public void setScalar(int scalar) {
+        this.scalar = scalar;
     }
 }

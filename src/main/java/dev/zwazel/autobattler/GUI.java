@@ -26,26 +26,26 @@ public class GUI extends Canvas {
     private Unit target = null;
     private boolean currentUnitMoved = false;
 
-    private boolean differentiateSide = true;
-    private boolean differentiateLastUnit = false;
-    private boolean differentiateCurrentUnit = true;
-    private boolean differentiateTarget = true;
-    private boolean showLastPosition = true;
-    private boolean differentiateEnd = true;
+    private final boolean differentiateSide = true;
+    private final boolean differentiateLastUnit = false;
+    private final boolean differentiateCurrentUnit = true;
+    private final boolean differentiateTarget = true;
+    private final boolean showLastPosition = true;
+    private final boolean differentiateEnd = true;
 
-    private JFrame frame = new JFrame();
+    private final JFrame frame = new JFrame();
 
-    private Label currentUnitLabel = new Label("Current Unit = ");
-    private Label lastUnitLabel = new Label("Last Unit = ");
-    private Label targetLabel = new Label("Target = ");
-    private Label currentAction = new Label("Current Action = ");
+    private final Label currentUnitLabel = new Label("Current Unit = ");
+    private final Label lastUnitLabel = new Label("Last Unit = ");
+    private final Label targetLabel = new Label("Target = ");
+    private final Label currentAction = new Label("Current Action = ");
 
-    private Color colorStart = Color.cyan;
-    private Color colorCurrentUnit = Color.blue;
-    private Color colorFriendly = Color.green;
-    private Color colorEnemy = Color.pink;
-    private Color colorTarget = Color.red;
-    private Color colorLastUnit = Color.yellow;
+    private final Color colorStart = Color.cyan;
+    private final Color colorCurrentUnit = Color.blue;
+    private final Color colorFriendly = Color.green;
+    private final Color colorEnemy = Color.pink;
+    private final Color colorTarget = Color.red;
+    private final Color colorLastUnit = Color.yellow;
 
     public GUI(BattlerGen2 battlerGen2, int scalar) {
         this.battlerGen2 = battlerGen2;
@@ -158,15 +158,12 @@ public class GUI extends Canvas {
                     } else {
                         if (obstacle.equals(currentUnit)) {
                             // current unit
-                            System.out.println("current unit");
                             differentiateFriendlyAndEnemy(g, currentUnit, differentiateCurrentUnit, colorCurrentUnit);
                         } else if (obstacle.equals(lastUnit) && !lastUnit.equals(target)) {
                             // last unit
-                            System.out.println("last unit");
                             differentiateFriendlyAndEnemy(g, lastUnit, differentiateLastUnit, colorLastUnit);
                         } else {
                             // target unit
-                            System.out.println("target unit");
                             differentiateFriendlyAndEnemy(g, target, differentiateTarget, colorTarget);
                         }
                     }

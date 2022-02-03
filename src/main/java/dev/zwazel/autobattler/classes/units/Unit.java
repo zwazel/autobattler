@@ -2,15 +2,16 @@ package dev.zwazel.autobattler.classes.units;
 
 import dev.zwazel.autobattler.BattlerGen2;
 import dev.zwazel.autobattler.classes.Obstacle;
-import dev.zwazel.autobattler.classes.utils.Vector;
-import dev.zwazel.autobattler.classes.utils.json.ActionHistory;
 import dev.zwazel.autobattler.classes.abilities.Ability;
 import dev.zwazel.autobattler.classes.enums.Action;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
 import dev.zwazel.autobattler.classes.enums.UnitTypes;
+import dev.zwazel.autobattler.classes.utils.Vector;
+import dev.zwazel.autobattler.classes.utils.json.ActionHistory;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public abstract class Unit implements Obstacle, Cloneable {
     private final long ID;
@@ -45,6 +46,21 @@ public abstract class Unit implements Obstacle, Cloneable {
         this.side = side;
         this.priority = priority;
         this.type = type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Unit unit = (Unit) o;
+        return getID() == unit.getID() && getSymbol() == unit.getSymbol() && getHealth() == unit.getHealth() && getEnergy() == unit.getEnergy() && getLevel() == unit.getLevel() && getPriority() == unit.getPriority() && getSpeed() == unit.getSpeed() && getSide() == unit.getSide() && getType() == unit.getType() && getName().equals(unit.getName()) && getDescription().equals(unit.getDescription()) && Arrays.equals(getAbilities(), unit.getAbilities()) && getGridPosition().equals(unit.getGridPosition()) && getGridSize().equals(unit.getGridSize()) && getBattler().equals(unit.getBattler()) && getMyState() == unit.getMyState();
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(getID(), getSymbol(), getSide(), getType(), getHealth(), getEnergy(), getLevel(), getPriority(), getName(), getDescription(), getGridPosition(), getGridSize(), getSpeed(), getBattler(), getMyState());
+        result = 31 * result + Arrays.hashCode(getAbilities());
+        return result;
     }
 
     public abstract ActionHistory run();

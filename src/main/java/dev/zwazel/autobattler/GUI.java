@@ -24,9 +24,16 @@ public class GUI extends Canvas {
     private Unit lastUnit = null;
     private Unit target = null;
 
+    private JFrame frame = new JFrame();
+
+    private Label currentUnitLabel = new Label("Current Unit = ");
+    private Label lastUnitLabel = new Label("Last Unit = ");
+    private Label targetLabel = new Label("Target = ");
+
+    private Color colorStart = Color.cyan;
+    private Color colorCurrentUnit = Color.blue;
     private Color colorFriendly = Color.green;
     private Color colorEnemy = Color.pink;
-    private Color colorCurrentUnit = Color.cyan;
     private Color colorTarget = Color.red;
     private Color colorLastUnit = Color.yellow;
 
@@ -36,15 +43,20 @@ public class GUI extends Canvas {
         this.scalar = scalar;
         this.unitIterator = battlerGen2.getUnits().listIterator();
 
-        JFrame frame = new JFrame();
         frame.setSize(grid.getWidth() * scalar, grid.getHeight() * scalar);
+
         frame.add(this, BorderLayout.CENTER);
+
         Button nextButton = new Button("Next");
         nextButton.addActionListener(e -> {
             System.out.println("------------------");
             if (unitIterator.hasNext()) {
                 lastUnit = currentUnit;
+                if (lastUnit != null) {
+                    this.lastUnitLabel.setText("Last Unit = " + lastUnit.getName() + " (" + lastUnit.getID() + "), at " + lastUnit.getGridPosition());
+                }
                 currentUnit = unitIterator.next();
+                this.currentUnitLabel.setText("Current Unit = " + currentUnit.getName() + " (" + currentUnit.getID() + ")");
                 start = currentUnit.getGridPosition();
                 Unit target = battlerGen2.doTurn(unitIterator, currentUnit, false);
                 if (target != null) {
@@ -52,11 +64,17 @@ public class GUI extends Canvas {
                     this.target = target;
                     FindPath findPath = new FindPath();
                     nodes = findPath.findPath(currentUnit.getGridPosition(), findPath.findClosestNearbyNode(grid, currentUnit.getGridPosition(), end), new GridGraph(grid));
-                    System.out.println("currentUnit = " + currentUnit);
-                    System.out.println("target = " + target);
+                    this.targetLabel.setText("Target = " + target.getName() + " (" + target.getID() + "), at " + end);
                 } else {
                     end = null;
                     nodes = new Node[0];
+                    this.targetLabel.setText("Target = ");
+                }
+
+                if (!start.equals(currentUnit.getGridPosition())) {
+                    currentUnitLabel.setText(currentUnitLabel.getText() + ", moved from " + start + " to " + currentUnit.getGridPosition());
+                } else {
+                    currentUnitLabel.setText(currentUnitLabel.getText() + ", stayed at " + currentUnit.getGridPosition());
                 }
             }
 
@@ -66,6 +84,14 @@ public class GUI extends Canvas {
             repaint();
         });
         frame.add(nextButton, BorderLayout.SOUTH);
+
+        // add the labels to a new panel underneath each other and add it to the frame as well on the north side
+        JPanel labelPanel = new JPanel();
+        labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.Y_AXIS));
+        labelPanel.add(currentUnitLabel);
+        labelPanel.add(lastUnitLabel);
+        labelPanel.add(targetLabel);
+        frame.add(labelPanel, BorderLayout.NORTH);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
@@ -118,11 +144,11 @@ public class GUI extends Canvas {
             }
         }
 
-//        if (start != null) {
-//            g.setColor(Color.PINK);
-//            g.fillRect(start.getX() * scalar, start.getY() * scalar, scalar, scalar);
-//        }
-//
+        if (start != null) {
+            g.setColor(colorStart);
+            g.fillRect(start.getX() * scalar, start.getY() * scalar, scalar, scalar);
+        }
+
 //        if (end != null) {
 //            g.setColor(Color.BLUE);
 //            g.fillRect(end.getX() * scalar, end.getY() * scalar, scalar, scalar);

@@ -1,4 +1,4 @@
-package dev.zwazel.autobattler.classes.Utils;
+package dev.zwazel.autobattler.classes.utils;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;

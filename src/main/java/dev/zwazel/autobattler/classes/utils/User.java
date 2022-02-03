@@ -1,4 +1,4 @@
-package dev.zwazel.autobattler.classes.Utils;
+package dev.zwazel.autobattler.classes.utils;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

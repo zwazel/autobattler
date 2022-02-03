@@ -1,9 +1,9 @@
 package dev.zwazel.autobattler.services;
 
 import dev.zwazel.autobattler.BattlerGen2;
-import dev.zwazel.autobattler.classes.Utils.Vector;
-import dev.zwazel.autobattler.classes.Utils.json.History;
-import dev.zwazel.autobattler.classes.Utils.json.HistoryToJson;
+import dev.zwazel.autobattler.classes.utils.Vector;
+import dev.zwazel.autobattler.classes.utils.json.History;
+import dev.zwazel.autobattler.classes.utils.json.HistoryToJson;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 

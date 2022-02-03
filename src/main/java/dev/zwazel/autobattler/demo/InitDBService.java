@@ -1,11 +1,11 @@
 package dev.zwazel.autobattler.demo;
 
 import com.google.gson.*;
-import dev.zwazel.autobattler.classes.Utils.GetFile;
-import dev.zwazel.autobattler.classes.Utils.UnitTypeParser;
-import dev.zwazel.autobattler.classes.Utils.User;
-import dev.zwazel.autobattler.classes.Utils.database.repositories.UserRepository;
-import dev.zwazel.autobattler.classes.Utils.map.Grid;
+import dev.zwazel.autobattler.classes.utils.GetFile;
+import dev.zwazel.autobattler.classes.utils.UnitTypeParser;
+import dev.zwazel.autobattler.classes.utils.User;
+import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
+import dev.zwazel.autobattler.classes.utils.map.Grid;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.units.Unit;

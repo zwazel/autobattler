@@ -1,7 +1,7 @@
-package dev.zwazel.autobattler.classes.Utils.map;
+package dev.zwazel.autobattler.classes.utils.map;
 
 import dev.zwazel.autobattler.classes.Obstacle;
-import dev.zwazel.autobattler.classes.Utils.Vector;
+import dev.zwazel.autobattler.classes.utils.Vector;
 
 import java.util.Arrays;
 

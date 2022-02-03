@@ -1,8 +1,8 @@
-package dev.zwazel.autobattler.classes.Utils.database;
+package dev.zwazel.autobattler.classes.utils.database;
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
-import dev.zwazel.autobattler.classes.Utils.User;
+import dev.zwazel.autobattler.classes.utils.User;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;

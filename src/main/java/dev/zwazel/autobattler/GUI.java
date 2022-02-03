@@ -31,7 +31,6 @@ public class GUI extends Canvas {
     private final boolean differentiateCurrentUnit = true;
     private final boolean differentiateTarget = true;
     private final boolean showLastPosition = true;
-    private final boolean differentiateEnd = true;
 
     private final JFrame frame = new JFrame();
 

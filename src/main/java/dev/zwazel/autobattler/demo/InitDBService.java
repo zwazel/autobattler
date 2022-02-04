@@ -44,8 +44,8 @@ public class InitDBService {
     @GetMapping(path = "/initDB", produces = "text/plain")
     public String initDB() {
         try {
-            User userLeft = getDataFromFormationPlan(FRIENDLY, "friendlyFormation.json");
-            User userRight = getDataFromFormationPlan(ENEMY, "enemyFormation.json");
+            User userLeft = getDataFromFormationPlan(FRIENDLY, "friendlyFormationBig.json");
+            User userRight = getDataFromFormationPlan(ENEMY, "enemyFormationBig.json");
 
             userRepository.save(userLeft);
             userRepository.save(userRight);

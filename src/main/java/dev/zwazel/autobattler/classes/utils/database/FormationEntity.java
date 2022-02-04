@@ -57,4 +57,13 @@ public class FormationEntity {
     public void setFormationJson(String formationJson) {
         this.formationJson = formationJson;
     }
+
+    @Override
+    public String toString() {
+        return "FormationEntity{" +
+                "id=" + id +
+                ", formationJson='" + formationJson + '\'' +
+                ", user=" + user +
+                '}';
+    }
 }

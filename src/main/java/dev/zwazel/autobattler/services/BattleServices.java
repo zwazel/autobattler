@@ -15,6 +15,10 @@ public class BattleServices {
     public Response getFightHistory() {
         BattlerGen2 battler = new BattlerGen2(false, false, new Vector(10, 10));
         History history = battler.getHistory();
+        if (history == null) {
+            // return error
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("History doesn't exist!").build();
+        }
         return Response.ok().entity(HistoryToJson.toJson(history)).build();
     }
 }

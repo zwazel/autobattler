@@ -5,7 +5,9 @@ import dev.zwazel.autobattler.classes.Obstacle;
 import dev.zwazel.autobattler.classes.enums.Action;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
+import dev.zwazel.autobattler.classes.exceptions.FormationNotFound;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
+import dev.zwazel.autobattler.classes.exceptions.UserNotFound;
 import dev.zwazel.autobattler.classes.units.MyFirstUnit;
 import dev.zwazel.autobattler.classes.units.Unit;
 import dev.zwazel.autobattler.classes.utils.Vector;
@@ -61,14 +63,19 @@ public class BattlerGen2 {
         formationEntityRepository = BeanUtil.getBean(FormationEntityRepository.class);
 
         try {
-            Optional<User> userLeft = userRepository.findById(1L);
-            Optional<User> userRight = userRepository.findById(2L);
+            long friendlyUserID = 1L;
+            long enemyUserID = 2L;
+            Optional<User> userLeft = userRepository.findById(friendlyUserID);
+            Optional<User> userRight = userRepository.findById(enemyUserID);
 
             if (userLeft.isPresent() && userRight.isPresent()) {
                 friendlyUser = userLeft.get();
                 enemyUser = userRight.get();
-                Optional<FormationEntity> formationEntityLeft = formationEntityRepository.findByUserIdAndId(friendlyUser.getId(), 3L);
-                Optional<FormationEntity> formationEntityRight = formationEntityRepository.findByUserIdAndId(enemyUser.getId(), 4L);
+
+                long formationLeftID = 3L;
+                long formationRightID = 4L;
+                Optional<FormationEntity> formationEntityLeft = formationEntityRepository.findByUserIdAndId(friendlyUser.getId(), formationLeftID);
+                Optional<FormationEntity> formationEntityRight = formationEntityRepository.findByUserIdAndId(enemyUser.getId(), formationRightID);
 
                 if (formationEntityLeft.isPresent() && formationEntityRight.isPresent()) {
                     getFormationFromJson(FRIENDLY, formationEntityLeft.get().getFormationJson());
@@ -129,6 +136,18 @@ public class BattlerGen2 {
                             }
                         }
                     }
+                } else {
+                    if (formationEntityLeft.isEmpty()) {
+                        throw new FormationNotFound(friendlyUser, formationLeftID);
+                    } else {
+                        throw new FormationNotFound(enemyUser, formationRightID);
+                    }
+                }
+            } else {
+                if (userLeft.isEmpty()) {
+                    throw new UserNotFound(friendlyUserID);
+                } else {
+                    throw new UserNotFound(enemyUserID);
                 }
             }
         } catch (Exception e) {

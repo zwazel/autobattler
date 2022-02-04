@@ -122,11 +122,6 @@ public class BattlerGen2 {
         new BattlerGen2(false, true, new Vector(10, 10));
     }
 
-    public boolean placeOccupied(Vector toGo) {
-        GridCell cell = grid.getGridCells()[toGo.getX()][toGo.getY()];
-        return cell.getCurrentObstacle() != null;
-    }
-
     // TODO: 28.01.2022 use a pathfinding like algorithm that goes from current node of unit and checks all the neighbours if there is someone, the first one found is considered the closest one
     public Unit findClosestOther(Unit unit, Side sideToCheck, boolean checkIfReachable, boolean includeDead) {
         Unit closestUnit = null;

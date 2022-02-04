@@ -67,7 +67,7 @@ public class MyFirstUnit extends Unit {
             this.setGridPosition(direction);
             return true;
         } else {
-            if (!this.getBattler().placeOccupied(direction)) {
+            if (new FindPath().isReachable(this.getGridPosition(), direction, this.getBattler().getGrid())) {
                 this.setGridPosition(direction);
                 return true;
             }

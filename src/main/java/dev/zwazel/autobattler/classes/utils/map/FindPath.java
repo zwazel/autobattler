@@ -55,8 +55,7 @@ public class FindPath {
         }
 
         if (isReachable(start, vectorToGo, grid)) {
-            FindPath findPath = new FindPath();
-            path = findPath.findPath(start, vectorToGo, new GridGraph(grid));
+            path = this.findPath(start, vectorToGo, new GridGraph(grid));
         } else {
             vectorToGo = findClosestNearbyNode(grid, start, vectorToGo);
             if (vectorToGo != null) {
@@ -102,8 +101,7 @@ public class FindPath {
             return false;
         }
 
-        FindPath path = new FindPath();
-        return (path.findPath(start, end, new GridGraph(grid)).length > 0);
+        return (this.findPath(start, end, new GridGraph(grid)).length > 0);
     }
 
     private void printNodeHierarchy(Node node) {

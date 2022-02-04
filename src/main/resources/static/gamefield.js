@@ -2,11 +2,28 @@ let rows;
 let columns;
 const gameBoard = document.getElementById("gameboard")
 let index = 0;
-let historyPlaybackSpeed = 50; // speed in ms (i think)
-let movementDelay = historyPlaybackSpeed / 2;
+const defaultPlaybackSpeed = 1000;
+const movementDelayAmount = 2;
+let historyPlaybackSpeed = defaultPlaybackSpeed; // speed in ms (i think)
+let movementDelay = historyPlaybackSpeed / movementDelayAmount;
 
 let unitsLeft = []
 let unitsRight = []
+
+function speedUp(scalar) {
+    historyPlaybackSpeed = defaultPlaybackSpeed / scalar;
+    movementDelay = historyPlaybackSpeed / movementDelayAmount;
+}
+
+function speedDown(scalar) {
+    historyPlaybackSpeed = defaultPlaybackSpeed * scalar;
+    movementDelay = historyPlaybackSpeed / movementDelayAmount;
+}
+
+function resetSpeed() {
+    historyPlaybackSpeed = defaultPlaybackSpeed;
+    movementDelay = historyPlaybackSpeed / movementDelayAmount;
+}
 
 async function loadGridSize() {
     let response = await fetch("/getFightHistory");

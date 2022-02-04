@@ -1,4 +1,4 @@
-package dev.zwazel.autobattler.classes.Utils.map;
+package dev.zwazel.autobattler.classes.utils.map;
 
 import java.util.Comparator;
 

@@ -1,12 +1,12 @@
-package dev.zwazel.autobattler.classes.Utils;
+package dev.zwazel.autobattler.classes.utils;
 
 import dev.zwazel.autobattler.classes.units.Unit;
 
 import java.util.ArrayList;
 
 public class Formation {
-
     private final User user;
+
     private final ArrayList<Unit> units;
 
     public Formation(User user, ArrayList<Unit> units) {

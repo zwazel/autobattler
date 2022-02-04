@@ -2,13 +2,13 @@ package dev.zwazel.autobattler.classes.units;
 
 import dev.zwazel.autobattler.BattlerGen2;
 import dev.zwazel.autobattler.classes.Obstacle;
-import dev.zwazel.autobattler.classes.Utils.Vector;
-import dev.zwazel.autobattler.classes.Utils.json.ActionHistory;
 import dev.zwazel.autobattler.classes.abilities.Ability;
 import dev.zwazel.autobattler.classes.enums.Action;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
 import dev.zwazel.autobattler.classes.enums.UnitTypes;
+import dev.zwazel.autobattler.classes.utils.Vector;
+import dev.zwazel.autobattler.classes.utils.json.ActionHistory;
 
 import java.util.Arrays;
 

@@ -1,11 +1,11 @@
 package dev.zwazel.autobattler.demo;
 
-import dev.zwazel.autobattler.classes.Utils.Vector;
-import dev.zwazel.autobattler.classes.Utils.map.FindPath;
-import dev.zwazel.autobattler.classes.Utils.map.Grid;
-import dev.zwazel.autobattler.classes.Utils.map.GridGraph;
-import dev.zwazel.autobattler.classes.Utils.map.Node;
 import dev.zwazel.autobattler.classes.units.SimpleWall;
+import dev.zwazel.autobattler.classes.utils.Vector;
+import dev.zwazel.autobattler.classes.utils.map.FindPath;
+import dev.zwazel.autobattler.classes.utils.map.Grid;
+import dev.zwazel.autobattler.classes.utils.map.GridGraph;
+import dev.zwazel.autobattler.classes.utils.map.Node;
 
 public class TestPath {
     public static void main(String[] args) {

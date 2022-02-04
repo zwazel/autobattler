@@ -1,6 +1,6 @@
-package dev.zwazel.autobattler.classes.Utils.json;
+package dev.zwazel.autobattler.classes.utils.json;
 
-import dev.zwazel.autobattler.classes.Utils.Vector;
+import dev.zwazel.autobattler.classes.utils.Vector;
 import dev.zwazel.autobattler.classes.abilities.Ability;
 import dev.zwazel.autobattler.classes.enums.Action;
 import dev.zwazel.autobattler.classes.units.Unit;

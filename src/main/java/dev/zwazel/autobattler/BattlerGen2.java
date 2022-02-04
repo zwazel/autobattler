@@ -2,24 +2,25 @@ package dev.zwazel.autobattler;
 
 import com.google.gson.*;
 import dev.zwazel.autobattler.classes.Obstacle;
-import dev.zwazel.autobattler.classes.Utils.*;
-import dev.zwazel.autobattler.classes.Utils.json.ActionHistory;
-import dev.zwazel.autobattler.classes.Utils.json.Export;
-import dev.zwazel.autobattler.classes.Utils.json.History;
-import dev.zwazel.autobattler.classes.Utils.map.FindPath;
-import dev.zwazel.autobattler.classes.Utils.map.Grid;
-import dev.zwazel.autobattler.classes.Utils.map.GridCell;
 import dev.zwazel.autobattler.classes.enums.Action;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.units.MyFirstUnit;
 import dev.zwazel.autobattler.classes.units.Unit;
+import dev.zwazel.autobattler.classes.utils.*;
+import dev.zwazel.autobattler.classes.utils.json.ActionHistory;
+import dev.zwazel.autobattler.classes.utils.json.Export;
+import dev.zwazel.autobattler.classes.utils.json.History;
+import dev.zwazel.autobattler.classes.utils.map.FindPath;
+import dev.zwazel.autobattler.classes.utils.map.Grid;
+import dev.zwazel.autobattler.classes.utils.map.GridCell;
 
 import java.io.*;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.ListIterator;
 
 import static dev.zwazel.autobattler.classes.enums.Side.ENEMY;
@@ -36,7 +37,13 @@ public class BattlerGen2 {
     private boolean fightFinished = false;
     private Side winningSide;
 
-    public BattlerGen2(boolean createJson, Vector gridSize) {
+    public BattlerGen2() {
+        grid = new Grid(new Vector(10, 10));
+        friendlyUnitList = new ArrayList<>();
+        enemyUnitList = new ArrayList<>();
+    }
+
+    public BattlerGen2(boolean createJson, boolean runWithGUI, Vector gridSize) {
         friendlyUnitList = new ArrayList<>();
         enemyUnitList = new ArrayList<>();
         grid = new Grid(gridSize);
@@ -72,50 +79,38 @@ public class BattlerGen2 {
             }
 
             history = new History(new Formation(friendlyUser, new ArrayList<>(friendlyUnitList)), new Formation(enemyUser, new ArrayList<>(enemyUnitList)), this);
-
-            drawBoard();
             int roundCounter = 0;
-            while (!fightFinished) {
-                ListIterator<Unit> unitIterator = units.listIterator();
-                while (unitIterator.hasNext()) {
-                    Unit unit = unitIterator.next();
-                    Vector posBefore = unit.getGridPosition();
-                    // TODO: 27.01.2022 update the way units die, think about how it should work!
-                    if (unit.getMyState() != State.ALIVE) {
-                        if (unit.getSide() == FRIENDLY) {
-                            friendlyUnitList.remove(unit);
-                        } else if (unit.getSide() == ENEMY) {
-                            enemyUnitList.remove(unit);
-                        }
-                        grid.updateOccupiedGrid(posBefore, null);
-                        history.addActionHistory(new ActionHistory(Action.DIE, unit, new Unit[0], null, new Vector[]{unit.getGridPosition()}));
-                        unitIterator.remove();
-                    } else {
-                        history.addActionHistory(unit.run());
-                        grid.updateOccupiedGrid(posBefore, null);
-                        grid.updateOccupiedGrid(unit.getGridPosition(), unit);
-                    }
-                }
 
-                if (friendlyUnitList.size() <= 0) {
-                    winningSide = Side.ENEMY;
-                    fightFinished = true;
-                } else if (enemyUnitList.size() <= 0) {
-                    winningSide = FRIENDLY;
-                    fightFinished = true;
-                }
+            if (runWithGUI) {
+                GUI gui = new GUI(this, 50);
+            } else {
                 drawBoard();
-                roundCounter++;
-            }
+                while (!fightFinished) {
+                    ListIterator<Unit> unitIterator = units.listIterator();
+                    while (unitIterator.hasNext()) {
+                        doTurn(unitIterator, true);
+                    }
+
+                    if (friendlyUnitList.size() <= 0) {
+                        winningSide = Side.ENEMY;
+                        fightFinished = true;
+                    } else if (enemyUnitList.size() <= 0) {
+                        winningSide = FRIENDLY;
+                        fightFinished = true;
+                    }
+                    drawBoard();
+                    roundCounter++;
+                }
 
             
             
 
-            if (createJson) {
-                try {
-                    new Export().export(history);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (createJson) {
+                    try {
+                        new Export().export(history);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         } catch (URISyntaxException | FileNotFoundException | UnknownUnitType e) {
@@ -124,12 +119,7 @@ public class BattlerGen2 {
     }
 
     public static void main(String[] args) {
-        new BattlerGen2(true, new Vector(10, 10));
-    }
-
-    public boolean placeOccupied(Vector toGo) {
-        GridCell cell = grid.getGridCells()[toGo.getX()][toGo.getY()];
-        return cell.getCurrentObstacle() != null;
+        new BattlerGen2(false, true, new Vector(10, 10));
     }
 
     // TODO: 28.01.2022 use a pathfinding like algorithm that goes from current node of unit and checks all the neighbours if there is someone, the first one found is considered the closest one
@@ -161,6 +151,36 @@ public class BattlerGen2 {
         return closestUnit;
     }
 
+    public void doTurn(Iterator<Unit> unitIterator, boolean createHistory) {
+        Unit unit = unitIterator.next();
+        doTurn(unitIterator, unit, createHistory);
+    }
+
+    public ActionHistory doTurn(Iterator<Unit> unitIterator, Unit unit, boolean createHistory) {
+        Vector posBefore = unit.getGridPosition();
+        // TODO: 27.01.2022 update the way units die, think about how it should work!
+        if (unit.getMyState() != State.ALIVE) {
+            if (unit.getSide() == FRIENDLY) {
+                friendlyUnitList.remove(unit);
+            } else if (unit.getSide() == ENEMY) {
+                enemyUnitList.remove(unit);
+            }
+            grid.updateOccupiedGrid(posBefore, null);
+            if (createHistory) {
+                history.addActionHistory(new ActionHistory(Action.DIE, unit, new Unit[0], null, new Vector[]{unit.getGridPosition()}));
+            }
+            unitIterator.remove();
+        } else {
+            ActionHistory actionHistory = unit.run();
+            if (createHistory) {
+                history.addActionHistory(actionHistory);
+            }
+            grid.updateOccupiedGrid(posBefore, null);
+            grid.updateOccupiedGrid(unit.getGridPosition(), unit);
+            return actionHistory;
+        }
+        return null;
+    }
 
     private void drawBoard() {
         StringBuilder vertical = new StringBuilder();

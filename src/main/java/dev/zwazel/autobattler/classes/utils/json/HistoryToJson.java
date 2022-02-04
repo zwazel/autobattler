@@ -1,8 +1,8 @@
-package dev.zwazel.autobattler.classes.Utils.json;
+package dev.zwazel.autobattler.classes.utils.json;
 
 import com.google.gson.Gson;
-import dev.zwazel.autobattler.classes.Utils.Formation;
-import dev.zwazel.autobattler.classes.Utils.Vector;
+import dev.zwazel.autobattler.classes.utils.Formation;
+import dev.zwazel.autobattler.classes.utils.Vector;
 import dev.zwazel.autobattler.classes.units.Unit;
 
 import java.util.Iterator;

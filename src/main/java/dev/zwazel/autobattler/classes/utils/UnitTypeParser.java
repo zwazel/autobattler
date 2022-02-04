@@ -1,4 +1,4 @@
-package dev.zwazel.autobattler.classes.Utils;
+package dev.zwazel.autobattler.classes.utils;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

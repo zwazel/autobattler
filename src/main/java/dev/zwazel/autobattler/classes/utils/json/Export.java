@@ -1,4 +1,4 @@
-package dev.zwazel.autobattler.classes.Utils.json;
+package dev.zwazel.autobattler.classes.utils.json;
 
 import java.io.File;
 import java.io.FileWriter;

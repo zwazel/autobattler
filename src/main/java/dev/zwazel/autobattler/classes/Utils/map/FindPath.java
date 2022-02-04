@@ -1,8 +1,7 @@
-package dev.zwazel.autobattler.classes.Utils.map;
+package dev.zwazel.autobattler.classes.utils.map;
 
-import dev.zwazel.autobattler.classes.Utils.Vector;
+import dev.zwazel.autobattler.classes.utils.Vector;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 
@@ -30,9 +29,6 @@ public class FindPath {
     private void expandNode(Node currentNode, Vector end) {
         for (Node successor : currentNode.getMyNeighbors()) {
             if (closedList.contains(successor) || successor.getMyGridCell().getCurrentObstacle() != null) {
-                if (successor.getMyGridCell().getCurrentObstacle() != null) {
-                    
-                }
                 continue;
             }
 
@@ -52,24 +48,18 @@ public class FindPath {
     }
 
     public Node[] getNextMoveSteps(Vector start, Vector vectorToGo, Grid grid, int moveCount) {
-        if (moveCount <= 0) {
-            return new Node[0];
-        }
-        FindPath findPath = new FindPath();
-        Node[] path = findPath.findPath(start, vectorToGo, new GridGraph(grid));
+        Node[] path = new Node[0];
 
-        if (path.length <= 0) {
+        if (moveCount <= 0) {
+            return path;
+        }
+
+        if (isReachable(start, vectorToGo, grid)) {
+            path = this.findPath(start, vectorToGo, new GridGraph(grid));
+        } else {
             vectorToGo = findClosestNearbyNode(grid, start, vectorToGo);
             if (vectorToGo != null) {
-                path = findPath.findPath(start, vectorToGo, new GridGraph(grid));
-
-                if (path.length > 0) {
-                    
-                } else {
-                    
-                }
-            } else {
-                
+                path = this.findPath(start, vectorToGo, new GridGraph(grid));
             }
         }
 
@@ -77,12 +67,11 @@ public class FindPath {
             int length = Math.min(path.length, moveCount);
             Node[] nodes = new Node[length];
             System.arraycopy(path, 0, nodes, 0, length);
-            
 
             return nodes;
         }
 
-        return new Node[0];
+        return path;
     }
 
     // TODO: 29.01.2022 we have a problem here, i can't think anymore so future me has to solve it 
@@ -92,17 +81,13 @@ public class FindPath {
 
         for (Node node : targetNode.getMyNeighbors()) {
             double cost = node.getMyGridCell().getPosition().getDistanceFrom(start);
-            
             node.setCost(cost);
         }
 
         PriorityQueue<Node> neighbors = new PriorityQueue<>(targetNode.getMyNeighbors().size(), new NodeComparator());
         neighbors.addAll(targetNode.getMyNeighbors());
-        
-        
         for (Node node : neighbors) {
             Vector vector = node.getMyGridCell().getPosition();
-            
             if (isReachable(start, vector, grid)) {
                 
                 return vector;
@@ -112,8 +97,11 @@ public class FindPath {
     }
 
     public boolean isReachable(Vector start, Vector end, Grid grid) {
-        FindPath path = new FindPath();
-        return (path.findPath(start, end, new GridGraph(grid)) != null);
+        if (grid.getGridCells()[end.getX()][end.getY()].getCurrentObstacle() != null) {
+            return false;
+        }
+
+        return (this.findPath(start, end, new GridGraph(grid)).length > 0);
     }
 
     private void printNodeHierarchy(Node node) {

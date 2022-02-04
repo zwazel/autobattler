@@ -1,7 +1,7 @@
-package dev.zwazel.autobattler.classes.Utils.map;
+package dev.zwazel.autobattler.classes.utils.map;
 
 import dev.zwazel.autobattler.classes.Obstacle;
-import dev.zwazel.autobattler.classes.Utils.Vector;
+import dev.zwazel.autobattler.classes.utils.Vector;
 
 import java.util.Arrays;
 
@@ -9,6 +9,10 @@ public class Grid {
     private final GridCell[][] gridCells;
     private final int width;
     private final int height;
+
+    public Grid(int x, int y) {
+        this(new Vector(x, y));
+    }
 
     public Grid(Vector size) {
         width = size.getX();

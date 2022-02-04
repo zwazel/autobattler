@@ -1,22 +1,22 @@
 package dev.zwazel.autobattler.classes.units;
 
 import dev.zwazel.autobattler.BattlerGen2;
-import dev.zwazel.autobattler.classes.Utils.Vector;
-import dev.zwazel.autobattler.classes.Utils.json.ActionHistory;
-import dev.zwazel.autobattler.classes.Utils.map.FindPath;
-import dev.zwazel.autobattler.classes.Utils.map.Node;
 import dev.zwazel.autobattler.classes.abilities.Ability;
 import dev.zwazel.autobattler.classes.abilities.DefaultPunch;
 import dev.zwazel.autobattler.classes.enums.Action;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.UnitTypes;
+import dev.zwazel.autobattler.classes.utils.Vector;
+import dev.zwazel.autobattler.classes.utils.json.ActionHistory;
+import dev.zwazel.autobattler.classes.utils.map.FindPath;
+import dev.zwazel.autobattler.classes.utils.map.Node;
 
 import java.util.Arrays;
 import java.util.Random;
 
 public class MyFirstUnit extends Unit {
     public MyFirstUnit(long id, int priority, int level, String name, Vector position, BattlerGen2 battler, Side side) {
-        super(id, level, name, "First Unit", 100, 100, 'u', position, battler.getGrid().getGridSize(), 1, battler, side, priority, UnitTypes.MY_FIRST_UNIT);
+        super(id, level, name, "First Unit", 10, 100, 'u', position, battler.getGrid().getGridSize(), 1, battler, side, priority, UnitTypes.MY_FIRST_UNIT);
         this.setAbilities(new Ability[]{new DefaultPunch(this)});
     }
 
@@ -67,7 +67,7 @@ public class MyFirstUnit extends Unit {
             this.setGridPosition(direction);
             return true;
         } else {
-            if (!this.getBattler().placeOccupied(direction)) {
+            if (new FindPath().isReachable(this.getGridPosition(), direction, this.getBattler().getGrid())) {
                 this.setGridPosition(direction);
                 return true;
             }

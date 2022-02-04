@@ -1,9 +1,9 @@
 package dev.zwazel.autobattler.classes.utils.json;
 
 import com.google.gson.Gson;
+import dev.zwazel.autobattler.classes.units.Unit;
 import dev.zwazel.autobattler.classes.utils.Formation;
 import dev.zwazel.autobattler.classes.utils.Vector;
-import dev.zwazel.autobattler.classes.units.Unit;
 
 import java.util.Iterator;
 
@@ -89,7 +89,7 @@ public class HistoryToJson {
     }
 
     // TODO: 29.01.2022 ADD HEALTH AND ENERGY 
-    private static String formationToJson(Formation formation) {
+    public static String formationToJson(Formation formation) {
         Gson gson = new Gson();
         StringBuilder json = new StringBuilder("[");
 
@@ -101,6 +101,8 @@ public class HistoryToJson {
                     .append(",\"type\":").append("\"").append(unit.getType()).append("\"")
                     .append(",\"name\":").append("\"").append(unit.getName()).append("\"")
                     .append(",\"level\":").append(unit.getLevel())
+                    .append(",\"health\":").append(unit.getHealth())
+                    .append(",\"energy\":").append(unit.getEnergy())
                     .append(",\"priority\":").append(unit.getPriority())
                     .append(",\"position\":").append(gson.toJson(unit.getGridPosition()))
                     .append(",\"side\":\"").append(unit.getSide()).append("\"");

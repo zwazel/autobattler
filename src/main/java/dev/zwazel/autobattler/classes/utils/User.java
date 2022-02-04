@@ -1,11 +1,13 @@
 package dev.zwazel.autobattler.classes.utils;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
+import dev.zwazel.autobattler.classes.utils.database.FormationEntity;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.List;
+
+@EnableAutoConfiguration
 @Entity
 public class User {
     @Id
@@ -17,6 +19,10 @@ public class User {
 
     @NotNull
     private String password;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<FormationEntity> formations;
+
 
     public User() {
     }

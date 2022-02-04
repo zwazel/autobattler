@@ -1,28 +1,21 @@
 package dev.zwazel.autobattler.classes.utils.database;
 
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import com.vladmihalcea.hibernate.type.json.JsonStringType;
+import dev.zwazel.autobattler.classes.utils.Formation;
 import dev.zwazel.autobattler.classes.utils.User;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
+import dev.zwazel.autobattler.classes.utils.json.HistoryToJson;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import javax.persistence.*;
 
+@EnableAutoConfiguration
 @Entity
 @Table(name = "formation")
-@TypeDefs({
-        @TypeDef(name = "json", typeClass = JsonStringType.class)
-        ,
-        @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
-})
 public class FormationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
-    @Type(type = "jsonb")
-    @Column(name = "formation", columnDefinition = "jsonb")
+    @Column(name = "formation")
     private String formationJson;
 
     @ManyToOne
@@ -30,6 +23,11 @@ public class FormationEntity {
 
     public FormationEntity(String formationJson, User user) {
         this.formationJson = formationJson;
+        this.user = user;
+    }
+
+    public FormationEntity(Formation formation, User user) {
+        this.formationJson = HistoryToJson.formationToJson(formation);
         this.user = user;
     }
 

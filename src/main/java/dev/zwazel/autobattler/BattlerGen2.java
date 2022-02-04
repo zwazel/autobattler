@@ -102,9 +102,6 @@ public class BattlerGen2 {
                     roundCounter++;
                 }
 
-            
-            
-
                 if (createJson) {
                     try {
                         new Export().export(history);
@@ -189,8 +186,8 @@ public class BattlerGen2 {
         Vector gridPositionNow = new Vector(0, 0);
 
         for (int row = 0; row < grid.getHeight(); row++) {
-            
-            
+            System.out.println();
+            System.out.println(vertical);
 
             for (int column = 0; column < grid.getWidth(); column++) {
                 String character = " ";
@@ -211,8 +208,8 @@ public class BattlerGen2 {
             }
             System.out.print("|");
         }
-        
-        
+        System.out.println();
+        System.out.println(vertical);
     }
 
     private User getDataFromFormationPlan(Side side, String fileName) throws URISyntaxException, FileNotFoundException, UnknownUnitType {

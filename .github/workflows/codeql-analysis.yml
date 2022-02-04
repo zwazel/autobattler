@@ -13,10 +13,10 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [ main, heroku ]
+    branches: [ heroku ]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ main, heroku ]
+    branches: [ heroku ]
   schedule:
     - cron: '17 12 * * 4'
 

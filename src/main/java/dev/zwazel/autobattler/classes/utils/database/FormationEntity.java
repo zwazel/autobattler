@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Table(name = "formation")
 public class FormationEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @Column(name = "formation", length = 8192)

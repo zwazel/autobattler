@@ -5,14 +5,14 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.Set;
 
 @EnableAutoConfiguration
 @Entity
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @NotNull
@@ -22,8 +22,11 @@ public class User {
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<FormationEntity> formations;
+    private Set<FormationEntity> formations;
 
+    @ManyToMany
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<UserRole> roles;
 
     public User() {
     }
@@ -55,6 +58,22 @@ public class User {
 
     public void setPassword(String password) {
         this.password = SHA256.getHexStringInstant(password);
+    }
+
+    public Set<FormationEntity> getFormations() {
+        return formations;
+    }
+
+    public void setFormations(Set<FormationEntity> formations) {
+        this.formations = formations;
+    }
+
+    public Set<UserRole> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<UserRole> roles) {
+        this.roles = roles;
     }
 
     @Override

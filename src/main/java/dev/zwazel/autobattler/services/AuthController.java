@@ -4,7 +4,7 @@ import dev.zwazel.autobattler.classes.utils.EnumUserRole;
 import dev.zwazel.autobattler.classes.utils.User;
 import dev.zwazel.autobattler.classes.utils.UserRole;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
-import dev.zwazel.autobattler.classes.utils.database.repositories.UserRolERepository;
+import dev.zwazel.autobattler.classes.utils.database.repositories.UserRoleRepository;
 import dev.zwazel.autobattler.security.jwt.JwtUtils;
 import dev.zwazel.autobattler.security.payload.request.LoginRequest;
 import dev.zwazel.autobattler.security.payload.request.SignupRequest;
@@ -35,11 +35,11 @@ import java.util.stream.Collectors;
 public class AuthController {
     final AuthenticationManager authenticationManager;
     final UserRepository userRepository;
-    final UserRolERepository roleRepository;
+    final UserRoleRepository roleRepository;
     final PasswordEncoder encoder;
     final JwtUtils jwtUtils;
 
-    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, UserRolERepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils) {
+    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, UserRoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;

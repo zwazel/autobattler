@@ -22,14 +22,15 @@ public class GUI extends Canvas {
     private final boolean differentiateLastUnit = false;
     private final boolean differentiateCurrentUnit = true;
     private final boolean differentiateTarget = true;
-    private final boolean showLastPosition = false;
+    private final boolean showLastPosition = true;
+    private final boolean drawPath = true;
 
     private final JFrame frame = new JFrame();
     private final Label currentUnitLabel = new Label("Current Unit = ");
     private final Label lastUnitLabel = new Label("Last Unit = ");
     private final Label targetLabel = new Label("Target = ");
     private final Label currentAction = new Label("Current Action = ");
-    
+
     private final Color colorStart = Color.cyan;
     private final Color colorCurrentUnit = Color.blue;
     private final Color colorFriendly = Color.green;
@@ -44,6 +45,7 @@ public class GUI extends Canvas {
     private Unit currentUnit = null;
     private Unit lastUnit = null;
     private Unit target = null;
+
     private boolean currentUnitMoved = false;
 
     public GUI(BattlerGen2 battlerGen2, int scalar) {
@@ -178,23 +180,25 @@ public class GUI extends Canvas {
         }
 
         // draw the path
-        Vector nodeBefore = null;
-        for (Node n : nodes) {
-            if (nodeBefore == null) {
-                nodeBefore = currentUnit.getGridPosition();
+        if (drawPath && currentUnitMoved) {
+            Vector nodeBefore = null;
+            for (Node n : nodes) {
+                if (nodeBefore == null) {
+                    nodeBefore = currentUnit.getGridPosition();
+                }
+                g.setColor(Color.BLACK);
+                g.drawRect(n.getMyGridCell().getPosition().getX() * scalar, n.getMyGridCell().getPosition().getY() * scalar, scalar, scalar);
+
+                g.setColor(Color.RED);
+                g.drawLine(nodeBefore.getX() * scalar + (scalar / 2), nodeBefore.getY() * scalar + (scalar / 2), n.getMyGridCell().getPosition().getX() * scalar + (scalar / 2), n.getMyGridCell().getPosition().getY() * scalar + (scalar / 2));
+                g.drawString("" + df.format(n.getCost()), n.getMyGridCell().getPosition().getX() * scalar, n.getMyGridCell().getPosition().getY() * scalar);
+
+                nodeBefore = n.getMyGridCell().getPosition();
             }
-            g.setColor(Color.BLACK);
-            g.drawRect(n.getMyGridCell().getPosition().getX() * scalar, n.getMyGridCell().getPosition().getY() * scalar, scalar, scalar);
-
-            g.setColor(Color.RED);
-            g.drawLine(nodeBefore.getX() * scalar + (scalar / 2), nodeBefore.getY() * scalar + (scalar / 2), n.getMyGridCell().getPosition().getX() * scalar + (scalar / 2), n.getMyGridCell().getPosition().getY() * scalar + (scalar / 2));
-            g.drawString("" + df.format(n.getCost()), n.getMyGridCell().getPosition().getX() * scalar, n.getMyGridCell().getPosition().getY() * scalar);
-
-            nodeBefore = n.getMyGridCell().getPosition();
-        }
-        if (nodeBefore != null) {
-            g.setColor(Color.RED);
-            g.drawLine(nodeBefore.getX() * scalar + (scalar / 2), nodeBefore.getY() * scalar + (scalar / 2), end.getX() * scalar + (scalar / 2), end.getY() * scalar + (scalar / 2));
+            if (nodeBefore != null) {
+                g.setColor(Color.RED);
+                g.drawLine(nodeBefore.getX() * scalar + (scalar / 2), nodeBefore.getY() * scalar + (scalar / 2), end.getX() * scalar + (scalar / 2), end.getY() * scalar + (scalar / 2));
+            }
         }
     }
 

@@ -30,7 +30,7 @@ public class GUI extends Canvas {
     private final boolean differentiateLastUnit = false;
     private final boolean differentiateCurrentUnit = true;
     private final boolean differentiateTarget = true;
-    private final boolean showLastPosition = true;
+    private final boolean showLastPosition = false;
 
     private final JFrame frame = new JFrame();
 
@@ -69,6 +69,7 @@ public class GUI extends Canvas {
                 if (showLastPosition) {
                     start = currentUnit.getGridPosition();
                 }
+                Vector positionBefore = currentUnit.getGridPosition();
                 ActionHistory actionHistory = battlerGen2.doTurn(unitIterator, currentUnit, false);
                 if (!showLastPosition) {
                     start = currentUnit.getGridPosition();
@@ -88,7 +89,7 @@ public class GUI extends Canvas {
                     this.currentAction.setText("Current Action = ");
                 }
 
-                if (!start.equals(currentUnit.getGridPosition())) {
+                if (!positionBefore.equals(currentUnit.getGridPosition())) {
                     currentUnitLabel.setText(currentUnitLabel.getText() + ", moved from " + start + " to " + currentUnit.getGridPosition());
                     currentUnitMoved = true;
                 } else {

@@ -17,14 +17,6 @@ public class GUI extends Canvas {
     private static final DecimalFormat df = new DecimalFormat("0.00");
     private final int scalar;
     private final BattlerGen2 battlerGen2;
-    private Iterator<Unit> unitIterator;
-    private Node[] nodes = new Node[0];
-    private Vector start = null;
-    private Vector end = null;
-    private Unit currentUnit = null;
-    private Unit lastUnit = null;
-    private Unit target = null;
-    private boolean currentUnitMoved = false;
 
     private final boolean differentiateSide = true;
     private final boolean differentiateLastUnit = false;
@@ -33,18 +25,26 @@ public class GUI extends Canvas {
     private final boolean showLastPosition = false;
 
     private final JFrame frame = new JFrame();
-
     private final Label currentUnitLabel = new Label("Current Unit = ");
     private final Label lastUnitLabel = new Label("Last Unit = ");
     private final Label targetLabel = new Label("Target = ");
     private final Label currentAction = new Label("Current Action = ");
-
+    
     private final Color colorStart = Color.cyan;
     private final Color colorCurrentUnit = Color.blue;
     private final Color colorFriendly = Color.green;
     private final Color colorEnemy = Color.pink;
     private final Color colorTarget = Color.red;
     private final Color colorLastUnit = Color.yellow;
+
+    private Iterator<Unit> unitIterator;
+    private Node[] nodes = new Node[0];
+    private Vector start = null;
+    private Vector end = null;
+    private Unit currentUnit = null;
+    private Unit lastUnit = null;
+    private Unit target = null;
+    private boolean currentUnitMoved = false;
 
     public GUI(BattlerGen2 battlerGen2, int scalar) {
         this.battlerGen2 = battlerGen2;

@@ -5,27 +5,33 @@ import dev.zwazel.autobattler.classes.Obstacle;
 import dev.zwazel.autobattler.classes.enums.Action;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
+import dev.zwazel.autobattler.classes.exceptions.FormationNotFound;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
+import dev.zwazel.autobattler.classes.exceptions.UserNotFound;
 import dev.zwazel.autobattler.classes.units.MyFirstUnit;
 import dev.zwazel.autobattler.classes.units.Unit;
+import dev.zwazel.autobattler.classes.utils.Vector;
 import dev.zwazel.autobattler.classes.utils.*;
+import dev.zwazel.autobattler.classes.utils.database.FormationEntity;
+import dev.zwazel.autobattler.classes.utils.database.repositories.FormationEntityRepository;
+import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
 import dev.zwazel.autobattler.classes.utils.json.ActionHistory;
 import dev.zwazel.autobattler.classes.utils.json.Export;
 import dev.zwazel.autobattler.classes.utils.json.History;
 import dev.zwazel.autobattler.classes.utils.map.FindPath;
 import dev.zwazel.autobattler.classes.utils.map.Grid;
 import dev.zwazel.autobattler.classes.utils.map.GridCell;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 
 import java.io.*;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.ListIterator;
+import java.util.*;
 
 import static dev.zwazel.autobattler.classes.enums.Side.ENEMY;
 import static dev.zwazel.autobattler.classes.enums.Side.FRIENDLY;
 
+@Configurable
 public class BattlerGen2 {
     private final Grid grid;
     private final ArrayList<Unit> friendlyUnitList;
@@ -36,6 +42,11 @@ public class BattlerGen2 {
     private History history;
     private boolean fightFinished = false;
     private Side winningSide;
+
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private FormationEntityRepository formationEntityRepository;
 
     public BattlerGen2() {
         grid = new Grid(new Vector(10, 10));
@@ -48,82 +59,111 @@ public class BattlerGen2 {
         enemyUnitList = new ArrayList<>();
         grid = new Grid(gridSize);
 
+        userRepository = BeanUtil.getBean(UserRepository.class);
+        formationEntityRepository = BeanUtil.getBean(FormationEntityRepository.class);
+
         try {
-//            getDataFromFormationPlan(FRIENDLY, "friendlyFormation.json");
-//            getDataFromFormationPlan(ENEMY, "enemyFormation.json");
-            friendlyUser = getDataFromFormationPlan(FRIENDLY, "friendlyFormationBig.json");
-            enemyUser = getDataFromFormationPlan(ENEMY, "enemyFormationBig.json");
+            long friendlyUserID = 1L;
+            long enemyUserID = 2L;
+            Optional<User> userLeft = userRepository.findById(friendlyUserID);
+            Optional<User> userRight = userRepository.findById(enemyUserID);
 
-            friendlyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
-            enemyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
-            units = new ArrayList<>();
+            if (userLeft.isPresent() && userRight.isPresent()) {
+                friendlyUser = userLeft.get();
+                enemyUser = userRight.get();
 
-            boolean friendlies = Math.random() < 0.5;
-//            boolean friendlies = false;
-            int firstCounter = 0;
-            int secondCounter = 0;
-            for (int i = 0; i < friendlyUnitList.size() + enemyUnitList.size(); i++) {
-                boolean friendlyDone = firstCounter >= friendlyUnitList.size();
-                boolean enemyDone = secondCounter >= enemyUnitList.size();
+                long formationLeftID = 3L;
+                long formationRightID = 4L;
+                Optional<FormationEntity> formationEntityLeft = formationEntityRepository.findByUserIdAndId(friendlyUser.getId(), formationLeftID);
+                Optional<FormationEntity> formationEntityRight = formationEntityRepository.findByUserIdAndId(enemyUser.getId(), formationRightID);
 
-                if (friendlies) {
-                    units.add(friendlyUnitList.get(firstCounter++));
+                if (formationEntityLeft.isPresent() && formationEntityRight.isPresent()) {
+                    getFormationFromJson(FRIENDLY, formationEntityLeft.get().getFormationJson());
+                    getFormationFromJson(ENEMY, formationEntityRight.get().getFormationJson());
+
+                    friendlyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
+                    enemyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
+                    units = new ArrayList<>();
+
+                    boolean friendlies = Math.random() < 0.5;
+                    int firstCounter = 0;
+                    int secondCounter = 0;
+                    for (int i = 0; i < friendlyUnitList.size() + enemyUnitList.size(); i++) {
+                        boolean friendlyDone = firstCounter >= friendlyUnitList.size();
+                        boolean enemyDone = secondCounter >= enemyUnitList.size();
+
+                        if (friendlies) {
+                            units.add(friendlyUnitList.get(firstCounter++));
+                        } else {
+                            units.add(enemyUnitList.get(secondCounter++));
+                        }
+
+                        friendlies = !friendlies;
+                        if (friendlyDone || enemyDone) {
+                            friendlies = !friendlies;
+                        }
+                    }
+
+                    System.out.println(units);
+
+                    history = new History(new Formation(friendlyUser, new ArrayList<>(friendlyUnitList)), new Formation(enemyUser, new ArrayList<>(enemyUnitList)), this);
+
+                    if (runWithGUI) {
+                        GUI gui = new GUI(this, 50);
+                    } else {
+                        drawBoard();
+                        while (!fightFinished) {
+                            ListIterator<Unit> unitIterator = units.listIterator();
+                            while (unitIterator.hasNext()) {
+                                doTurn(unitIterator, true);
+                            }
+
+                            if (friendlyUnitList.size() <= 0) {
+                                winningSide = Side.ENEMY;
+                                fightFinished = true;
+                            } else if (enemyUnitList.size() <= 0) {
+                                winningSide = FRIENDLY;
+                                fightFinished = true;
+                            }
+                            drawBoard();
+                        }
+
+                        if (createJson) {
+                            try {
+                                new Export().export(history);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
                 } else {
-                    units.add(enemyUnitList.get(secondCounter++));
+                    if (formationEntityLeft.isEmpty()) {
+                        throw new FormationNotFound(friendlyUser, formationLeftID);
+                    } else {
+                        throw new FormationNotFound(enemyUser, formationRightID);
+                    }
                 }
-
-                friendlies = !friendlies;
-                if (friendlyDone || enemyDone) {
-                    friendlies = !friendlies;
-                }
-            }
-
-            history = new History(new Formation(friendlyUser, new ArrayList<>(friendlyUnitList)), new Formation(enemyUser, new ArrayList<>(enemyUnitList)), this);
-            int roundCounter = 0;
-
-            if (runWithGUI) {
-                GUI gui = new GUI(this, 50);
             } else {
-                drawBoard();
-                while (!fightFinished) {
-                    ListIterator<Unit> unitIterator = units.listIterator();
-                    while (unitIterator.hasNext()) {
-                        doTurn(unitIterator, true);
-                    }
-
-                    if (friendlyUnitList.size() <= 0) {
-                        winningSide = Side.ENEMY;
-                        fightFinished = true;
-                    } else if (enemyUnitList.size() <= 0) {
-                        winningSide = FRIENDLY;
-                        fightFinished = true;
-                    }
-                    drawBoard();
-                    roundCounter++;
-                }
-
-                if (createJson) {
-                    try {
-                        new Export().export(history);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                if (userLeft.isEmpty()) {
+                    throw new UserNotFound(friendlyUserID);
+                } else {
+                    throw new UserNotFound(enemyUserID);
                 }
             }
-        } catch (URISyntaxException | FileNotFoundException | UnknownUnitType e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-    public static void main(String[] args) {
-        new BattlerGen2(false, true, new Vector(10, 10));
-    }
+//
+//    public static void main(String[] args) {
+//        new BattlerGen2(false, true, new Vector(10, 10));
+//    }
 
     // TODO: 28.01.2022 use a pathfinding like algorithm that goes from current node of unit and checks all the neighbours if there is someone, the first one found is considered the closest one
     public Unit findClosestOther(Unit unit, Side sideToCheck, boolean checkIfReachable, boolean includeDead) {
         Unit closestUnit = null;
         Double shortestDistance = -1d;
-        
+
         for (Unit unitChecking : units) {
             if (unitChecking != unit) {
                 if (unitChecking.getSide() == sideToCheck) {
@@ -144,7 +184,7 @@ public class BattlerGen2 {
                 }
             }
         }
-        
+
         return closestUnit;
     }
 
@@ -212,13 +252,13 @@ public class BattlerGen2 {
         System.out.println(vertical);
     }
 
-    private User getDataFromFormationPlan(Side side, String fileName) throws URISyntaxException, FileNotFoundException, UnknownUnitType {
-        GetFile getFile = new GetFile();
-        File file = getFile.getFileFromResource(fileName);
-        Reader reader = new FileReader(file);
-        JsonElement jsonElement = JsonParser.parseReader(reader);
-        JsonObject jsonObject = jsonElement.getAsJsonObject();
-        JsonArray jsonArray = jsonObject.get("formation").getAsJsonArray();
+    private void getFormationFromJson(Side side, String json) throws UnknownUnitType {
+        JsonElement jsonElement = JsonParser.parseString(json);
+        JsonArray jsonArray = jsonElement.getAsJsonArray();
+        getUnitsFromJsonAndAssignThemToSide(side, jsonArray);
+    }
+
+    private void getUnitsFromJsonAndAssignThemToSide(Side side, JsonArray jsonArray) throws UnknownUnitType {
         for (int i = 0; i < jsonArray.size(); i++) {
             JsonObject unit = jsonArray.get(i).getAsJsonObject();
             Unit actualUnit = UnitTypeParser.getUnit(unit, this, side);
@@ -228,6 +268,16 @@ public class BattlerGen2 {
                 case ENEMY -> enemyUnitList.add(actualUnit);
             }
         }
+    }
+
+    private User getFormationPlanFromFile(Side side, String fileName) throws URISyntaxException, FileNotFoundException, UnknownUnitType {
+        GetFile getFile = new GetFile();
+        File file = getFile.getFileFromResource(fileName);
+        Reader reader = new FileReader(file);
+        JsonElement jsonElement = JsonParser.parseReader(reader);
+        JsonObject jsonObject = jsonElement.getAsJsonObject();
+        JsonArray jsonArray = jsonObject.get("formation").getAsJsonArray();
+        getUnitsFromJsonAndAssignThemToSide(side, jsonArray);
 
         return new Gson().fromJson(jsonObject.get("user").getAsJsonObject(), User.class);
     }

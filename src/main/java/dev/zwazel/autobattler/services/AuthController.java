@@ -8,6 +8,7 @@ import dev.zwazel.autobattler.classes.utils.database.repositories.UserRoleReposi
 import dev.zwazel.autobattler.security.jwt.JwtUtils;
 import dev.zwazel.autobattler.security.payload.request.LoginRequest;
 import dev.zwazel.autobattler.security.payload.request.SignupRequest;
+import dev.zwazel.autobattler.security.payload.response.MessageResponse;
 import dev.zwazel.autobattler.security.payload.response.UserInfoResponse;
 import dev.zwazel.autobattler.security.services.UserDetailsImpl;
 import org.springframework.http.HttpHeaders;
@@ -66,7 +67,7 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            return ResponseEntity.badRequest().body("Error: Username is already taken!");
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
         }
         // Create new user's account
         User user = new User(signUpRequest.getUsername(),
@@ -95,13 +96,13 @@ public class AuthController {
         }
         user.setRoles(roles);
         userRepository.save(user);
-        return ResponseEntity.ok().body("User registered successfully!");
+        return ResponseEntity.ok().body(new MessageResponse("User registered successfully!"));
     }
 
     @PostMapping("/signout")
     public ResponseEntity<?> logoutUser() {
         ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body("You've been signed out!");
+                .body(new MessageResponse("You've been signed out!"));
     }
 }

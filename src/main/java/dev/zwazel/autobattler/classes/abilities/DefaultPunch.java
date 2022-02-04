@@ -31,11 +31,11 @@ public class DefaultPunch extends Ability {
 
     @Override
     public boolean canBeUsed(Unit target) {
-//        System.out.println("unit " + this.getOwner().getID() + " checking if ability " + this.getTitle() + " can be used:");
+//        
         boolean cooldownReady = this.getCurrentCooldown() <= 0;
         boolean inRange = this.isInRange(target);
-//        System.out.println("\tCooldown is reset, ability could be used = " + cooldownReady + ", current cooldown = " + this.getCurrentCooldown());
-//        System.out.println("\tis in range of target " + ((target == null) ? "null" : target.getID()) + " = " + inRange);
+//        
+//        
         return cooldownReady && inRange;
     }
 

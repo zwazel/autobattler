@@ -1,0 +1,18 @@
+<project name="autobattler" basedir=".">
+    <description>
+        chatbot build file
+    </description>
+    <!-- set global properties for this build -->
+    <property name="src" location="src"/>
+    <property name="build" location="build"/>
+
+    <replaceregexp match="System.out.println(.*);" replace="" flags="g" byline="true">
+        <fileset dir="${src}" includes="**/*.java"/>
+    </replaceregexp>
+
+    <replaceregexp match="console.log(.*);" replace="" flags="g" byline="true">
+        <fileset dir="${src}" includes="**/*.ts"/>
+        <fileset dir="${src}" includes="**/*.js"/>
+    </replaceregexp>
+
+</project>

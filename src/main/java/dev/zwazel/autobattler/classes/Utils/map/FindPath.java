@@ -89,7 +89,7 @@ public class FindPath {
         for (Node node : neighbors) {
             Vector vector = node.getMyGridCell().getPosition();
             if (isReachable(start, vector, grid)) {
-                System.out.println("IS REACHABLE " + vector);
+                
                 return vector;
             }
         }
@@ -111,7 +111,7 @@ public class FindPath {
             System.out.print("\n" + "\t".repeat(Math.max(0, counter++)) + node.getMyGridCell().getPosition());
             node = node.getPredecessor();
         }
-        System.out.println();
+        
     }
 
     private Node[] getPathInCorrectOrder(Node node, boolean excludeStart) {

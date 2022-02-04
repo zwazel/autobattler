@@ -61,7 +61,7 @@ public abstract class Ability extends RoundAffected {
     public abstract boolean canBeUsed(Unit target);
 
     public boolean use(Unit target) {
-        System.out.println(getRandomUseMessage(target));
+        
         return actuallyUse(target);
     }
 

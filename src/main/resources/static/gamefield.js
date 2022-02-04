@@ -2,10 +2,10 @@ let rows;
 let columns;
 const gameBoard = document.getElementById("gameboard")
 let index = 0;
-const defaultPlaybackSpeed = 1000;
+const defaultPlaybackSpeed = 750;
 const movementDelayAmount = 2;
-let historyPlaybackSpeed = defaultPlaybackSpeed; // speed in ms (i think)
-let movementDelay = historyPlaybackSpeed / movementDelayAmount;
+let historyPlaybackSpeed = defaultPlaybackSpeed; // speed per turn
+let movementDelay = historyPlaybackSpeed / movementDelayAmount; // speed per movement
 
 let unitsLeft = []
 let unitsRight = []
@@ -125,7 +125,7 @@ async function moveUnit(unit, positions) {
 }
 
 async function placeUnit(unit, position) {
-    $(gameBoard.rows[position.y].cells[position.x]).children(".unitCellWrapper").append(getUnitIcon(unit.id, unit.name));
+    $(gameBoard.rows[position.y].cells[position.x]).children(".unitCellWrapper").append(getUnitIcon(unit));
 
     unit.position = new Position(position.x, position.y);
 
@@ -162,7 +162,11 @@ function drawField(_rows, _columns) {
     gameBoad.innerHTML = gameBoardBuildingSting
 }
 
-function getUnitIcon(unitId, unitName) {
+function getUnitIcon(unit) {
+    let unitId = unit.id;
+    let unitName = unit.name;
+    let unitImage = unit.image;
+
     let pUnitId = document.createElement("p")
     pUnitId.id = "unitId-" + unitId
     pUnitId.innerHTML = unitId
@@ -177,7 +181,7 @@ function getUnitIcon(unitId, unitName) {
     divP.append(unitId, unitName)
 
     imgUnit.classList.add("characterIconImage")
-    imgUnit.src = "img/circle_01.png"
+    imgUnit.src = unitImage;
     imgUnit.alt = ""
 
     let imgDiv = document.createElement("div")

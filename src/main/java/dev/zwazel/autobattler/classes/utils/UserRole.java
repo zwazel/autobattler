@@ -11,6 +11,10 @@ public class UserRole {
     @Enumerated(EnumType.STRING)
     private EnumUserRole name;
 
+    public UserRole(EnumUserRole name) {
+        this.name = name;
+    }
+
     public long getId() {
         return id;
     }

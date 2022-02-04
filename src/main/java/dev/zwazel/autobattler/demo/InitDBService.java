@@ -4,13 +4,11 @@ import com.google.gson.*;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.units.Unit;
-import dev.zwazel.autobattler.classes.utils.Formation;
-import dev.zwazel.autobattler.classes.utils.GetFile;
-import dev.zwazel.autobattler.classes.utils.UnitTypeParser;
-import dev.zwazel.autobattler.classes.utils.User;
+import dev.zwazel.autobattler.classes.utils.*;
 import dev.zwazel.autobattler.classes.utils.database.FormationEntity;
 import dev.zwazel.autobattler.classes.utils.database.repositories.FormationEntityRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
+import dev.zwazel.autobattler.classes.utils.database.repositories.UserRoleRepository;
 import dev.zwazel.autobattler.classes.utils.map.Grid;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,14 +29,17 @@ import static dev.zwazel.autobattler.classes.enums.Side.FRIENDLY;
 public class InitDBService {
     private final FormationEntityRepository formationEntityRepository;
     private final UserRepository userRepository;
+    private final UserRoleRepository userRoleRepository;
+
     private Grid grid = new Grid(10, 10);
     private ArrayList<Unit> friendlyUnitList = new ArrayList<>();
     private ArrayList<Unit> enemyUnitList = new ArrayList<>();
     private DemoBattler demoBattler = new DemoBattler();
 
-    public InitDBService(UserRepository userRepository, FormationEntityRepository formationEntityRepository) {
+    public InitDBService(UserRepository userRepository, FormationEntityRepository formationEntityRepository, UserRoleRepository userRoleRepository) {
         this.userRepository = userRepository;
         this.formationEntityRepository = formationEntityRepository;
+        this.userRoleRepository = userRoleRepository;
     }
 
     @GetMapping(path = "/initDB", produces = "text/plain")
@@ -55,6 +56,9 @@ public class InitDBService {
 
             formationEntityRepository.save(new FormationEntity(userLeftFormation, userLeft));
             formationEntityRepository.save(new FormationEntity(userRightFormation, userRight));
+
+            userRoleRepository.save(new UserRole(EnumUserRole.ROLE_USER));
+            userRoleRepository.save(new UserRole(EnumUserRole.ROLE_ADMIN));
 
             return "DB Initialized";
         } catch (URISyntaxException | FileNotFoundException | UnknownUnitType e) {

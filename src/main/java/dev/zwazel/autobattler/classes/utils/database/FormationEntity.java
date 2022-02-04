@@ -15,7 +15,7 @@ public class FormationEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
-    @Column(name = "formation")
+    @Column(name = "formation", length = 8192)
     private String formationJson;
 
     @ManyToOne

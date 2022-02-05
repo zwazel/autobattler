@@ -5,7 +5,7 @@ import java.util.List;
 public class UserInfoResponse {
     private Long id;
     private String username;
-    private List<String> roles;
+    private final List<String> roles;
 
     public UserInfoResponse(Long id, String username, List<String> roles) {
         this.id = id;

@@ -26,7 +26,7 @@ function resetSpeed() {
 }
 
 async function loadGridSize() {
-    let response = await fetch("/getFightHistory");
+    let response = await fetch("/api/battle/getFightHistory");
 
     if (response.ok) { // if HTTP-status is 200-299
         // get the response body (the method explained below)

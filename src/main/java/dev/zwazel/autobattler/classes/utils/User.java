@@ -33,7 +33,7 @@ public class User {
 
     public User(String username, String password) {
         this.username = username;
-        this.password = SHA256.getHexStringInstant(password);
+        this.password = password;
     }
 
     public long getId() {
@@ -57,7 +57,7 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = SHA256.getHexStringInstant(password);
+        this.password = password;
     }
 
     public Set<FormationEntity> getFormations() {

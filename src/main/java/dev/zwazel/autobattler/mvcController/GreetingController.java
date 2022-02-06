@@ -1,4 +1,4 @@
-package dev.zwazel.autobattler.controller;
+package dev.zwazel.autobattler.mvcController;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

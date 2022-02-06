@@ -60,9 +60,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/test/**").permitAll()
                 .antMatchers("/**").permitAll()
                 .anyRequest().authenticated().and()
-                .formLogin().loginPage("public/login").loginProcessingUrl("/api/auth/signin").defaultSuccessUrl("/secured/home.html", true)
-                .failureUrl("public/login?error=true")//.failureHandler()
-                .and().logout().logoutUrl("/api/auth/signout").logoutSuccessUrl("/public/login").deleteCookies("JSESSIONID");//.logoutSuccessHandler(logoutSuccessHandler())
+                .formLogin().loginPage("/public/login.html").loginProcessingUrl("/api/auth/signin").defaultSuccessUrl("/secured/home.html", true)
+                .failureUrl("/public/login.html?error=true")
+                .and().logout().logoutUrl("/api/auth/signout").logoutSuccessUrl("/public/login.html").deleteCookies("JSESSIONID");
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }

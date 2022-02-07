@@ -31,7 +31,7 @@ async function loadGridSize() {
         let json = await response.json();
         let entity = JSON.parse(json.entity);
         console.log(entity);
-        drawField(entity.gridSize.x, entity.gridSize.y, false);
+        drawField(entity.gridSize.x, entity.gridSize.y);
 
         await initUnits(entity.unitsLeft);
         await initUnits(entity.unitsRight);

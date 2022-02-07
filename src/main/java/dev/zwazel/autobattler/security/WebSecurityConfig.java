@@ -59,10 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/secured/**").authenticated()
                 .antMatchers("/api/test/**").permitAll()
                 .antMatchers("/**").permitAll()
-                .anyRequest().authenticated().and()
-                .formLogin().loginPage("/public/login.html").loginProcessingUrl("/api/auth/signin").defaultSuccessUrl("/secured/home.html", true)
-                .failureUrl("/public/login.html?error=true")
-                .and().logout().logoutUrl("/api/auth/signout").logoutSuccessUrl("/public/login.html").deleteCookies("JSESSIONID");
+                .anyRequest().authenticated();
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }

@@ -26,9 +26,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.HashSet;
@@ -55,7 +55,11 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@Valid LoginRequest loginRequest) {
+    public ResponseEntity<?> authenticateUser(@Valid /*@RequestBody*/ LoginRequest loginRequest, BindingResult result, Model model, HttpServletResponse response) {
+        if (result.hasErrors()) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Invalid username or password, or something else idk!"));
+        }
+
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -64,10 +68,15 @@ public class AuthController {
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
-        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("/secured/home")).header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("/secured/home.html")).header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .body(new UserInfoResponse(userDetails.getId(),
                         userDetails.getUsername(),
                         roles));
+
+//        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+//                .body(new UserInfoResponse(userDetails.getId(),
+//                        userDetails.getUsername(),
+//                        roles));
     }
 
     @PostMapping("/signup")
@@ -107,7 +116,7 @@ public class AuthController {
         user.setRoles(roles);
         userRepository.save(user);
 //        return ResponseEntity.ok().body(new MessageResponse("User registered successfully!"));
-        return "redirect:/login";
+        return "redirect:/signin";
     }
 
     @PostMapping("/signout")

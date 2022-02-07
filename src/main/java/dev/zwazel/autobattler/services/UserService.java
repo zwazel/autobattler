@@ -26,12 +26,6 @@ public class UserService {
         return null;
     }
 
-    @PostMapping(path = "/add", consumes = "application/json", produces = "application/json")
-    public User addUser(@RequestBody User user) {
-        userRepository.save(user);
-        return user;
-    }
-
     @GetMapping(path = "/get/{id}", produces = "application/json")
     public Optional<User> getUser(@PathVariable long id) {
         return userRepository.findById(id);

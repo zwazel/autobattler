@@ -2,6 +2,10 @@ let copyCounter = 0;
 
 let formation = createArray(rows, columns);
 
+function saveFormation() {
+
+}
+
 // get all the elements with the param draggable=true and add the event listener
 let elms = document.querySelectorAll("[draggable=true]");
 for (let i = 0; i < elms.length; i++) {

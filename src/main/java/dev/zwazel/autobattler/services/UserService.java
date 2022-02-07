@@ -1,6 +1,7 @@
 package dev.zwazel.autobattler.services;
 
 import dev.zwazel.autobattler.classes.utils.User;
+import dev.zwazel.autobattler.classes.utils.database.repositories.FormationEntityRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,13 +12,15 @@ import java.util.Optional;
 @RequestMapping("/api/user")
 public class UserService {
     private final UserRepository userRepository;
+    private final FormationEntityRepository formationEntityRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, FormationEntityRepository formationEntityRepository) {
         this.userRepository = userRepository;
+        this.formationEntityRepository = formationEntityRepository;
     }
 
     @PostMapping(path = "/addFormation")
-    public ResponseEntity<String> setFormationForUser() {
+    public ResponseEntity<String> setFormationForUser(@RequestBody ) {
         return null;
     }
 

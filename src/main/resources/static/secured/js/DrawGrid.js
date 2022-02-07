@@ -6,7 +6,7 @@ function drawField(_rows, _columns, dragable) {
     columns = _columns;
     const drawField = document.getElementById("gameboard");
     const htmlForRow = "<tr class='boardRow'>";
-    const htmlforCell = "<td><div class='unitCellWrapper'></div></td>"
+    const htmlforCell = (dragable) ? "<td><div class='unitCellWrapper' ondragover='event.preventDefault()'></div></td>" : "<td><div class='unitCellWrapper'></div></td>";
     let drawFieldBuildString = "";
 
     for (let i = 1; i <= columns; i++) {

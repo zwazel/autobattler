@@ -26,12 +26,12 @@
 }
 
 #gameboard tr td {
-    background-image: url("secured/img/grassTextureTile.jpg");
+    background-image: url("../img/grassTextureTile.jpg");
     text-align: center;
 }
 
 #gameboard tr td:hover {
-    background: linear-gradient(rgba(122, 122, 122, 0.5), rgba(122, 122, 122, 0.5)), url("secured/img/grassTextureTile.jpg");
+    background: linear-gradient(rgba(122, 122, 122, 0.5), rgba(122, 122, 122, 0.5)), url("../img/grassTextureTile.jpg");
 }
 
 .unitCellWrapper {
@@ -64,7 +64,7 @@
 }
 
 body {
-    background-image: url("secured/img/woodTexture.jpg");
+    background-image: url("../img/woodTexture.jpg");
 }
 
 

@@ -1,6 +1,12 @@
 let rows;
 let columns;
 
+function extractPosFromCell(elementId) {
+    elementId = elementId.replace("cell-", "");
+    const pos = elementId.split("-");
+    return new Position(parseInt(pos[0]), parseInt(pos[1]));
+}
+
 function drawField(_rows, _columns) {
     rows = _rows;
     columns = _columns;

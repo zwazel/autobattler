@@ -2,9 +2,19 @@ let rows;
 let columns;
 
 function extractPosFromCell(elementId) {
-    elementId = elementId.replace("cell-", "");
-    const pos = elementId.split("-");
-    return new Position(parseInt(pos[0])-1, parseInt(pos[1])-1);
+    let index = elementId.indexOf("cell-");
+    let indexOfNumber = index + 5;
+    let number = elementId.substring(indexOfNumber);
+    return extractPosFromString(number, true);
+}
+
+function extractPosFromString(string, minusOne = false) {
+    const pos = string.split("-");
+    if(minusOne) {
+        return new Position(parseInt(pos[0]) - 1, parseInt(pos[1]) - 1);
+    } else {
+        return new Position(parseInt(pos[0]), parseInt(pos[1]));
+    }
 }
 
 function drawField(_rows, _columns) {

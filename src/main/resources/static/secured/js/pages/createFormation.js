@@ -28,20 +28,36 @@ function drop(ev) {
     ev.preventDefault();
 
     const target = ev.target;
-    const pos = extractPosFromCell(target.id);
+    if (ev.target.id) {
+        const pos = extractPosFromCell(target.id);
+        if (formation[pos.x][pos.y] != null) {
+            console.log("NO >:[")
+        } else {
+            const data = ev.dataTransfer.getData("text");
+            const original = document.getElementById(data);
+            if (original.id.includes("copy")) {
+                const originalId = original.id;
+                let index = originalId.indexOf("pos-");
+                let indexOfNumber = index + 4;
+                let number = originalId.substring(indexOfNumber);
+                let lastPos = extractPosFromString(number);
+                formation[lastPos.x][lastPos.y] = null;
 
-    const data = ev.dataTransfer.getData("text");
-    const original = document.getElementById(data);
-    if (original.id.includes("copy")) {
-        ev.target.appendChild(original);
-        formation[pos.x][pos.y] = original.id;
+                let newId = originalId.substring(0, indexOfNumber);
+                newId += +pos.x + "-" + pos.y;
+                original.id = newId;
+                ev.target.appendChild(original);
+                formation[pos.x][pos.y] = original.id;
+            } else {
+                const nodeCopy = original.cloneNode(true);
+                nodeCopy.id = original.id + "-copy-" + copyCounter++ + "-pos-" + pos.x + "-" + pos.y; /* We cannot use the same ID */
+                nodeCopy.addEventListener("dragstart", drag);
+                nodeCopy.removeEventListener("dragover", allowDrop);
+                ev.target.appendChild(nodeCopy);
+                formation[pos.x][pos.y] = nodeCopy.id;
+            }
+        }
     } else {
-        const nodeCopy = original.cloneNode(true);
-        nodeCopy.id = original.id + "-copy-" + copyCounter++; /* We cannot use the same ID */
-        nodeCopy.addEventListener("dragstart", drag);
-        nodeCopy.removeEventListener("dragover", allowDrop);
-        ev.target.appendChild(nodeCopy);
-        formation[pos.x][pos.y] = nodeCopy.id;
+        console.log("target undefined, lol")
     }
-    console.log(formation);
 }

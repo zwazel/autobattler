@@ -92,6 +92,7 @@ public class HistoryToJson {
 
     // TODO: 29.01.2022 ADD HEALTH AND ENERGY
     // TODO: 08.02.2022 NEVERMIND WE NEED TO DETERMINE WHEN/WHERE WE NEED THIS! I DON'T THINK WE NEED HEALTH AND STUFF IN THE FORMATION, THATS USELESS! BUT ADD IT TO THE ACTION!
+    // TODO: 08.02.2022 WE ALSO DON'T NEED THE SIDE INFORMATION AND STUFF!
     public static String formationToJson(Formation formation) {
         Gson gson = new Gson();
         StringBuilder json = new StringBuilder("[");

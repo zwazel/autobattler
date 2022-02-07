@@ -16,12 +16,21 @@ import java.util.Date;
 @Component
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
-    @Value("${bezkoder.app.jwtSecret}")
+    @Value("${zwazel.app.jwtSecret}")
     private String jwtSecret;
-    @Value("${bezkoder.app.jwtExpirationMs}")
+    @Value("${zwazel.app.jwtExpirationMs}")
     private int jwtExpirationMs;
-    @Value("${bezkoder.app.jwtCookieName}")
+    @Value("${zwazel.app.jwtCookieName}")
     private String jwtCookie;
+
+    public JwtUtils() {
+    }
+
+    public JwtUtils(String hello) {
+        jwtSecret = System.getenv("ZWAZEL_APP_JWT_SECRET");
+        jwtExpirationMs = Integer.parseInt(System.getenv("ZWAZEL_APP_JWT_EXPIRATION_MS"));
+        jwtCookie = System.getenv("ZWAZEL_APP_JWT_COOKIE_NAME");
+    }
 
     public String getJwtFromCookies(HttpServletRequest request) {
         Cookie cookie = WebUtils.getCookie(request, jwtCookie);

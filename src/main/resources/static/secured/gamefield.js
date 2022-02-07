@@ -1,5 +1,3 @@
-let rows;
-let columns;
 const gameBoard = document.getElementById("gameboard")
 let index = 0;
 const defaultPlaybackSpeed = 750;
@@ -32,14 +30,14 @@ async function loadGridSize() {
         // get the response body (the method explained below)
         let json = await response.json();
         let entity = JSON.parse(json.entity);
-        console.log(entity)
-        drawField(entity.gridSize.x, entity.gridSize.y)
+        console.log(entity);
+        drawField(entity.gridSize.x, entity.gridSize.y);
 
-        await initUnits(entity.unitsLeft)
-        await initUnits(entity.unitsRight)
+        await initUnits(entity.unitsLeft);
+        await initUnits(entity.unitsRight);
 
         let timeStart = new Date().getTime();
-        manageHistoryPlayback(entity.history)
+        manageHistoryPlayback(entity.history);
     } else {
         alert("HTTP-Error: " + response.status);
     }
@@ -141,25 +139,6 @@ async function removeUnit(unit) {
     return new Promise((resolve) => {
         resolve();
     })
-}
-
-function drawField(_rows, _columns) {
-    rows = _rows;
-    columns = _columns;
-    const gameBoad = document.getElementById("gameboard")
-    const htmlForRow = "<tr class=\"boardRow\">";
-    const htmlforCell = "<td><div class='unitCellWrapper'></div></td>"
-    let gameBoardBuildingSting = "";
-
-    for (let i = 1; i <= columns; i++) {
-        gameBoardBuildingSting += htmlForRow;
-        for (let j = 1; j <= rows; j++) {
-            gameBoardBuildingSting += htmlforCell;
-        }
-        gameBoardBuildingSting += "</tr>";
-    }
-
-    gameBoad.innerHTML = gameBoardBuildingSting
 }
 
 function getUnitIcon(unit) {

@@ -1,11 +1,11 @@
 let rows;
 let columns;
 
-function drawField(_rows, _columns) {
+function drawField(_rows, _columns, dragable) {
     rows = _rows;
     columns = _columns;
     const drawField = document.getElementById("gameboard");
-    const htmlForRow = "<tr class=\"boardRow\">";
+    const htmlForRow = "<tr class='boardRow'>";
     const htmlforCell = "<td><div class='unitCellWrapper'></div></td>"
     let drawFieldBuildString = "";
 

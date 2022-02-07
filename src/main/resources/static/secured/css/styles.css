@@ -28,6 +28,7 @@
 #gameboard tr td {
     background-image: url("../img/grassTextureTile.jpg");
     text-align: center;
+    padding: 0;
 }
 
 #gameboard tr td:hover {

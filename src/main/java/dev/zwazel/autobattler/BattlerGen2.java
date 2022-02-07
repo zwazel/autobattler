@@ -63,8 +63,8 @@ public class BattlerGen2 {
         formationEntityRepository = BeanUtil.getBean(FormationEntityRepository.class);
 
         try {
-            long friendlyUserID = 5L;
-            long enemyUserID = 6L;
+            long friendlyUserID = 7L;
+            long enemyUserID = 8L;
             Optional<User> userLeft = userRepository.findById(friendlyUserID);
             Optional<User> userRight = userRepository.findById(enemyUserID);
 
@@ -72,8 +72,8 @@ public class BattlerGen2 {
                 friendlyUser = userLeft.get();
                 enemyUser = userRight.get();
 
-                long formationLeftID = 7L;
-                long formationRightID = 8L;
+                long formationLeftID = 3L;
+                long formationRightID = 4L;
                 Optional<FormationEntity> formationEntityLeft = formationEntityRepository.findByUserIdAndId(friendlyUser.getId(), formationLeftID);
                 Optional<FormationEntity> formationEntityRight = formationEntityRepository.findByUserIdAndId(enemyUser.getId(), formationRightID);
 

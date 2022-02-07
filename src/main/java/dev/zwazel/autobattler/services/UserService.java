@@ -1,5 +1,6 @@
 package dev.zwazel.autobattler.services;
 
+import dev.zwazel.autobattler.classes.utils.FormationServiceTemplate;
 import dev.zwazel.autobattler.classes.utils.User;
 import dev.zwazel.autobattler.classes.utils.database.repositories.FormationEntityRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
@@ -20,7 +21,7 @@ public class UserService {
     }
 
     @PostMapping(path = "/addFormation")
-    public ResponseEntity<String> setFormationForUser(@RequestBody ) {
+    public ResponseEntity<String> setFormationForUser(@RequestBody FormationServiceTemplate formationServiceTemplate) {
         return null;
     }
 

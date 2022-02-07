@@ -3,7 +3,28 @@ let copyCounter = 0;
 let formation = createArray(rows, columns);
 
 function saveFormation() {
+    for (let i = 0; i < formation.length; i++) {
+        for (let j = 0; j < formation[i].length; j++) {
+            if (formation[i][j] != null) {
+                let unit = formation[i][j];
+                console.log(unit);
+                console.log(getPosOutOfUnit(unit));
+                console.log(getUnitTypefromUnit(unit))
+            }
+        }
+    }
+}
 
+function getUnitTypefromUnit(string) {
+    let index = string.indexOf("-");
+    return string.substring(0, index);
+}
+
+function getPosOutOfUnit(string) {
+    let index = string.indexOf("pos-");
+    let indexOfNumber = index + 4;
+    let number = string.substring(indexOfNumber);
+    return extractPosFromString(number);
 }
 
 // get all the elements with the param draggable=true and add the event listener
@@ -41,12 +62,11 @@ function drop(ev) {
             const original = document.getElementById(data);
             if (original.id.includes("copy")) {
                 const originalId = original.id;
-                let index = originalId.indexOf("pos-");
-                let indexOfNumber = index + 4;
-                let number = originalId.substring(indexOfNumber);
-                let lastPos = extractPosFromString(number);
+                const lastPos = getPosOutOfUnit(originalId);
                 formation[lastPos.x][lastPos.y] = null;
 
+                let index = originalId.indexOf("pos-");
+                let indexOfNumber = index + 4;
                 let newId = originalId.substring(0, indexOfNumber);
                 newId += +pos.x + "-" + pos.y;
                 original.id = newId;

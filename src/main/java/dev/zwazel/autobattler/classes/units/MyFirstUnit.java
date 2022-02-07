@@ -14,6 +14,10 @@ import dev.zwazel.autobattler.classes.utils.map.Node;
 import java.util.Random;
 
 public class MyFirstUnit extends Unit {
+    public MyFirstUnit(long id, int level, String name, Vector position, int priority) {
+        super(id, level, name, "First Unit", 10, 100, 'u', position, 1, priority, UnitTypes.MY_FIRST_UNIT);
+    }
+
     public MyFirstUnit(long id, int priority, int level, String name, Vector position, BattlerGen2 battler, Side side) {
         super(id, level, name, "First Unit", 10, 100, 'u', position, battler.getGrid().getGridSize(), 1, battler, side, priority, UnitTypes.MY_FIRST_UNIT);
         this.setAbilities(new Ability[]{new DefaultPunch(this)});

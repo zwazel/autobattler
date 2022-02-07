@@ -15,8 +15,8 @@ import java.util.Arrays;
 public abstract class Unit implements Obstacle, Cloneable {
     private final long ID;
     private final char symbol;
-    private final Side side;
     private final UnitTypes type;
+    private Side side;
     private int health;
     private int energy;
     private int level;
@@ -30,7 +30,7 @@ public abstract class Unit implements Obstacle, Cloneable {
     private BattlerGen2 battler;
     private State myState = State.ALIVE;
 
-    public Unit(long id, int level, String name, String description, int health, int energy, char symbol, Vector position, Vector gridSize, int speed, BattlerGen2 battler, Side side, int priority, UnitTypes type) {
+    public Unit(long id, int level, String name, String description, int health, int energy, char symbol, Vector position, int speed, int priority, UnitTypes type) {
         this.ID = id;
         this.level = level;
         this.health = getLevelHealth(health, level - 1);
@@ -39,12 +39,16 @@ public abstract class Unit implements Obstacle, Cloneable {
         this.description = description;
         this.symbol = symbol;
         this.gridPosition = position;
-        this.gridSize = gridSize;
         this.speed = speed;
-        this.battler = battler;
-        this.side = side;
         this.priority = priority;
         this.type = type;
+    }
+
+    public Unit(long id, int level, String name, String description, int health, int energy, char symbol, Vector position, Vector gridSize, int speed, BattlerGen2 battler, Side side, int priority, UnitTypes type) {
+        this(id, level, name, description, health, energy, symbol, position, speed, priority, type);
+        this.gridSize = gridSize;
+        this.battler = battler;
+        this.side = side;
     }
 
     public abstract ActionHistory run();
@@ -67,7 +71,7 @@ public abstract class Unit implements Obstacle, Cloneable {
 
     public ActionHistory die(Ability ability) {
         setMyState(State.DEAD);
-        
+
         return new ActionHistory(Action.DIE, this, new Unit[0], null, new Vector[]{this.getGridPosition()});
     }
 

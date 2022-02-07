@@ -7,9 +7,27 @@ import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.UnitTypes;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.units.MyFirstUnit;
+import dev.zwazel.autobattler.classes.units.SimpleUnit;
 import dev.zwazel.autobattler.classes.units.Unit;
 
 public class UnitTypeParser {
+    public static Unit getUnit(SimpleUnit unit) throws UnknownUnitType {
+        UnitTypes type = UnitTypes.findUnitType(unit.getUnitType());
+
+        if (type != null) {
+            switch (type) {
+                case MY_FIRST_UNIT -> {
+                    return new MyFirstUnit(unit.getId(), 1, unit.getName(), unit.getPosition(), unit.getPriority());
+                }
+                default -> {
+                    throw new UnknownUnitType();
+                }
+            }
+        } else {
+            throw new UnknownUnitType();
+        }
+    }
+
     public static Unit getUnit(JsonObject unitJson, BattlerGen2 battler, Side side) throws UnknownUnitType {
         JsonElement unitType = unitJson.get("type");
         UnitTypes type = UnitTypes.findUnitType(unitType.getAsString());

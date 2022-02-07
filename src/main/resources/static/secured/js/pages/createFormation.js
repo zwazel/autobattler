@@ -4,6 +4,7 @@ let formation = createArray(rows, columns);
 
 async function saveFormation() {
     let formationToSave = [];
+    let priorityAndID = 1;
     for (let i = 0; i < formation.length; i++) {
         for (let j = 0; j < formation[i].length; j++) {
             if (formation[i][j] != null) {
@@ -17,8 +18,11 @@ async function saveFormation() {
                         "x": pos.x,
                         "y": pos.y
                     },
-                    "unitType": type
+                    "unitType": type,
+                    "priority": priorityAndID,
+                    "id": priorityAndID
                 };
+                priorityAndID++;
 
                 formationToSave.push(data);
             }

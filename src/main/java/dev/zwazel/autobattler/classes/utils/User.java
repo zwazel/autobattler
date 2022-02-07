@@ -60,6 +60,10 @@ public class User {
         this.password = password;
     }
 
+    public void addFormation(FormationEntity formation) {
+        formations.add(formation);
+    }
+
     public Set<FormationEntity> getFormations() {
         return formations;
     }

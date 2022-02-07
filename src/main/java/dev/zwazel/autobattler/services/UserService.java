@@ -1,12 +1,17 @@
 package dev.zwazel.autobattler.services;
 
+import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.utils.FormationServiceTemplate;
 import dev.zwazel.autobattler.classes.utils.User;
 import dev.zwazel.autobattler.classes.utils.database.repositories.FormationEntityRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
+import dev.zwazel.autobattler.security.jwt.JwtUtils;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.Optional;
 
 @RestController
@@ -21,8 +26,30 @@ public class UserService {
     }
 
     @PostMapping(path = "/addFormation")
-    public ResponseEntity<String> setFormationForUser(@RequestBody FormationServiceTemplate formationServiceTemplate) {
+    public ResponseEntity<String> setFormationForUser(@RequestBody FormationServiceTemplate formationServiceTemplate, Authentication authentication, Principal principal, HttpServletRequest request) {
         System.out.println("formationServiceTemplate = " + formationServiceTemplate);
+
+        JwtUtils jwtUtils = new JwtUtils("");
+        String jwt = jwtUtils.getJwtFromCookies(request);
+        boolean valid = jwtUtils.validateJwtToken(jwt);
+        if (valid) {
+            String username = jwtUtils.getUserNameFromJwtToken(jwt);
+            System.out.println("username = " + username);
+
+            Optional<User> userOptional = userRepository.findByUsername(username);
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+                try {
+                    user.addFormation(formationServiceTemplate.getFormationEntity(user));
+                    userRepository.save(user);
+                } catch (UnknownUnitType e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            // return error
+
+        }
         return null;
     }
 

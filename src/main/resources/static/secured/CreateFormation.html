@@ -4,14 +4,18 @@
     <meta charset="UTF-8">
     <title>Create Formation</title>
     <link rel="stylesheet" href="css/styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
 <h1>Create Formation</h1>
 
 <div class="unitsToDrag">
     <div id="myFirstUnit" class="myFirstUnit" draggable="true">
-        <p>My first Unit</p>
-        <img src="img/units/my_first_unit/goodSoupMobil.png" alt="">
+        <p draggable="false">My first Unit</p>
+        <img draggable="false" src="img/units/my_first_unit/goodSoupMobil.png" alt="">
     </div>
 </div>
 
@@ -21,6 +25,6 @@
 </div>
 </body>
 <script src="js/DrawGrid.js"></script>
-<script src="js/pages/createFormation.js"></script>
 <script>drawField(3, 10)</script>
+<script src="js/pages/createFormation.js"></script>
 </html>

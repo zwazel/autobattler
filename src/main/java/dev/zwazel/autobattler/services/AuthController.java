@@ -114,6 +114,7 @@ public class AuthController {
             });
         }
         user.setRoles(roles);
+
         userRepository.save(user);
 //        return ResponseEntity.ok().body(new MessageResponse("User registered successfully!"));
         return "redirect:/signin";

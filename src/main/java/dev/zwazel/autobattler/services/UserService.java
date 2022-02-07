@@ -2,6 +2,7 @@ package dev.zwazel.autobattler.services;
 
 import dev.zwazel.autobattler.classes.utils.User;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -13,6 +14,11 @@ public class UserService {
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @PostMapping(path = "/addFormation")
+    public ResponseEntity<String> setFormationForUser() {
+        return null;
     }
 
     @PostMapping(path = "/add", consumes = "application/json", produces = "application/json")

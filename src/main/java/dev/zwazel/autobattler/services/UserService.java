@@ -22,6 +22,7 @@ public class UserService {
 
     @PostMapping(path = "/addFormation")
     public ResponseEntity<String> setFormationForUser(@RequestBody FormationServiceTemplate formationServiceTemplate) {
+        System.out.println("formationServiceTemplate = " + formationServiceTemplate);
         return null;
     }
 

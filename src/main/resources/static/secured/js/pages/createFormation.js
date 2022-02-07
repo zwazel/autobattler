@@ -2,17 +2,42 @@ let copyCounter = 0;
 
 let formation = createArray(rows, columns);
 
-function saveFormation() {
+async function saveFormation() {
+    let formationToSave = [];
     for (let i = 0; i < formation.length; i++) {
         for (let j = 0; j < formation[i].length; j++) {
             if (formation[i][j] != null) {
                 let unit = formation[i][j];
-                console.log(unit);
-                console.log(getPosOutOfUnit(unit));
-                console.log(getUnitTypefromUnit(unit))
+                const pos = getPosOutOfUnit(unit);
+                const type = getUnitTypefromUnit(unit);
+
+                const data = {
+                    "name": type,
+                    "position": {
+                        "x": pos.x,
+                        "y": pos.y
+                    },
+                    "unitType": type
+                };
+
+                formationToSave.push(data);
             }
         }
     }
+
+    const data = {
+        "units": formationToSave
+    };
+
+    console.log(data);
+
+    await fetch('/api/user/addFormation', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
 }
 
 function getUnitTypefromUnit(string) {

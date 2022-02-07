@@ -21,4 +21,11 @@ public class FormationServiceTemplate {
     public void setUnits(ArrayList<SimpleUnit> units) {
         this.units = units;
     }
+
+    @Override
+    public String toString() {
+        return "FormationServiceTemplate{" +
+                "units=" + units +
+                '}';
+    }
 }

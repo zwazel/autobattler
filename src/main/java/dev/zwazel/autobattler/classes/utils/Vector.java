@@ -8,6 +8,9 @@ public class Vector {
     private int x;
     private int y;
 
+    public Vector() {
+    }
+
     public Vector(JsonObject json) {
         this.x = json.get("x").getAsInt();
         this.y = json.get("y").getAsInt();

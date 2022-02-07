@@ -11,7 +11,6 @@ import dev.zwazel.autobattler.classes.utils.json.ActionHistory;
 import dev.zwazel.autobattler.classes.utils.map.FindPath;
 import dev.zwazel.autobattler.classes.utils.map.Node;
 
-import java.util.Arrays;
 import java.util.Random;
 
 public class MyFirstUnit extends Unit {
@@ -45,7 +44,6 @@ public class MyFirstUnit extends Unit {
     @Override
     public Vector[] moveTowards(Unit target) {
         if (target != null) {
-            
             Node[] nodes = new FindPath().getNextMoveSteps(this.getGridPosition(), target.getGridPosition(), this.getBattler().getGrid(), this.getSpeed());
             if (nodes.length > 0) {
                 Vector[] vectors = new Vector[nodes.length];
@@ -113,8 +111,12 @@ public class MyFirstUnit extends Unit {
         switch (todoAction) {
             case CHASE -> {
                 Unit target = findTargetUnit(this.getSide().getOpposite());
-                targets = new Unit[]{target};
-                targetPositions = moveTowards(targets[0]);
+                if (target != null) {
+                    targets = new Unit[]{target};
+                    targetPositions = moveTowards(targets[0]);
+                } else {
+                    targets = new Unit[0];
+                }
             }
             case USE_ABILITY -> {
                 targets = new Unit[]{findTargetUnit(suitableAbility.getTargetSide())};
@@ -124,12 +126,7 @@ public class MyFirstUnit extends Unit {
 
             }
         }
-        
-        
-        if (targets.length > 0) {
-            
-        }
-        
+
         return new ActionHistory(todoAction, this, targets, suitableAbility, targetPositions);
     }
 }

@@ -7,7 +7,6 @@ import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
 import dev.zwazel.autobattler.classes.exceptions.FormationNotFound;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
-import dev.zwazel.autobattler.classes.exceptions.UserNotFound;
 import dev.zwazel.autobattler.classes.units.MyFirstUnit;
 import dev.zwazel.autobattler.classes.units.Unit;
 import dev.zwazel.autobattler.classes.utils.Vector;
@@ -54,102 +53,87 @@ public class BattlerGen2 {
         enemyUnitList = new ArrayList<>();
     }
 
-    public BattlerGen2(boolean createJson, boolean runWithGUI, Vector gridSize) {
+    public BattlerGen2(User userLeft, User userRight, boolean createJson, boolean runWithGUI, Vector gridSize) {
         friendlyUnitList = new ArrayList<>();
         enemyUnitList = new ArrayList<>();
         grid = new Grid(gridSize);
-
-        userRepository = BeanUtil.getBean(UserRepository.class);
         formationEntityRepository = BeanUtil.getBean(FormationEntityRepository.class);
 
         try {
-            long friendlyUserID = 7L;
-            long enemyUserID = 8L;
-            Optional<User> userLeft = userRepository.findById(friendlyUserID);
-            Optional<User> userRight = userRepository.findById(enemyUserID);
+            friendlyUser = userLeft;
+            enemyUser = userRight;
 
-            if (userLeft.isPresent() && userRight.isPresent()) {
-                friendlyUser = userLeft.get();
-                enemyUser = userRight.get();
+            long formationLeftID = 4L;
+            Optional<FormationEntity> formationEntityLeft = formationEntityRepository.findByUserIdAndId(friendlyUser.getId(), formationLeftID);
+            Optional<FormationEntity> formationEntityRight = formationEntityRepository.findById(3L);
 
-                long formationLeftID = 3L;
-                long formationRightID = 4L;
-                Optional<FormationEntity> formationEntityLeft = formationEntityRepository.findByUserIdAndId(friendlyUser.getId(), formationLeftID);
-                Optional<FormationEntity> formationEntityRight = formationEntityRepository.findByUserIdAndId(enemyUser.getId(), formationRightID);
+            if (formationEntityLeft.isPresent() && formationEntityRight.isPresent()) {
+                getFormationFromJson(FRIENDLY, formationEntityLeft.get().getFormationJson());
+                getFormationFromJson(ENEMY, formationEntityRight.get().getFormationJson());
 
-                if (formationEntityLeft.isPresent() && formationEntityRight.isPresent()) {
-                    getFormationFromJson(FRIENDLY, formationEntityLeft.get().getFormationJson());
-                    getFormationFromJson(ENEMY, formationEntityRight.get().getFormationJson());
+                friendlyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
+                enemyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
+                units = new ArrayList<>();
 
-                    friendlyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
-                    enemyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
-                    units = new ArrayList<>();
+                boolean friendlies = Math.random() < 0.5;
+                int firstCounter = 0;
+                int secondCounter = 0;
+                for (int i = 0; i < friendlyUnitList.size() + enemyUnitList.size(); i++) {
+                    boolean friendlyDone = firstCounter >= friendlyUnitList.size();
+                    boolean enemyDone = secondCounter >= enemyUnitList.size();
 
-                    boolean friendlies = Math.random() < 0.5;
-                    int firstCounter = 0;
-                    int secondCounter = 0;
-                    for (int i = 0; i < friendlyUnitList.size() + enemyUnitList.size(); i++) {
-                        boolean friendlyDone = firstCounter >= friendlyUnitList.size();
-                        boolean enemyDone = secondCounter >= enemyUnitList.size();
+                    if (friendlies) {
+                        units.add(friendlyUnitList.get(firstCounter++));
+                    } else {
+                        units.add(enemyUnitList.get(secondCounter++));
+                    }
 
-                        if (friendlies) {
-                            units.add(friendlyUnitList.get(firstCounter++));
-                        } else {
-                            units.add(enemyUnitList.get(secondCounter++));
-                        }
-
+                    friendlies = !friendlies;
+                    if (friendlyDone || enemyDone) {
                         friendlies = !friendlies;
-                        if (friendlyDone || enemyDone) {
-                            friendlies = !friendlies;
-                        }
                     }
+                }
 
-                    System.out.println(units);
+                System.out.println(units);
 
-                    history = new History(new Formation(friendlyUser, new ArrayList<>(friendlyUnitList)), new Formation(enemyUser, new ArrayList<>(enemyUnitList)), this);
+                history = new History(new Formation(friendlyUser, new ArrayList<>(friendlyUnitList)), new Formation(enemyUser, new ArrayList<>(enemyUnitList)), this);
 
-                    if (runWithGUI) {
-                        GUI gui = new GUI(this, 50);
-                    } else {
-                        drawBoard();
-                        while (!fightFinished) {
-                            ListIterator<Unit> unitIterator = units.listIterator();
-                            while (unitIterator.hasNext()) {
-                                doTurn(unitIterator, true);
-                            }
-
-                            if (friendlyUnitList.size() <= 0) {
-                                winningSide = Side.ENEMY;
-                                fightFinished = true;
-                            } else if (enemyUnitList.size() <= 0) {
-                                winningSide = FRIENDLY;
-                                fightFinished = true;
-                            }
-                            drawBoard();
-                        }
-
-                        if (createJson) {
-                            try {
-                                new Export().export(history);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
+                if (runWithGUI) {
+                    GUI gui = new GUI(this, 50);
                 } else {
-                    if (formationEntityLeft.isEmpty()) {
-                        throw new FormationNotFound(friendlyUser, formationLeftID);
-                    } else {
-                        throw new FormationNotFound(enemyUser, formationRightID);
+                    drawBoard();
+                    while (!fightFinished) {
+                        ListIterator<Unit> unitIterator = units.listIterator();
+                        while (unitIterator.hasNext()) {
+                            doTurn(unitIterator, true);
+                        }
+
+                        if (friendlyUnitList.size() <= 0) {
+                            winningSide = Side.ENEMY;
+                            fightFinished = true;
+                        } else if (enemyUnitList.size() <= 0) {
+                            winningSide = FRIENDLY;
+                            fightFinished = true;
+                        }
+                        drawBoard();
+                    }
+
+                    if (createJson) {
+                        try {
+                            new Export().export(history);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             } else {
-                if (userLeft.isEmpty()) {
-                    throw new UserNotFound(friendlyUserID);
+                if (formationEntityLeft.isEmpty()) {
+                    throw new FormationNotFound(friendlyUser, formationLeftID);
                 } else {
-                    throw new UserNotFound(enemyUserID);
+                    throw new FormationNotFound(enemyUser, formationLeftID);
                 }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

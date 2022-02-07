@@ -5,6 +5,7 @@ import dev.zwazel.autobattler.classes.units.Unit;
 import dev.zwazel.autobattler.classes.utils.Formation;
 import dev.zwazel.autobattler.classes.utils.Vector;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 public class HistoryToJson {
@@ -56,6 +57,7 @@ public class HistoryToJson {
 
         json.append(",\"targets\":[");
         int counter = 0;
+        System.out.println("actionHistory = " + Arrays.toString(actionHistory.targets()));
         for (Unit unit : actionHistory.targets()) {
             json.append("{\"id\":").append(unit.getID()).append(",").append("\"side\":\"").append(unit.getSide()).append("\"").append("}");
             if (counter < actionHistory.targets().length - 1) {

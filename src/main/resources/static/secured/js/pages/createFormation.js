@@ -29,17 +29,19 @@ function drop(ev) {
 
     const target = ev.target;
     const pos = extractPosFromCell(target.id);
-    console.log(pos);
 
     const data = ev.dataTransfer.getData("text");
     const original = document.getElementById(data);
     if (original.id.includes("copy")) {
         ev.target.appendChild(original);
+        formation[pos.x][pos.y] = original.id;
     } else {
         const nodeCopy = original.cloneNode(true);
         nodeCopy.id = original.id + "-copy-" + copyCounter++; /* We cannot use the same ID */
         nodeCopy.addEventListener("dragstart", drag);
         nodeCopy.removeEventListener("dragover", allowDrop);
         ev.target.appendChild(nodeCopy);
+        formation[pos.x][pos.y] = nodeCopy.id;
     }
+    console.log(formation);
 }

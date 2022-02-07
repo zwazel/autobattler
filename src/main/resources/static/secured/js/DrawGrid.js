@@ -5,18 +5,19 @@ function drawField(_rows, _columns) {
     rows = _rows;
     columns = _columns;
     const drawField = document.getElementById("gameboard");
-    const htmlForRow = "<tr class='boardRow'>";
-    const htmlforCell ="<td><div class='unitCellWrapper'></div></td>";
-    // const htmlforCell = "<td class='unitCellWrapper'></td>";
-    let drawFieldBuildString = "";
-
     for (let i = 1; i <= columns; i++) {
-        drawFieldBuildString += htmlForRow;
+        let row = document.createElement("tr");
+        row.classList.add("boardRow");
         for (let j = 1; j <= rows; j++) {
-            drawFieldBuildString += htmlforCell;
+            let col = document.createElement("td");
+            col.draggable = false;
+            let div = document.createElement("div");
+            div.classList.add("unitCellWrapper");
+            div.id = `cell-${i}-${j}`;
+            div.draggable = false;
+            col.appendChild(div);
+            row.appendChild(col);
         }
-        drawFieldBuildString += "</tr>";
+        drawField.append(row);
     }
-
-    drawField.innerHTML = drawFieldBuildString
 }

@@ -38,11 +38,7 @@ function manageHistoryPlayback(history) {
 
 async function playHistory(history) {
     let historyObject = history[index++];
-    console.log("historyObject")
-    console.log(historyObject)
     let unit = historyObject.user;
-    console.log("unit")
-    console.log(unit)
 
     if (unit.side === "ENEMY") {
         unit = findUnit(unitsRight, unit.id)
@@ -74,12 +70,10 @@ function parseUnitType(unit, side) {
 }
 
 async function initUnits(units) {
-    console.log("initUnits")
     for (let i = 0; i < units.length; i++) {
         let unit = units[i];
-        console.log(unit)
-        let unitPos = unit.position;
         unit = parseUnitType(unit, unit.side);
+        let unitPos = unit.position;
         if (unit.side === "ENEMY") {
             unitsRight.push(unit)
         } else {
@@ -270,7 +264,6 @@ async function startBattle() {
         let response = await fetch(`/api/battle/getFightHistory/${selectedFormation.id}`);
         if (response.ok) { // if HTTP-status is 200-299
             let json = await response.json();
-            console.log(json);
 
             await removeAllUnits(true);
 

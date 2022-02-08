@@ -109,6 +109,11 @@ public class HistoryToJson {
                     .append(",\"priority\":").append(unit.getPriority())
                     .append(",\"position\":").append(gson.toJson(unit.getGridPosition()))
                     .append(",\"level\":").append(unit.getLevel());
+
+            if(unit.getSide() != null) {
+                json.append(",\"side\":").append("\"").append(unit.getSide()).append("\"");
+            }
+
             json.append("}");
             if (iterator.hasNext()) {
                 json.append(",");

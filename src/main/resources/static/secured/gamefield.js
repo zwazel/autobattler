@@ -114,7 +114,7 @@ async function moveUnit(unit, positions) {
 }
 
 async function placeUnit(unit, position) {
-    $(gameBoard.rows[position.x].cells[position.y]).children(".unitCellWrapper").append(getUnitIcon(unit));
+    $(gameBoard.rows[position.y].cells[position.x]).children(".unitCellWrapper").append(getUnitIcon(unit));
 
     unit.position = new Position(position.x, position.y);
 
@@ -141,7 +141,7 @@ async function removeAllUnits() {
 
 async function removeUnit(unit) {
     let unitPos = unit.position;
-    $(gameBoard.rows[unitPos.x].cells[unitPos.y]).children(".unitCellWrapper").empty();
+    $(gameBoard.rows[unitPos.y].cells[unitPos.x]).children(".unitCellWrapper").empty();
 
     return new Promise((resolve) => {
         resolve();
@@ -247,3 +247,20 @@ function toggleDisableButtons() {
 loadGridSizeAndDrawFieldAccordingly("battle").then(() => {
     loadFormations();
 })
+
+async function startBattle() {
+    const buttonStart = document.getElementById("battleStart");
+    const unitList = document.getElementById("formationsContainerList");
+
+    if(selectedFormation) {
+        $("#temporaryContainer").empty();
+
+        let response = await fetch(`/api/battle/getFightHistory/${selectedFormation.id}`);
+        if (response.ok) { // if HTTP-status is 200-299
+            let json = await response.json();
+            console.log(json);
+        } else {
+            alert("HTTP-Error: " + response.status);
+        }
+    }
+}

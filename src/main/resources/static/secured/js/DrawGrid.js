@@ -28,19 +28,19 @@ function extractPosFromString(string, minusOne = false) {
     }
 }
 
-function drawField(_rows, _columns) {
+function drawField(_columns, _rows) {
     rows = _rows;
     columns = _columns;
     const drawField = document.getElementById("gameboard");
-    for (let i = 1; i <= columns; i++) {
+    for (let i = 1; i <= rows; i++) {
         let row = document.createElement("tr");
         row.classList.add("boardRow");
-        for (let j = 1; j <= rows; j++) {
+        for (let j = 1; j <= columns; j++) {
             let col = document.createElement("td");
             col.draggable = false;
             let div = document.createElement("div");
             div.classList.add("unitCellWrapper");
-            div.id = `cell-${i}-${j}`;
+            div.id = `cell-${j}-${i}`;
             div.draggable = false;
             col.appendChild(div);
             row.appendChild(col);

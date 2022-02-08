@@ -57,7 +57,7 @@ function getPosOutOfUnit(string) {
 }
 
 function initDraggableElements() {
-    formation = createArray(columns, rows);
+    formation = createArray(rows, columns);
 
     // get all the elements with the param draggable=true and add the event listener
     let elms = document.querySelectorAll("[draggable=true]");

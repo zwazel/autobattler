@@ -69,6 +69,7 @@ public class BattlerGen2 {
 
             friendlyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
             enemyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
+
             units = new ArrayList<>();
 
             boolean friendlies = Math.random() < 0.5;
@@ -132,10 +133,12 @@ public class BattlerGen2 {
 //        new BattlerGen2(false, true, new Vector(10, 10));
 //    }
 
-    private void mirrorFormation(Formation formation) {
-        for (Unit unit : formation.getUnits()) {
-            unit.setGridPosition(new Vector(grid.getGridSize().getX() - unit.getGridPosition().getX(), unit.getGridPosition().getY()));
-        }
+    private void mirrorPosition(Unit unit) {
+        System.out.println("gridSize=" + grid.getGridSize());
+        System.out.println("unitPos=" + unit.getGridPosition());
+        System.out.println("new x = " + (grid.getGridSize().getX() - 1 - unit.getGridPosition().getX()));
+
+        unit.setGridPosition(new Vector(grid.getGridSize().getX() - 1 - unit.getGridPosition().getX(), unit.getGridPosition().getY()));
     }
 
     // TODO: 28.01.2022 use a pathfinding like algorithm that goes from current node of unit and checks all the neighbours if there is someone, the first one found is considered the closest one
@@ -241,6 +244,10 @@ public class BattlerGen2 {
         for (int i = 0; i < jsonArray.size(); i++) {
             JsonObject unit = jsonArray.get(i).getAsJsonObject();
             Unit actualUnit = UnitTypeParser.getUnit(unit, this, side);
+            if (side == ENEMY) {
+                mirrorPosition(actualUnit);
+            }
+
             grid.updateOccupiedGrid(actualUnit.getGridPosition(), actualUnit);
             switch (side) {
                 case FRIENDLY -> friendlyUnitList.add(actualUnit);

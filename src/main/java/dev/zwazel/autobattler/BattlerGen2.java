@@ -216,7 +216,7 @@ public class BattlerGen2 {
                 Obstacle obstacle = cell.getCurrentObstacle();
                 if (obstacle != null) {
                     if (obstacle.getClass() == MyFirstUnit.class) {
-                        character = "" + ((MyFirstUnit) obstacle).getID();
+                        character = "" + ((MyFirstUnit) obstacle).getSymbol();
                     } else {
                         character = "/";
                     }

@@ -163,7 +163,9 @@ public abstract class Ability extends RoundAffected {
     }
 
     public void setTargetSide(Side targetSide) {
+        System.out.println("targetSide = " + targetSide);
         this.targetSide = targetSide;
+        System.out.println("targetSide = " + targetSide);
     }
 
     @Override

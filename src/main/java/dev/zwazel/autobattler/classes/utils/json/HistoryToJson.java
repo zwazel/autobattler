@@ -40,8 +40,6 @@ public class HistoryToJson {
 
         json += "}";
 
-        System.out.println(json);
-
         return json;
     }
 

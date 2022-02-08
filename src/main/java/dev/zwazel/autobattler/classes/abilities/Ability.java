@@ -1,9 +1,9 @@
 package dev.zwazel.autobattler.classes.abilities;
 
 import dev.zwazel.autobattler.classes.RoundAffected;
-import dev.zwazel.autobattler.classes.utils.Vector;
 import dev.zwazel.autobattler.classes.enums.*;
 import dev.zwazel.autobattler.classes.units.Unit;
+import dev.zwazel.autobattler.classes.utils.Vector;
 
 import java.util.Random;
 
@@ -13,9 +13,9 @@ public abstract class Ability extends RoundAffected {
     private final int outPutAmount;
     private final int cooldown;
     private final Unit owner;
-    private final Side targetSide;
     private final String[] killMessages;
     private final String[] useMessages;
+    private Side targetSide;
     private int currentCooldown = 0;
     private AbilityType type;
     private int usageCostAmount;
@@ -61,7 +61,7 @@ public abstract class Ability extends RoundAffected {
     public abstract boolean canBeUsed(Unit target);
 
     public boolean use(Unit target) {
-        
+
         return actuallyUse(target);
     }
 
@@ -160,6 +160,10 @@ public abstract class Ability extends RoundAffected {
 
     public Side getTargetSide() {
         return targetSide;
+    }
+
+    public void setTargetSide(Side targetSide) {
+        this.targetSide = targetSide;
     }
 
     @Override

@@ -38,7 +38,11 @@ function manageHistoryPlayback(history) {
 
 async function playHistory(history) {
     let historyObject = history[index++];
+    console.log("historyObject")
+    console.log(historyObject)
     let unit = historyObject.user;
+    console.log("unit")
+    console.log(unit)
 
     if (unit.side === "ENEMY") {
         unit = findUnit(unitsRight, unit.id)
@@ -56,12 +60,13 @@ async function playHistory(history) {
 
         manageHistoryPlayback(history);
     } else {
-        alert("UNIT UNDEFINED!")
+        alert("UNIT UNDEFINED! FUUUUCK")
     }
 }
 
 function parseUnitType(unit, side) {
     const type = unit.type;
+
     switch (type) {
         case "MY_FIRST_UNIT":
             return new MyFirstUnit(side, unit.id, unit.name, unit.level, unit.position, unit.priority)
@@ -69,10 +74,12 @@ function parseUnitType(unit, side) {
 }
 
 async function initUnits(units) {
+    console.log("initUnits")
     for (let i = 0; i < units.length; i++) {
         let unit = units[i];
+        console.log(unit)
         let unitPos = unit.position;
-        unit = new MyFirstUnit(unit.side, unit.id, unit.name, unit.level, new Position(unitPos.x, unitPos.y), unit.priority)
+        unit = parseUnitType(unit, unit.side);
         if (unit.side === "ENEMY") {
             unitsRight.push(unit)
         } else {
@@ -123,15 +130,15 @@ async function placeUnit(unit, position) {
     })
 }
 
-async function removeAllUnits() {
+async function removeAllUnits(removeFromArray = false) {
     for (let i = 0; i < unitsLeft.length; i++) {
         let unit = unitsLeft[i];
-        await removeUnit(unit)
+        await removeUnit(unit, removeFromArray)
     }
 
     for (let i = 0; i < unitsRight.length; i++) {
         let unit = unitsRight[i];
-        await removeUnit(unit)
+        await removeUnit(unit, removeFromArray)
     }
 
     return new Promise((resolve) => {
@@ -139,9 +146,17 @@ async function removeAllUnits() {
     })
 }
 
-async function removeUnit(unit) {
+async function removeUnit(unit, removeFromArray = false) {
     let unitPos = unit.position;
     $(gameBoard.rows[unitPos.y].cells[unitPos.x]).children(".unitCellWrapper").empty();
+
+    if (removeFromArray) {
+        if (unit.side === "ENEMY") {
+            unitsRight.splice(unitsRight.indexOf(unit), 1)
+        } else {
+            unitsLeft.splice(unitsLeft.indexOf(unit), 1)
+        }
+    }
 
     return new Promise((resolve) => {
         resolve();
@@ -249,16 +264,19 @@ loadGridSizeAndDrawFieldAccordingly("battle").then(() => {
 })
 
 async function startBattle() {
-    const buttonStart = document.getElementById("battleStart");
-    const unitList = document.getElementById("formationsContainerList");
-
-    if(selectedFormation) {
+    if (selectedFormation) {
         $("#temporaryContainer").empty();
 
         let response = await fetch(`/api/battle/getFightHistory/${selectedFormation.id}`);
         if (response.ok) { // if HTTP-status is 200-299
             let json = await response.json();
             console.log(json);
+
+            await removeAllUnits(true);
+
+            await initUnits(json.unitsLeft);
+            await initUnits(json.unitsRight);
+            manageHistoryPlayback(json.history);
         } else {
             alert("HTTP-Error: " + response.status);
         }

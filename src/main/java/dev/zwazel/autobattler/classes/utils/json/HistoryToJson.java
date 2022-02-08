@@ -40,10 +40,11 @@ public class HistoryToJson {
 
         json += "}";
 
+        System.out.println(json);
+
         return json;
     }
 
-    // TODO: 29.01.2022 ADD OUTPUT AMOUNT
     private static String actionHistoryToJson(ActionHistory actionHistory) {
         Gson gson = new Gson();
 
@@ -52,14 +53,14 @@ public class HistoryToJson {
         json.append("\"user\":{" + "\"id\":").append(actionHistory.user().getID()).append(",")
                 .append("\"side\":\"").append(actionHistory.user().getSide()).append("\",")
                 .append("\"health\":").append(actionHistory.user().getHealth()).append(",")
-                .append("\"energy\":").append(actionHistory.user().getEnergy()).append(",")
+                .append("\"energy\":").append(actionHistory.user().getEnergy())
                 .append("}");
 
         json.append(",\"targets\":[");
         int counter = 0;
         for (Unit unit : actionHistory.targets()) {
             json.append("{\"id\":").append(unit.getID()).append(",")
-                    .append("\"side\":\"").append(unit.getSide()).append("\"")
+                    .append("\"side\":\"").append(unit.getSide()).append("\",")
                     .append("\"health\":").append(unit.getHealth()).append(",")
                     .append("\"energy\":").append(unit.getEnergy())
                     .append("}");

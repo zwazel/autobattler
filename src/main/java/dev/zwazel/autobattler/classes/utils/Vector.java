@@ -110,6 +110,11 @@ public class Vector {
         return false;
     }
 
+    public String toSize() {
+        return "{\"width\": " + x +
+                ",\"height\": " + y + "}";
+    }
+
     @Override
     public String toString() {
         return "Vector{" +

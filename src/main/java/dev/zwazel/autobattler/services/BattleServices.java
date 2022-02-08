@@ -9,18 +9,20 @@ import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository
 import dev.zwazel.autobattler.classes.utils.json.History;
 import dev.zwazel.autobattler.classes.utils.json.HistoryToJson;
 import dev.zwazel.autobattler.security.jwt.JwtUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Response;
 import java.util.Optional;
 
 @RestController()
 @RequestMapping("/api/battle")
 public class BattleServices {
+    private final Vector gridSize = new Vector(10, 10);
     private final UserRepository userRepository;
     private final FormationEntityRepository formationEntityRepository;
 
@@ -29,41 +31,49 @@ public class BattleServices {
         this.formationEntityRepository = formationEntityRepository;
     }
 
+    @GetMapping(path = "/getGridSize")
+    public ResponseEntity<String> getGridSize() {
+        // return the gridSize
+        return ResponseEntity.ok(gridSize.toSize());
+    }
+
     @GetMapping(path = "/getFightHistory/{formationId}")
-    public Response getFightHistory(@PathVariable long formationId, HttpServletRequest request) {
+    public ResponseEntity<String> getFightHistory(@PathVariable long formationId, HttpServletRequest request) {
         JwtUtils jwtUtils = new JwtUtils("");
         String jwt = jwtUtils.getJwtFromCookies(request);
         boolean valid = jwtUtils.validateJwtToken(jwt);
         if (valid) {
             String username = jwtUtils.getUserNameFromJwtToken(jwt);
-            System.out.println("username = " + username);
-
             Optional<User> user1 = userRepository.findByUsername(username);
+
+            // TODO: 08.02.2022 IMPLEMENT SOMETHING LIKE MATCHMAKING TO GET THE ENEMY USER
             Optional<User> user2 = userRepository.findByUsername(username);
 
             if (user1.isPresent() && user2.isPresent()) {
                 Optional<FormationEntity> formationEntity = formationEntityRepository.findById(formationId);
+                // TODO: 08.02.2022 FIND ENEMY FORMATION
 
                 if (formationEntity.isPresent()) {
-                    BattlerGen2 battler = new BattlerGen2(user1.get(), formationEntity.get(), user2.get(), formationEntity.get(), false, false, new Vector(10, 10));
+                    BattlerGen2 battler = new BattlerGen2(user1.get(), formationEntity.get(), user2.get(), formationEntity.get(), false, false, gridSize);
                     History history = battler.getHistory();
 
                     if (history == null) {
-                        // return error
-                        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("History doesn't exist!").build();
+                        // return error, history doesn't exist
+                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("History doesn't exist");
                     } else {
-                        return Response.ok().entity(HistoryToJson.toJson(history)).build();
+                        return ResponseEntity.ok(HistoryToJson.toJson(history));
                     }
                 } else {
                     // return error
-                    return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Formation doesn't exist!").build();
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Formation doesn't exist");
                 }
             } else {
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("User doesn't exist!").build();
+                // return error
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User doesn't exist");
             }
         } else {
             // return error
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("JWT is invalid!").build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized, JWT is invalid!");
         }
     }
 }

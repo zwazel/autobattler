@@ -24,20 +24,13 @@ function resetSpeed() {
 }
 
 async function loadGridSize() {
-    let response = await fetch("/api/battle/getFightHistory");
+    let response = await fetch("/api/battle/getGridSize");
 
+    console.log(response);
     if (response.ok) { // if HTTP-status is 200-299
         // get the response body (the method explained below)
         let json = await response.json();
-        let entity = JSON.parse(json.entity);
-        console.log(entity);
-        drawField(entity.gridSize.x, entity.gridSize.y);
-
-        await initUnits(entity.unitsLeft);
-        await initUnits(entity.unitsRight);
-
-        let timeStart = new Date().getTime();
-        manageHistoryPlayback(entity.history);
+        drawField(json.width, json.height);
     } else {
         alert("HTTP-Error: " + response.status);
     }

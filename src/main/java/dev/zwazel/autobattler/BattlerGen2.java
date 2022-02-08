@@ -5,11 +5,9 @@ import dev.zwazel.autobattler.classes.Obstacle;
 import dev.zwazel.autobattler.classes.enums.Action;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
-import dev.zwazel.autobattler.classes.exceptions.FormationNotFound;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.units.MyFirstUnit;
 import dev.zwazel.autobattler.classes.units.Unit;
-import dev.zwazel.autobattler.classes.utils.Vector;
 import dev.zwazel.autobattler.classes.utils.*;
 import dev.zwazel.autobattler.classes.utils.database.FormationEntity;
 import dev.zwazel.autobattler.classes.utils.database.repositories.FormationEntityRepository;
@@ -25,7 +23,10 @@ import org.springframework.beans.factory.annotation.Configurable;
 
 import java.io.*;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.ListIterator;
 
 import static dev.zwazel.autobattler.classes.enums.Side.ENEMY;
 import static dev.zwazel.autobattler.classes.enums.Side.FRIENDLY;
@@ -53,7 +54,7 @@ public class BattlerGen2 {
         enemyUnitList = new ArrayList<>();
     }
 
-    public BattlerGen2(User userLeft, User userRight, boolean createJson, boolean runWithGUI, Vector gridSize) {
+    public BattlerGen2(User userLeft, FormationEntity formationLeft, User userRight, FormationEntity formationRight, boolean createJson, boolean runWithGUI, Vector gridSize) {
         friendlyUnitList = new ArrayList<>();
         enemyUnitList = new ArrayList<>();
         grid = new Grid(gridSize);
@@ -63,74 +64,62 @@ public class BattlerGen2 {
             friendlyUser = userLeft;
             enemyUser = userRight;
 
-            long formationLeftID = 4L;
-            Optional<FormationEntity> formationEntityLeft = formationEntityRepository.findByUserIdAndId(friendlyUser.getId(), formationLeftID);
-            Optional<FormationEntity> formationEntityRight = formationEntityRepository.findById(3L);
+            getFormationFromJson(FRIENDLY, formationLeft.getFormationJson());
+            getFormationFromJson(ENEMY, formationRight.getFormationJson());
 
-            if (formationEntityLeft.isPresent() && formationEntityRight.isPresent()) {
-                getFormationFromJson(FRIENDLY, formationEntityLeft.get().getFormationJson());
-                getFormationFromJson(ENEMY, formationEntityRight.get().getFormationJson());
+            friendlyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
+            enemyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
+            units = new ArrayList<>();
 
-                friendlyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
-                enemyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
-                units = new ArrayList<>();
+            boolean friendlies = Math.random() < 0.5;
+            int firstCounter = 0;
+            int secondCounter = 0;
+            for (int i = 0; i < friendlyUnitList.size() + enemyUnitList.size(); i++) {
+                boolean friendlyDone = firstCounter >= friendlyUnitList.size();
+                boolean enemyDone = secondCounter >= enemyUnitList.size();
 
-                boolean friendlies = Math.random() < 0.5;
-                int firstCounter = 0;
-                int secondCounter = 0;
-                for (int i = 0; i < friendlyUnitList.size() + enemyUnitList.size(); i++) {
-                    boolean friendlyDone = firstCounter >= friendlyUnitList.size();
-                    boolean enemyDone = secondCounter >= enemyUnitList.size();
+                if (friendlies) {
+                    units.add(friendlyUnitList.get(firstCounter++));
+                } else {
+                    units.add(enemyUnitList.get(secondCounter++));
+                }
 
-                    if (friendlies) {
-                        units.add(friendlyUnitList.get(firstCounter++));
-                    } else {
-                        units.add(enemyUnitList.get(secondCounter++));
-                    }
-
+                friendlies = !friendlies;
+                if (friendlyDone || enemyDone) {
                     friendlies = !friendlies;
-                    if (friendlyDone || enemyDone) {
-                        friendlies = !friendlies;
-                    }
                 }
+            }
 
-                System.out.println(units);
+            System.out.println(units);
 
-                history = new History(new Formation(friendlyUser, new ArrayList<>(friendlyUnitList)), new Formation(enemyUser, new ArrayList<>(enemyUnitList)), this);
+            history = new History(new Formation(friendlyUser, new ArrayList<>(friendlyUnitList)), new Formation(enemyUser, new ArrayList<>(enemyUnitList)), this);
 
-                if (runWithGUI) {
-                    GUI gui = new GUI(this, 50);
-                } else {
-                    drawBoard();
-                    while (!fightFinished) {
-                        ListIterator<Unit> unitIterator = units.listIterator();
-                        while (unitIterator.hasNext()) {
-                            doTurn(unitIterator, true);
-                        }
-
-                        if (friendlyUnitList.size() <= 0) {
-                            winningSide = Side.ENEMY;
-                            fightFinished = true;
-                        } else if (enemyUnitList.size() <= 0) {
-                            winningSide = FRIENDLY;
-                            fightFinished = true;
-                        }
-                        drawBoard();
-                    }
-
-                    if (createJson) {
-                        try {
-                            new Export().export(history);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
+            if (runWithGUI) {
+                GUI gui = new GUI(this, 50);
             } else {
-                if (formationEntityLeft.isEmpty()) {
-                    throw new FormationNotFound(friendlyUser, formationLeftID);
-                } else {
-                    throw new FormationNotFound(enemyUser, formationLeftID);
+                drawBoard();
+                while (!fightFinished) {
+                    ListIterator<Unit> unitIterator = units.listIterator();
+                    while (unitIterator.hasNext()) {
+                        doTurn(unitIterator, true);
+                    }
+
+                    if (friendlyUnitList.size() <= 0) {
+                        winningSide = Side.ENEMY;
+                        fightFinished = true;
+                    } else if (enemyUnitList.size() <= 0) {
+                        winningSide = FRIENDLY;
+                        fightFinished = true;
+                    }
+                    drawBoard();
+                }
+
+                if (createJson) {
+                    try {
+                        new Export().export(history);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -142,6 +131,12 @@ public class BattlerGen2 {
 //    public static void main(String[] args) {
 //        new BattlerGen2(false, true, new Vector(10, 10));
 //    }
+
+    private void mirrorFormation(Formation formation) {
+        for (Unit unit : formation.getUnits()) {
+            unit.setGridPosition(new Vector(grid.getGridSize().getX() - unit.getGridPosition().getX(), unit.getGridPosition().getY()));
+        }
+    }
 
     // TODO: 28.01.2022 use a pathfinding like algorithm that goes from current node of unit and checks all the neighbours if there is someone, the first one found is considered the closest one
     public Unit findClosestOther(Unit unit, Side sideToCheck, boolean checkIfReachable, boolean includeDead) {

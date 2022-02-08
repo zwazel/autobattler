@@ -50,16 +50,21 @@ public class HistoryToJson {
 
         StringBuilder json = new StringBuilder("{");
 
-        json.append("\"user\":{" + "\"id\":").append(actionHistory.user().getID()).append(",").append("\"side\":\"").append(actionHistory.user().getSide()).append("\"").append("}");
-
-//        
-//        
+        json.append("\"user\":{" + "\"id\":").append(actionHistory.user().getID()).append(",")
+                .append("\"side\":\"").append(actionHistory.user().getSide()).append("\",")
+                .append("\"health\":").append(actionHistory.user().getHealth()).append(",")
+                .append("\"energy\":").append(actionHistory.user().getEnergy()).append(",")
+                .append("}");
 
         json.append(",\"targets\":[");
         int counter = 0;
         System.out.println("actionHistory = " + Arrays.toString(actionHistory.targets()));
         for (Unit unit : actionHistory.targets()) {
-            json.append("{\"id\":").append(unit.getID()).append(",").append("\"side\":\"").append(unit.getSide()).append("\"").append("}");
+            json.append("{\"id\":").append(unit.getID()).append(",")
+                    .append("\"side\":\"").append(unit.getSide()).append("\"")
+                    .append("\"health\":").append(unit.getHealth()).append(",")
+                    .append("\"energy\":").append(unit.getEnergy())
+                    .append("}");
             if (counter < actionHistory.targets().length - 1) {
                 counter++;
                 json.append(",");
@@ -68,9 +73,12 @@ public class HistoryToJson {
         json.append("]");
 
         json.append(",\"ability\":{").append((actionHistory.ability() == null) ?
-                "\"title\":\"undefined\"" : "\"title\":\"" + actionHistory.ability().getTitle() + "\"" +
-                ",\"targetSide\":\"" + actionHistory.ability().getTargetSide() + "\"" +
-                ",\"outPutType\":" + "\"" + actionHistory.ability().getOutputType() + "\"").append("}");
+                        "\"title\":\"undefined\"" :
+                        "\"title\":\"" + actionHistory.ability().getTitle() + "\"" +
+                                ",\"targetSide\":\"" + actionHistory.ability().getTargetSide() + "\"" +
+                                ",\"outPutType\":" + "\"" + actionHistory.ability().getOutputType() + "\",")
+                .append("\"outPutAmount\":").append(actionHistory.ability().getOutPutAmount())
+                .append("}");
 
         json.append(",\"type\":" + "\"").append(actionHistory.actionType()).append("\"");
 
@@ -104,12 +112,8 @@ public class HistoryToJson {
             json.append("\"id\":").append(unit.getID())
                     .append(",\"type\":").append("\"").append(unit.getType()).append("\"")
                     .append(",\"name\":").append("\"").append(unit.getName()).append("\"")
-                    .append(",\"level\":").append(unit.getLevel())
-                    .append(",\"health\":").append(unit.getHealth())
-                    .append(",\"energy\":").append(unit.getEnergy())
                     .append(",\"priority\":").append(unit.getPriority())
-                    .append(",\"position\":").append(gson.toJson(unit.getGridPosition()))
-                    .append(",\"side\":\"").append(unit.getSide()).append("\"");
+                    .append(",\"position\":").append(gson.toJson(unit.getGridPosition()));
             json.append("}");
             if (iterator.hasNext()) {
                 json.append(",");

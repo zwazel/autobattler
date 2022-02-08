@@ -30,6 +30,21 @@ public abstract class Unit implements Obstacle, Cloneable {
     private BattlerGen2 battler;
     private State myState = State.ALIVE;
 
+    /**
+     * constructor to use when saving formation
+     *
+     * @param id          the id of the unit
+     * @param level       the level of the unit
+     * @param name        the name of the unit
+     * @param description the description of the unit
+     * @param health      the health of the unit
+     * @param energy      the energy of the unit, used of some abilities
+     * @param symbol      the symbol of the unit, used for printing in the console (in theory, actually it has never been used yet lol)
+     * @param position    the position of the unit
+     * @param speed       the speed of the unit, how many squares it can move per turn
+     * @param priority    the priority of the unit, used for sorting
+     * @param type        the type of the unit
+     */
     public Unit(long id, int level, String name, String description, int health, int energy, char symbol, Vector position, int speed, int priority, UnitTypes type) {
         this.ID = id;
         this.level = level;
@@ -44,6 +59,24 @@ public abstract class Unit implements Obstacle, Cloneable {
         this.type = type;
     }
 
+    /**
+     * constructor to use when the unit needs to be used in fight
+     *
+     * @param id          the id of the unit
+     * @param level       the level of the unit
+     * @param name        the name of the unit
+     * @param description the description of the unit
+     * @param health      the health of the unit
+     * @param energy      the energy of the unit, used of some abilities
+     * @param symbol      the symbol of the unit, used for printing in the console (in theory, actually it has never been used yet lol)
+     * @param position    the position of the unit
+     * @param gridSize    the size of the grid
+     * @param speed       the speed of the unit, how many squares it can move per turn
+     * @param battler     the battler that the unit belongs to
+     * @param side        the side of the unit
+     * @param priority    the priority of the unit, used for sorting
+     * @param type        the type of the unit
+     */
     public Unit(long id, int level, String name, String description, int health, int energy, char symbol, Vector position, Vector gridSize, int speed, BattlerGen2 battler, Side side, int priority, UnitTypes type) {
         this(id, level, name, description, health, energy, symbol, position, speed, priority, type);
         this.gridSize = gridSize;

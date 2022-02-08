@@ -17,7 +17,7 @@ public final class ActionHistory {
     private final Vector @NotNull [] positions;
 
     public ActionHistory(@NotNull Action actionType, @NotNull Unit user, @NotNull Unit[] targets,
-                         @NotNull Ability ability, @NotNull Vector[] positions) {
+                         Ability ability, @NotNull Vector[] positions) {
         this.actionType = actionType;
         this.user = user;
         this.targets = targets;

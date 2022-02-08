@@ -5,6 +5,8 @@ import dev.zwazel.autobattler.classes.units.Unit;
 import java.util.ArrayList;
 
 public class Formation {
+
+
     private final User user;
 
     private final ArrayList<Unit> units;

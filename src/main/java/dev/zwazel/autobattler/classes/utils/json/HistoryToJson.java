@@ -98,9 +98,6 @@ public class HistoryToJson {
         return json.toString();
     }
 
-    // TODO: 29.01.2022 ADD HEALTH AND ENERGY
-    // TODO: 08.02.2022 NEVERMIND WE NEED TO DETERMINE WHEN/WHERE WE NEED THIS! I DON'T THINK WE NEED HEALTH AND STUFF IN THE FORMATION, THATS USELESS! BUT ADD IT TO THE ACTION!
-    // TODO: 08.02.2022 WE ALSO DON'T NEED THE SIDE INFORMATION AND STUFF!
     public static String formationToJson(Formation formation) {
         Gson gson = new Gson();
         StringBuilder json = new StringBuilder("[");
@@ -113,7 +110,8 @@ public class HistoryToJson {
                     .append(",\"type\":").append("\"").append(unit.getType()).append("\"")
                     .append(",\"name\":").append("\"").append(unit.getName()).append("\"")
                     .append(",\"priority\":").append(unit.getPriority())
-                    .append(",\"position\":").append(gson.toJson(unit.getGridPosition()));
+                    .append(",\"position\":").append(gson.toJson(unit.getGridPosition()))
+                    .append(",\"level\":").append(unit.getLevel());
             json.append("}");
             if (iterator.hasNext()) {
                 json.append(",");

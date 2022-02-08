@@ -29,7 +29,6 @@ public class FormationServiceTemplate {
     }
 
     public Formation getFormation(User user) throws UnknownUnitType {
-
         ArrayList<Unit> units = new ArrayList<>();
         for (SimpleUnit simpleUnit : this.units) {
             units.add(simpleUnit.getUnit());

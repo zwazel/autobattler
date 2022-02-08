@@ -9,6 +9,7 @@ let unitsLeft = []
 let unitsRight = []
 
 let formations = []
+let selectedFormation;
 
 function speedUp(scalar) {
     historyPlaybackSpeed = defaultPlaybackSpeed / scalar;
@@ -63,7 +64,7 @@ function parseUnitType(unit, side) {
     const type = unit.type;
     switch (type) {
         case "MY_FIRST_UNIT":
-            return new MyFirstUnit(side, unit.id, unit.name, 1, unit.position, unit.priority)
+            return new MyFirstUnit(side, unit.id, unit.name, unit.level, unit.position, unit.priority)
     }
 }
 
@@ -113,8 +114,6 @@ async function moveUnit(unit, positions) {
 }
 
 async function placeUnit(unit, position) {
-    console.log(unit)
-    console.log(position)
     $(gameBoard.rows[position.x].cells[position.y]).children(".unitCellWrapper").append(getUnitIcon(unit));
 
     unit.position = new Position(position.x, position.y);
@@ -141,8 +140,6 @@ async function removeAllUnits() {
 }
 
 async function removeUnit(unit) {
-    console.log("unit to be removed")
-    console.log(unit)
     let unitPos = unit.position;
     $(gameBoard.rows[unitPos.x].cells[unitPos.y]).children(".unitCellWrapper").empty();
 
@@ -192,11 +189,12 @@ async function loadFormations() {
         let json = await response.json();
 
         for (let i = 0; i < json.length; i++) {
+            const formationID = json[i].id;
             let formation = JSON.parse(json[i].formationJson);
 
             // create list item containing formation id
             let listItem = document.createElement("li");
-            listItem.id = "formation-" + i;
+            listItem.id = "formation-" + formationID;
             listItem.classList.add("formationListItem");
 
             let button = document.createElement("button");
@@ -208,7 +206,7 @@ async function loadFormations() {
             listItem.appendChild(button);
             formationListElement.appendChild(listItem);
 
-            formations.push(formation);
+            formations.push({formation: formation, id: formationID});
         }
     } else {
         alert("HTTP-Error: " + response.status);
@@ -228,11 +226,13 @@ async function loadFormation(formationId, button) {
     button.classList.add("selectedFormation");
 
     const formation = formations[formationId]
-    for (let i = 0; i < formation.length; i++) {
-        const unit = parseUnitType(formation[i], "FRIENDLY");
+    for (let i = 0; i < formation.formation.length; i++) {
+        const unit = parseUnitType(formation.formation[i], "FRIENDLY");
         unitsLeft.push(unit);
         await placeUnit(unit, unit.position);
     }
+
+    selectedFormation = formation;
 
     toggleDisableButtons();
 }

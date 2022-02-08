@@ -62,6 +62,7 @@ public class UserService {
                 if (!formationAlreadyExists) {
                     user.addFormation(formationEntity);
                     userRepository.save(user);
+                    return ResponseEntity.ok("Formation added");
                 } else {
                     return ResponseEntity.badRequest().body("Formation already exists");
                 }
@@ -69,7 +70,7 @@ public class UserService {
                 e.printStackTrace();
             }
         }
-        return ResponseEntity.ok().body("Formation not added, user not found");
+        return ResponseEntity.badRequest().body("User not found");
     }
 
     @GetMapping(path = "/get/{id}", produces = "application/json")

@@ -3,6 +3,7 @@ package dev.zwazel.autobattler.services;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.utils.FormationServiceTemplate;
 import dev.zwazel.autobattler.classes.utils.User;
+import dev.zwazel.autobattler.classes.utils.database.FormationEntity;
 import dev.zwazel.autobattler.classes.utils.database.repositories.FormationEntityRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
 import dev.zwazel.autobattler.security.jwt.JwtUtils;
@@ -39,9 +40,17 @@ public class UserService {
             Optional<User> userOptional = userRepository.findByUsername(username);
             if (userOptional.isPresent()) {
                 User user = userOptional.get();
+
                 try {
-                    user.addFormation(formationServiceTemplate.getFormationEntity(user));
-                    userRepository.save(user);
+                    FormationEntity formationEntity = formationServiceTemplate.getFormationEntity(user);
+                    boolean formationAlreadyExists = formationEntityRepository.existsByFormationJson(formationEntity.getFormationJson());
+
+                    if (!formationAlreadyExists) {
+                        user.addFormation(formationEntity);
+                        userRepository.save(user);
+                    } else {
+                        return ResponseEntity.badRequest().body("Formation already exists");
+                    }
                 } catch (UnknownUnitType e) {
                     e.printStackTrace();
                 }

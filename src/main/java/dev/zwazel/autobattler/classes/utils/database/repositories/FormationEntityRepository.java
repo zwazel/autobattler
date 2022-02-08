@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface FormationEntityRepository extends JpaRepository<FormationEntity, Long> {
     Optional<List<FormationEntity>> findAllByUserId(Long userId);
-
+    boolean existsByFormationJson(String formationJson);
     Optional<FormationEntity> findByUserIdAndId(Long userId, Long id);
 }

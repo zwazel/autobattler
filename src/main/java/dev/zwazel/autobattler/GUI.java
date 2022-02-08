@@ -60,7 +60,6 @@ public class GUI extends Canvas {
 
         Button nextButton = new Button("Next");
         nextButton.addActionListener(e -> {
-            System.out.println("------------------");
             if (unitIterator.hasNext()) {
                 lastUnit = currentUnit;
                 if (lastUnit != null) {
@@ -76,14 +75,21 @@ public class GUI extends Canvas {
                 if (!showLastPosition) {
                     start = currentUnit.getGridPosition();
                 }
-                Unit target = actionHistory.targets()[0];
-                if (target != null) {
-                    end = target.getGridPosition();
-                    this.target = target;
-                    FindPath findPath = new FindPath();
-                    nodes = findPath.findPath(currentUnit.getGridPosition(), findPath.findClosestNearbyNode(grid, currentUnit.getGridPosition(), end), new GridGraph(grid));
-                    this.targetLabel.setText("Target = " + target.getName() + " (" + target.getID() + "), at " + end);
-                    this.currentAction.setText("Current Action = " + actionHistory.actionType());
+                if (actionHistory.targets().length > 0) {
+                    Unit target = actionHistory.targets()[0];
+                    if (target != null) {
+                        end = target.getGridPosition();
+                        this.target = target;
+                        FindPath findPath = new FindPath();
+                        nodes = findPath.findPath(currentUnit.getGridPosition(), findPath.findClosestNearbyNode(grid, currentUnit.getGridPosition(), end), new GridGraph(grid));
+                        this.targetLabel.setText("Target = " + target.getName() + " (" + target.getID() + "), at " + end);
+                        this.currentAction.setText("Current Action = " + actionHistory.actionType());
+                    } else {
+                        end = null;
+                        nodes = new Node[0];
+                        this.targetLabel.setText("Target = ");
+                        this.currentAction.setText("Current Action = ");
+                    }
                 } else {
                     end = null;
                     nodes = new Node[0];

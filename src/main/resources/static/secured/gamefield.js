@@ -59,6 +59,14 @@ async function playHistory(history) {
     }
 }
 
+function parseUnitType(unit, side) {
+    const type = unit.type;
+    switch (type) {
+        case "MY_FIRST_UNIT":
+            return new MyFirstUnit(side, unit.id, unit.name, 1, unit.position, unit.priority)
+    }
+}
+
 async function initUnits(units) {
     for (let i = 0; i < units.length; i++) {
         let unit = units[i];
@@ -105,7 +113,9 @@ async function moveUnit(unit, positions) {
 }
 
 async function placeUnit(unit, position) {
-    $(gameBoard.rows[position.y].cells[position.x]).children(".unitCellWrapper").append(getUnitIcon(unit));
+    console.log(unit)
+    console.log(position)
+    $(gameBoard.rows[position.x].cells[position.y]).children(".unitCellWrapper").append(getUnitIcon(unit));
 
     unit.position = new Position(position.x, position.y);
 
@@ -114,9 +124,27 @@ async function placeUnit(unit, position) {
     })
 }
 
+async function removeAllUnits() {
+    for (let i = 0; i < unitsLeft.length; i++) {
+        let unit = unitsLeft[i];
+        await removeUnit(unit)
+    }
+
+    for (let i = 0; i < unitsRight.length; i++) {
+        let unit = unitsRight[i];
+        await removeUnit(unit)
+    }
+
+    return new Promise((resolve) => {
+        resolve();
+    })
+}
+
 async function removeUnit(unit) {
+    console.log("unit to be removed")
+    console.log(unit)
     let unitPos = unit.position;
-    $(gameBoard.rows[unitPos.y].cells[unitPos.x]).children(".unitCellWrapper").empty();
+    $(gameBoard.rows[unitPos.x].cells[unitPos.y]).children(".unitCellWrapper").empty();
 
     return new Promise((resolve) => {
         resolve();
@@ -190,6 +218,8 @@ async function loadFormations() {
 async function loadFormation(formationId, button) {
     toggleDisableButtons();
 
+    await removeAllUnits()
+
     const allSelectedButtons = $(".selectedFormation");
     for (let i = 0; i < allSelectedButtons.length; i++) {
         allSelectedButtons[i].classList.remove("selectedFormation");
@@ -197,7 +227,12 @@ async function loadFormation(formationId, button) {
 
     button.classList.add("selectedFormation");
 
-    console.log("loadFormation: " + formationId);
+    const formation = formations[formationId]
+    for (let i = 0; i < formation.length; i++) {
+        const unit = parseUnitType(formation[i], "FRIENDLY");
+        unitsLeft.push(unit);
+        await placeUnit(unit, unit.position);
+    }
 
     toggleDisableButtons();
 }

@@ -1,6 +1,6 @@
 let copyCounter = 0;
 
-let formation = createArray(rows, columns);
+let formation;
 
 async function saveFormation() {
     let formationToSave = [];
@@ -56,18 +56,22 @@ function getPosOutOfUnit(string) {
     return extractPosFromString(number);
 }
 
-// get all the elements with the param draggable=true and add the event listener
-let elms = document.querySelectorAll("[draggable=true]");
-for (let i = 0; i < elms.length; i++) {
-    let draggable = elms[i];
-    draggable.addEventListener("dragstart", drag);
-}
+function initDraggableElements() {
+    formation = createArray(columns, rows);
 
-// find all elements with the class unitCellWrapper using jquery and add the event listener
-const allGridCells = $(".unitCellWrapper");
-for (let i = 0; i < allGridCells.length; i++) {
-    allGridCells[i].addEventListener("dragover", allowDrop);
-    allGridCells[i].addEventListener("drop", drop);
+    // get all the elements with the param draggable=true and add the event listener
+    let elms = document.querySelectorAll("[draggable=true]");
+    for (let i = 0; i < elms.length; i++) {
+        let draggable = elms[i];
+        draggable.addEventListener("dragstart", drag);
+    }
+
+    // find all elements with the class unitCellWrapper using jquery and add the event listener
+    const allGridCells = $(".unitCellWrapper");
+    for (let i = 0; i < allGridCells.length; i++) {
+        allGridCells[i].addEventListener("dragover", allowDrop);
+        allGridCells[i].addEventListener("drop", drop);
+    }
 }
 
 function allowDrop(ev) {
@@ -114,3 +118,7 @@ function drop(ev) {
         console.log("target undefined, lol")
     }
 }
+
+loadGridSizeAndDrawFieldAccordingly("user").then(() => {
+    initDraggableElements();
+});

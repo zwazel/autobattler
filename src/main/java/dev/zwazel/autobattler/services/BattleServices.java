@@ -23,6 +23,8 @@ import java.util.Optional;
 @RequestMapping("/api/battle")
 public class BattleServices {
     private final Vector gridSize = new Vector(10, 10);
+    private final Vector userGridSize = new Vector(3, 10);
+
     private final UserRepository userRepository;
     private final FormationEntityRepository formationEntityRepository;
 
@@ -31,10 +33,16 @@ public class BattleServices {
         this.formationEntityRepository = formationEntityRepository;
     }
 
-    @GetMapping(path = "/getGridSize")
+    @GetMapping(path = "/getGridSize/battle")
     public ResponseEntity<String> getGridSize() {
         // return the gridSize
         return ResponseEntity.ok(gridSize.toSize());
+    }
+
+    @GetMapping(path = "/getGridSize/user")
+    public ResponseEntity<String> getUserGridSize() {
+        // return the gridSize
+        return ResponseEntity.ok(userGridSize.toSize());
     }
 
     @GetMapping(path = "/getFightHistory/{formationId}")

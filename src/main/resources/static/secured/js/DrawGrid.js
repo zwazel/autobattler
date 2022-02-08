@@ -1,6 +1,18 @@
 let rows;
 let columns;
 
+async function loadGridSizeAndDrawFieldAccordingly(gridSizeType) {
+    let response = await fetch(`/api/battle/getGridSize/${gridSizeType}`);
+
+    if (response.ok) { // if HTTP-status is 200-299
+        // get the response body (the method explained below)
+        let json = await response.json();
+        drawField(json.width, json.height);
+    } else {
+        alert("HTTP-Error: " + response.status);
+    }
+}
+
 function extractPosFromCell(elementId) {
     let index = elementId.indexOf("cell-");
     let indexOfNumber = index + 5;
@@ -21,10 +33,10 @@ function drawField(_rows, _columns) {
     rows = _rows;
     columns = _columns;
     const drawField = document.getElementById("gameboard");
-    for (let i = 1; i <= rows; i++) {
+    for (let i = 1; i <= columns; i++) {
         let row = document.createElement("tr");
         row.classList.add("boardRow");
-        for (let j = 1; j <= columns; j++) {
+        for (let j = 1; j <= rows; j++) {
             let col = document.createElement("td");
             col.draggable = false;
             let div = document.createElement("div");

@@ -23,19 +23,6 @@ function resetSpeed() {
     movementDelay = historyPlaybackSpeed / movementDelayAmount;
 }
 
-async function loadGridSize() {
-    let response = await fetch("/api/battle/getGridSize");
-
-    console.log(response);
-    if (response.ok) { // if HTTP-status is 200-299
-        // get the response body (the method explained below)
-        let json = await response.json();
-        drawField(json.width, json.height);
-    } else {
-        alert("HTTP-Error: " + response.status);
-    }
-}
-
 function manageHistoryPlayback(history) {
     if (index < history.length) {
         setTimeout(async function () {
@@ -166,4 +153,4 @@ function getUnitIcon(unit) {
     return wrapper
 }
 
-loadGridSize()
+loadGridSizeAndDrawFieldAccordingly("battle")

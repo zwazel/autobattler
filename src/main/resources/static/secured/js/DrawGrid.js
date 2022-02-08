@@ -5,7 +5,6 @@ async function loadGridSizeAndDrawFieldAccordingly(gridSizeType) {
     let response = await fetch(`/api/battle/getGridSize/${gridSizeType}`);
 
     if (response.ok) { // if HTTP-status is 200-299
-        // get the response body (the method explained below)
         let json = await response.json();
         drawField(json.width, json.height);
     } else {

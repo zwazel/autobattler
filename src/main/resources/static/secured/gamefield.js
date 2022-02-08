@@ -8,6 +8,8 @@ let movementDelay = historyPlaybackSpeed / movementDelayAmount; // speed per mov
 let unitsLeft = []
 let unitsRight = []
 
+let formations = []
+
 function speedUp(scalar) {
     historyPlaybackSpeed = defaultPlaybackSpeed / scalar;
     movementDelay = historyPlaybackSpeed / movementDelayAmount;
@@ -153,4 +155,21 @@ function getUnitIcon(unit) {
     return wrapper
 }
 
-loadGridSizeAndDrawFieldAccordingly("battle")
+async function loadFormations() {
+    let response = await fetch(`/api/user/getAllFormations`);
+
+    if (response.ok) { // if HTTP-status is 200-299
+        let json = await response.json();
+
+        for (let i = 0; i < json.length; i++) {
+            let formation = JSON.parse(json[i].formationJson);
+            formations.push(formation);
+        }
+    } else {
+        alert("HTTP-Error: " + response.status);
+    }
+}
+
+loadGridSizeAndDrawFieldAccordingly("battle").then(() => {
+    loadFormations();
+})

@@ -98,7 +98,7 @@ public class BattlerGen2 {
             if (runWithGUI) {
                 GUI gui = new GUI(this, 50);
             } else {
-                drawBoard();
+//                drawBoard();
                 while (!fightFinished) {
                     ListIterator<Unit> unitIterator = units.listIterator();
                     while (unitIterator.hasNext()) {
@@ -112,7 +112,7 @@ public class BattlerGen2 {
                         winningSide = FRIENDLY;
                         fightFinished = true;
                     }
-                    drawBoard();
+//                    drawBoard();
                 }
 
                 if (createJson) {

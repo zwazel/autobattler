@@ -135,7 +135,6 @@ public class BattlerGen2 {
 
     private void mirrorSide(Unit unit) {
         unit.setGridPosition(new Vector(grid.getGridSize().getX() - 1 - unit.getGridPosition().getX(), unit.getGridPosition().getY()));
-        unit.setSide(unit.getSide().getOpposite());
     }
 
     // TODO: 28.01.2022 use a pathfinding like algorithm that goes from current node of unit and checks all the neighbours if there is someone, the first one found is considered the closest one

@@ -206,9 +206,6 @@ public abstract class Unit implements Obstacle, Cloneable {
 
     public void setSide(Side side) {
         this.side = side;
-        for (Ability ability : abilities) {
-            ability.setTargetSide(ability.getTargetSide().getOpposite());
-        }
     }
 
     public int getPriority() {

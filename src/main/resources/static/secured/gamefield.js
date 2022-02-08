@@ -156,6 +156,8 @@ function getUnitIcon(unit) {
 }
 
 async function loadFormations() {
+    const formationListElement = document.getElementById("formationList");
+
     let response = await fetch(`/api/user/getAllFormations`);
 
     if (response.ok) { // if HTTP-status is 200-299
@@ -163,10 +165,47 @@ async function loadFormations() {
 
         for (let i = 0; i < json.length; i++) {
             let formation = JSON.parse(json[i].formationJson);
+
+            // create list item containing formation id
+            let listItem = document.createElement("li");
+            listItem.id = "formation-" + i;
+            listItem.classList.add("formationListItem");
+
+            let button = document.createElement("button");
+            button.classList.add("formationListButton");
+            button.innerHTML = "" + i;
+            button.addEventListener("click", function () {
+                loadFormation(i, button);
+            });
+            listItem.appendChild(button);
+            formationListElement.appendChild(listItem);
+
             formations.push(formation);
         }
     } else {
         alert("HTTP-Error: " + response.status);
+    }
+}
+
+async function loadFormation(formationId, button) {
+    toggleDisableButtons();
+
+    const allSelectedButtons = $(".selectedFormation");
+    for (let i = 0; i < allSelectedButtons.length; i++) {
+        allSelectedButtons[i].classList.remove("selectedFormation");
+    }
+
+    button.classList.add("selectedFormation");
+
+    console.log("loadFormation: " + formationId);
+
+    toggleDisableButtons();
+}
+
+function toggleDisableButtons() {
+    const allButtons = $(".formationListButton");
+    for (let i = 0; i < allButtons.length; i++) {
+        allButtons[i].disabled = !allButtons[i].disabled;
     }
 }
 

@@ -13,7 +13,26 @@
 /*    text-align: center;*/
 /*}*/
 
+#formationList {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
 
+#formationList li {
+    color: white;
+    display: inline-block;
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid black;
+}
+
+.selectedFormation {
+    background-color: #f1f1f1;
+    color: black;
+}
 
 #gameboard {
     width: 100%;

@@ -68,6 +68,11 @@
     color: red;
 }
 
+.ENEMY img {
+    /*mirror the image on the x axis*/
+    transform: scaleX(-1);
+}
+
 .FRIENDLY {
     color: cyan;
 }

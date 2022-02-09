@@ -4,6 +4,10 @@
 name: Java CI with Maven
 
 on:
+  pull_request:
+    branches:
+      - Heroku
+      - main
   push:
     branches:
       - Heroku

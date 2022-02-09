@@ -173,6 +173,7 @@ function getUnitIcon(unit) {
 
     let divP = document.createElement("div")
     divP.classList.add("unitTextInfo")
+    divP.classList.add(unit.side)
     divP.append(unitId, unitName)
 
     imgUnit.classList.add("characterIconImage")

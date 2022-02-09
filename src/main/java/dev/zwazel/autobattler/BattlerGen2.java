@@ -10,16 +10,12 @@ import dev.zwazel.autobattler.classes.units.MyFirstUnit;
 import dev.zwazel.autobattler.classes.units.Unit;
 import dev.zwazel.autobattler.classes.utils.*;
 import dev.zwazel.autobattler.classes.utils.database.FormationEntity;
-import dev.zwazel.autobattler.classes.utils.database.repositories.FormationEntityRepository;
-import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
 import dev.zwazel.autobattler.classes.utils.json.ActionHistory;
 import dev.zwazel.autobattler.classes.utils.json.Export;
 import dev.zwazel.autobattler.classes.utils.json.History;
 import dev.zwazel.autobattler.classes.utils.map.FindPath;
 import dev.zwazel.autobattler.classes.utils.map.Grid;
 import dev.zwazel.autobattler.classes.utils.map.GridCell;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -31,7 +27,6 @@ import java.util.ListIterator;
 import static dev.zwazel.autobattler.classes.enums.Side.ENEMY;
 import static dev.zwazel.autobattler.classes.enums.Side.FRIENDLY;
 
-@Configurable
 public class BattlerGen2 {
     private final Grid grid;
     private final ArrayList<Unit> friendlyUnitList;
@@ -43,11 +38,6 @@ public class BattlerGen2 {
     private boolean fightFinished = false;
     private Side winningSide;
 
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private FormationEntityRepository formationEntityRepository;
-
     public BattlerGen2() {
         grid = new Grid(new Vector(10, 10));
         friendlyUnitList = new ArrayList<>();
@@ -58,7 +48,6 @@ public class BattlerGen2 {
         friendlyUnitList = new ArrayList<>();
         enemyUnitList = new ArrayList<>();
         grid = new Grid(gridSize);
-        formationEntityRepository = BeanUtil.getBean(FormationEntityRepository.class);
 
         try {
             friendlyUser = userLeft;
@@ -128,10 +117,29 @@ public class BattlerGen2 {
             e.printStackTrace();
         }
     }
-//
-//    public static void main(String[] args) {
-//        new BattlerGen2(false, true, new Vector(10, 10));
-//    }
+
+    public static void main(String[] args) {
+        ArrayList<Unit> units = new ArrayList<>();
+
+        long idCounter = 0;
+        int leftPriorityCounter = 0;
+        Unit unit = new MyFirstUnit(idCounter++, 1, "Tim", new Vector(0, 0), leftPriorityCounter++);
+        units.add(unit);
+        unit = new MyFirstUnit(idCounter++, 1, "Ash", new Vector(1, 0), leftPriorityCounter++);
+        units.add(unit);
+        unit = new MyFirstUnit(idCounter++, 1, "Phillip", new Vector(0, 1), leftPriorityCounter++);
+        units.add(unit);
+
+        User userLeft = new User("TestUserLeft", "TestUserLeft");
+        Formation formationLeft = new Formation(userLeft, units);
+        FormationEntity formationEntityLeft = new FormationEntity(formationLeft, userLeft);
+
+        User userRight = new User("TestUserRight", "TestUserRight");
+        Formation formationRight = new Formation(userRight, units);
+        FormationEntity formationEntityRight = new FormationEntity(formationRight, userRight);
+
+        new BattlerGen2(userLeft, formationEntityLeft, userRight, formationEntityRight, false, true, new Vector(10, 10));
+    }
 
     private void mirrorSide(Unit unit) {
         unit.setGridPosition(new Vector(grid.getGridSize().getX() - 1 - unit.getGridPosition().getX(), unit.getGridPosition().getY()));
@@ -216,7 +224,7 @@ public class BattlerGen2 {
                 Obstacle obstacle = cell.getCurrentObstacle();
                 if (obstacle != null) {
                     if (obstacle.getClass() == MyFirstUnit.class) {
-                        character = "" + ((MyFirstUnit) obstacle).getID();
+                        character = "" + ((MyFirstUnit) obstacle).getSymbol();
                     } else {
                         character = "/";
                     }

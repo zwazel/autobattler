@@ -64,6 +64,14 @@
     background: linear-gradient(rgba(122, 122, 122, 0.5), rgba(122, 122, 122, 0.5)), url("../img/grassTextureTile.jpg");
 }
 
+.ENEMY {
+    color: red;
+}
+
+.FRIENDLY {
+    color: cyan;
+}
+
 .unitCellWrapper {
     width: 100%;
     height: 100%;

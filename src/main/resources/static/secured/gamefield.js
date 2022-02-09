@@ -169,19 +169,20 @@ function getUnitIcon(unit) {
     let pUnitName = document.createElement("p")
     pUnitName.id = "unitName-" + unitName
     pUnitName.innerHTML = unitName
-    let imgUnit = document.createElement("img")
 
     let divP = document.createElement("div")
     divP.classList.add("unitTextInfo")
     divP.classList.add(unit.side)
     divP.append(unitId, unitName)
 
+    let imgUnit = document.createElement("img")
     imgUnit.classList.add("characterIconImage")
     imgUnit.src = unitImage;
     imgUnit.alt = ""
 
     let imgDiv = document.createElement("div")
     imgDiv.classList.add("unitImageWrapper")
+    imgDiv.classList.add(unit.side)
     imgDiv.append(imgUnit)
 
     let wrapper = document.createElement("div")

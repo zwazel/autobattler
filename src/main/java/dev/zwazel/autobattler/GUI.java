@@ -65,7 +65,7 @@ public class GUI extends Canvas {
             if (canDoNext) {
                 canDoNext = false;
 
-                if (unitIterator.hasNext()) {
+                if (unitIterator.hasNext() && !battlerGen2.isFightFinished()) {
                     lastUnit = currentUnit;
                     if (lastUnit != null) {
                         this.lastUnitLabel.setText("Last Unit = " + lastUnit.getName() + " (" + lastUnit.getID() + "), at " + lastUnit.getGridPosition());
@@ -113,6 +113,11 @@ public class GUI extends Canvas {
                 if (!battlerGen2.isFightFinished() && !unitIterator.hasNext()) {
                     unitIterator = battlerGen2.getUnits().listIterator();
                 }
+
+                if (battlerGen2.isFightFinished()) {
+                    this.currentAction.setText("Current Action = battle finished");
+                }
+
                 repaint();
                 canDoNext = true;
             } else {

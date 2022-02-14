@@ -189,10 +189,12 @@ public class BattlerGen2 {
                 enemyUnitList.remove(unit);
             }
             grid.updateOccupiedGrid(posBefore, null);
+            ActionHistory die = new ActionHistory(Action.DIE, unit, new Unit[0], null, new Vector[]{unit.getGridPosition()});
             if (createHistory) {
-                history.addActionHistory(new ActionHistory(Action.DIE, unit, new Unit[0], null, new Vector[]{unit.getGridPosition()}));
+                history.addActionHistory(die);
             }
             unitIterator.remove();
+            return die;
         } else {
             ActionHistory actionHistory = unit.run();
             if (createHistory) {
@@ -202,7 +204,6 @@ public class BattlerGen2 {
             grid.updateOccupiedGrid(unit.getGridPosition(), unit);
             return actionHistory;
         }
-        return null;
     }
 
     private void drawBoard() {

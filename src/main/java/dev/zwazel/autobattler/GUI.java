@@ -45,10 +45,8 @@ public class GUI extends Canvas {
     private Unit currentUnit = null;
     private Unit lastUnit = null;
     private Unit target = null;
-
-    boolean canDoNext = true;
-
     private boolean currentUnitMoved = false;
+    private boolean canDoNext = true;
 
     public GUI(BattlerGen2 battlerGen2, int scalar) {
         this.battlerGen2 = battlerGen2;

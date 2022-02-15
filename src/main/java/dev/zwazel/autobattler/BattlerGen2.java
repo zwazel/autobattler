@@ -147,7 +147,7 @@ public class BattlerGen2 {
             }
             Unit unit = new MyFirstUnit(idCounter++, 1, getRandomUnitName(), vector, leftPriorityCounter++);
             unitsLeft.add(unit);
-            grid.getGridCells()[vector.getX()][vector.getY()].setCurrentObstacle(unit);
+            grid.updateOccupiedGrid(unit);
         }
 
         int rightPriorityCounter = 0;
@@ -159,7 +159,7 @@ public class BattlerGen2 {
             }
             Unit unit = new MyFirstUnit(idCounter++, 1, getRandomUnitName(), vector, rightPriorityCounter++);
             unitsRight.add(unit);
-            grid.getGridCells()[vector.getX()][vector.getY()].setCurrentObstacle(unit);
+            grid.updateOccupiedGrid(unit);
         }
 
         left = new Formation(new User("TestUserLeft", "TestUserLeft"), unitsLeft);

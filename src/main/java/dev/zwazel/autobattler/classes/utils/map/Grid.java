@@ -1,6 +1,7 @@
 package dev.zwazel.autobattler.classes.utils.map;
 
 import dev.zwazel.autobattler.classes.Obstacle;
+import dev.zwazel.autobattler.classes.units.Unit;
 import dev.zwazel.autobattler.classes.utils.Vector;
 
 import java.util.Arrays;
@@ -23,6 +24,10 @@ public class Grid {
                 gridCells[i][j] = new GridCell(i, j);
             }
         }
+    }
+
+    public void updateOccupiedGrid(Unit unit) {
+        gridCells[unit.getGridPosition().getX()][unit.getGridPosition().getY()].setCurrentObstacle(unit);
     }
 
     public void updateOccupiedGrid(Vector vector, Obstacle obstacle) {

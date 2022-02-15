@@ -74,7 +74,6 @@ public class FindPath {
         return path;
     }
 
-    // TODO: 29.01.2022 we have a problem here, i can't think anymore so future me has to solve it 
     public Vector findClosestNearbyNode(Grid grid, Vector start, Vector end) {
         GridGraph graph = new GridGraph(grid);
         Node targetNode = graph.getNodes()[end.getX()][end.getY()];
@@ -89,7 +88,6 @@ public class FindPath {
         for (Node node : neighbors) {
             Vector vector = node.getMyGridCell().getPosition();
             if (isReachable(start, vector, grid)) {
-                
                 return vector;
             }
         }
@@ -111,7 +109,7 @@ public class FindPath {
             System.out.print("\n" + "\t".repeat(Math.max(0, counter++)) + node.getMyGridCell().getPosition());
             node = node.getPredecessor();
         }
-        
+
     }
 
     private Node[] getPathInCorrectOrder(Node node, boolean excludeStart) {

@@ -95,7 +95,7 @@ public class FindPath {
     }
 
     public boolean isOccupied(Vector vector, Grid grid) {
-        return isReachable(vector, vector, grid, false);
+        return !isReachable(vector, vector, grid, false);
     }
 
     public boolean isReachable(Vector start, Vector end, Grid grid) {

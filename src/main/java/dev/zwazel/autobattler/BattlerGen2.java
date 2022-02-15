@@ -147,6 +147,7 @@ public class BattlerGen2 {
             }
             Unit unit = new MyFirstUnit(idCounter++, 1, getRandomUnitName(), vector, leftPriorityCounter++);
             unitsLeft.add(unit);
+            grid.getGridCells()[vector.getX()][vector.getY()].setCurrentObstacle(unit);
         }
 
         int rightPriorityCounter = 0;
@@ -158,6 +159,7 @@ public class BattlerGen2 {
             }
             Unit unit = new MyFirstUnit(idCounter++, 1, getRandomUnitName(), vector, rightPriorityCounter++);
             unitsRight.add(unit);
+            grid.getGridCells()[vector.getX()][vector.getY()].setCurrentObstacle(unit);
         }
 
         left = new Formation(new User("TestUserLeft", "TestUserLeft"), unitsLeft);
@@ -182,8 +184,6 @@ public class BattlerGen2 {
                 vector = new Vector(i, j);
                 if (!findPath.isOccupied(vector, grid)) {
                     return vector;
-                } else {
-                    System.out.println("Vector " + vector + " is occupied");
                 }
             }
         }

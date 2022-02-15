@@ -94,9 +94,19 @@ public class FindPath {
         return null;
     }
 
+    public boolean isOccupied(Vector vector, Grid grid) {
+        return isReachable(vector, vector, grid, false);
+    }
+
     public boolean isReachable(Vector start, Vector end, Grid grid) {
+        return isReachable(start, end, grid, true);
+    }
+
+    public boolean isReachable(Vector start, Vector end, Grid grid, boolean checkPath) {
         if (grid.getGridCells()[end.getX()][end.getY()].getCurrentObstacle() != null) {
             return false;
+        } else if(!checkPath) {
+            return true;
         }
 
         return (this.findPath(start, end, new GridGraph(grid)).length > 0);

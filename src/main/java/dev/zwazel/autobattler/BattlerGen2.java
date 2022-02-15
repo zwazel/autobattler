@@ -44,6 +44,12 @@ public class BattlerGen2 {
         enemyUnitList = new ArrayList<>();
     }
 
+    public BattlerGen2(Vector gridSize) {
+        grid = new Grid(gridSize);
+        friendlyUnitList = new ArrayList<>();
+        enemyUnitList = new ArrayList<>();
+    }
+
     public BattlerGen2(User userLeft, FormationEntity formationLeft, User userRight, FormationEntity formationRight, boolean createJson, boolean runWithGUI, Vector gridSize) {
         friendlyUnitList = new ArrayList<>();
         enemyUnitList = new ArrayList<>();
@@ -111,26 +117,89 @@ public class BattlerGen2 {
     }
 
     public static void main(String[] args) {
-        ArrayList<Unit> units = new ArrayList<>();
+        Vector gridSize = new Vector(10, 10);
+        BattlerGen2 battlerGen2 = new BattlerGen2(gridSize);
+
+        Formation[] formations = battlerGen2.createTestFormation(5, 5);
+
+        Formation left = formations[0];
+        Formation right = formations[1];
+        User userLeft = left.getUser();
+        User userRight = right.getUser();
+
+        new BattlerGen2(userLeft, new FormationEntity(left, userLeft), userRight, new FormationEntity(right, userRight), false, true, gridSize);
+    }
+
+    private Formation[] createTestFormation(int amountUnitsLeft, int amountUnitsRight) {
+        Formation left;
+        ArrayList<Unit> unitsLeft = new ArrayList<>();
+
+        Formation right;
+        ArrayList<Unit> unitsRight = new ArrayList<>();
 
         long idCounter = 0;
         int leftPriorityCounter = 0;
-        Unit unit = new MyFirstUnit(idCounter++, 1, "Tim", new Vector(0, 0), leftPriorityCounter++);
-        units.add(unit);
-        unit = new MyFirstUnit(idCounter++, 1, "Ash", new Vector(1, 0), leftPriorityCounter++);
-        units.add(unit);
-        unit = new MyFirstUnit(idCounter++, 1, "Phillip", new Vector(0, 1), leftPriorityCounter++);
-        units.add(unit);
+        for (int i = 0; i < amountUnitsLeft; i++) {
+            Vector vector = findFreeSpaceOnSide(FRIENDLY);
+            if (vector == null) {
+                System.err.println("No free space on side " + FRIENDLY);
+                break;
+            }
+            Unit unit = new MyFirstUnit(idCounter++, 1, getRandomUnitName(), vector, leftPriorityCounter++);
+            unitsLeft.add(unit);
+        }
 
-        User userLeft = new User("TestUserLeft", "TestUserLeft");
-        Formation formationLeft = new Formation(userLeft, units);
-        FormationEntity formationEntityLeft = new FormationEntity(formationLeft, userLeft);
+        int rightPriorityCounter = 0;
+        for (int i = 0; i < amountUnitsRight; i++) {
+            Vector vector = findFreeSpaceOnSide(ENEMY);
+            if (vector == null) {
+                System.err.println("No free space on side " + ENEMY);
+                break;
+            }
+            Unit unit = new MyFirstUnit(idCounter++, 1, getRandomUnitName(), vector, rightPriorityCounter++);
+            unitsRight.add(unit);
+        }
 
-        User userRight = new User("TestUserRight", "TestUserRight");
-        Formation formationRight = new Formation(userRight, units);
-        FormationEntity formationEntityRight = new FormationEntity(formationRight, userRight);
+        left = new Formation(new User("TestUserLeft", "TestUserLeft"), unitsLeft);
+        right = new Formation(new User("TestUserRight", "TestUserRight"), unitsRight);
 
-        new BattlerGen2(userLeft, formationEntityLeft, userRight, formationEntityRight, false, true, new Vector(10, 10));
+        return new Formation[]{left, right};
+    }
+
+    private Vector findFreeSpaceOnSide(Side side) {
+        Vector vector;
+        FindPath findPath = new FindPath();
+
+        int starter = 0;
+        int end = grid.getWidth() / 2;
+        if (side == ENEMY) {
+            starter = grid.getWidth() / 2;
+            end = grid.getWidth();
+        }
+
+        for (int i = starter; i < end; i++) {
+            for (int j = 0; j < grid.getHeight(); j++) {
+                vector = new Vector(i, j);
+                if (!findPath.isOccupied(vector, grid)) {
+                    return vector;
+                } else {
+                    System.out.println("Vector " + vector + " is occupied");
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private String getRandomUnitName() {
+        String[] unitNames = new String[]{
+                "Tim", "Ash", "Phillip", "Moritz", "Mütz", "Marc", "Magnus", "Nadina", "Leon", "Bjarne", "Niklas", "Dennis"
+        };
+
+
+        // get a random name from the list
+        int randomIndex = (int) (Math.random() * unitNames.length);
+        return unitNames[randomIndex];
     }
 
     private void mirrorSide(Unit unit) {
@@ -167,8 +236,12 @@ public class BattlerGen2 {
     }
 
     public void doTurn(Iterator<Unit> unitIterator, boolean createHistory) {
-        Unit unit = unitIterator.next();
-        doTurn(unitIterator, unit, createHistory);
+        if (unitIterator.hasNext()) {
+            Unit unit = unitIterator.next();
+            doTurn(unitIterator, unit, createHistory);
+        } else {
+            throw new RuntimeException("No units left");
+        }
     }
 
     public ActionHistory doTurn(Iterator<Unit> unitIterator, Unit unit, boolean createHistory) {

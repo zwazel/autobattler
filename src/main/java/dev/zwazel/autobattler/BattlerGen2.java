@@ -50,14 +50,14 @@ public class BattlerGen2 {
         enemyUnitList = new ArrayList<>();
     }
 
-    public BattlerGen2(User userLeft, FormationEntity formationLeft, User userRight, FormationEntity formationRight, boolean createJson, boolean runWithGUI, Vector gridSize) {
+    public BattlerGen2(FormationEntity formationLeft, FormationEntity formationRight, boolean createJson, boolean runWithGUI, Vector gridSize) {
         friendlyUnitList = new ArrayList<>();
         enemyUnitList = new ArrayList<>();
         grid = new Grid(gridSize);
 
         try {
-            friendlyUser = userLeft;
-            enemyUser = userRight;
+            friendlyUser = formationLeft.getUser();
+            enemyUser = formationRight.getUser();
 
             getFormationFromJson(FRIENDLY, formationLeft.getFormationJson());
             getFormationFromJson(ENEMY, formationRight.getFormationJson());
@@ -127,7 +127,7 @@ public class BattlerGen2 {
         User userLeft = left.getUser();
         User userRight = right.getUser();
 
-        new BattlerGen2(userLeft, new FormationEntity(left, userLeft), userRight, new FormationEntity(right, userRight), false, true, gridSize);
+        new BattlerGen2(new FormationEntity(left, userLeft), new FormationEntity(right, userRight), false, true, gridSize);
     }
 
     private Formation[] createTestFormation(int amountUnitsLeft, int amountUnitsRight) {

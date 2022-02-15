@@ -93,14 +93,6 @@ public class BattlerGen2 {
                     while (unitIterator.hasNext()) {
                         doTurn(unitIterator, true);
                     }
-
-                    if (friendlyUnitList.size() <= 0) {
-                        winningSide = Side.ENEMY;
-                        fightFinished = true;
-                    } else if (enemyUnitList.size() <= 0) {
-                        winningSide = FRIENDLY;
-                        fightFinished = true;
-                    }
 //                    drawBoard();
                 }
 
@@ -180,6 +172,7 @@ public class BattlerGen2 {
     }
 
     public ActionHistory doTurn(Iterator<Unit> unitIterator, Unit unit, boolean createHistory) {
+        ActionHistory actionHistory;
         Vector posBefore = unit.getGridPosition();
         // TODO: 27.01.2022 update the way units die, think about how it should work!
         if (unit.getMyState() != State.ALIVE) {
@@ -189,20 +182,29 @@ public class BattlerGen2 {
                 enemyUnitList.remove(unit);
             }
             grid.updateOccupiedGrid(posBefore, null);
+            actionHistory = new ActionHistory(Action.DIE, unit, new Unit[0], null, new Vector[]{unit.getGridPosition()});
             if (createHistory) {
-                history.addActionHistory(new ActionHistory(Action.DIE, unit, new Unit[0], null, new Vector[]{unit.getGridPosition()}));
+                history.addActionHistory(actionHistory);
             }
             unitIterator.remove();
         } else {
-            ActionHistory actionHistory = unit.run();
+            actionHistory = unit.run();
             if (createHistory) {
                 history.addActionHistory(actionHistory);
             }
             grid.updateOccupiedGrid(posBefore, null);
             grid.updateOccupiedGrid(unit.getGridPosition(), unit);
-            return actionHistory;
         }
-        return null;
+
+        if (friendlyUnitList.size() <= 0) {
+            winningSide = Side.ENEMY;
+            fightFinished = true;
+        } else if (enemyUnitList.size() <= 0) {
+            winningSide = FRIENDLY;
+            fightFinished = true;
+        }
+
+        return actionHistory;
     }
 
     private void drawBoard() {

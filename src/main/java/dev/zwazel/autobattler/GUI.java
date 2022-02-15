@@ -45,8 +45,8 @@ public class GUI extends Canvas {
     private Unit currentUnit = null;
     private Unit lastUnit = null;
     private Unit target = null;
-
     private boolean currentUnitMoved = false;
+    private boolean canDoNext = true;
 
     public GUI(BattlerGen2 battlerGen2, int scalar) {
         this.battlerGen2 = battlerGen2;
@@ -60,56 +60,67 @@ public class GUI extends Canvas {
 
         Button nextButton = new Button("Next");
         nextButton.addActionListener(e -> {
-            if (unitIterator.hasNext()) {
-                lastUnit = currentUnit;
-                if (lastUnit != null) {
-                    this.lastUnitLabel.setText("Last Unit = " + lastUnit.getName() + " (" + lastUnit.getID() + "), at " + lastUnit.getGridPosition());
-                }
-                currentUnit = unitIterator.next();
-                this.currentUnitLabel.setText("Current Unit = " + currentUnit.getName() + " (" + currentUnit.getID() + ")");
-                if (showLastPosition) {
-                    start = currentUnit.getGridPosition();
-                }
-                Vector positionBefore = currentUnit.getGridPosition();
-                ActionHistory actionHistory = battlerGen2.doTurn(unitIterator, currentUnit, false);
-                if (!showLastPosition) {
-                    start = currentUnit.getGridPosition();
-                }
-                if (actionHistory.targets().length > 0) {
-                    Unit target = actionHistory.targets()[0];
-                    if (target != null) {
-                        end = target.getGridPosition();
-                        this.target = target;
-                        FindPath findPath = new FindPath();
-                        nodes = findPath.findPath(currentUnit.getGridPosition(), findPath.findClosestNearbyNode(grid, currentUnit.getGridPosition(), end), new GridGraph(grid));
-                        this.targetLabel.setText("Target = " + target.getName() + " (" + target.getID() + "), at " + end);
+            if (canDoNext) {
+                canDoNext = false;
+
+                if (unitIterator.hasNext() && !battlerGen2.isFightFinished()) {
+                    lastUnit = currentUnit;
+                    if (lastUnit != null) {
+                        this.lastUnitLabel.setText("Last Unit = " + lastUnit.getName() + " (" + lastUnit.getID() + "), at " + lastUnit.getGridPosition());
+                    }
+                    currentUnit = unitIterator.next();
+                    this.currentUnitLabel.setText("Current Unit = " + currentUnit.getName() + " (" + currentUnit.getID() + ")");
+                    if (showLastPosition) {
+                        start = currentUnit.getGridPosition();
+                    }
+                    Vector positionBefore = currentUnit.getGridPosition();
+                    ActionHistory actionHistory = battlerGen2.doTurn(unitIterator, currentUnit, false);
+                    if (!showLastPosition) {
+                        start = currentUnit.getGridPosition();
+                    }
+                    if (actionHistory.targets().length > 0) {
+                        Unit target = actionHistory.targets()[0];
                         this.currentAction.setText("Current Action = " + actionHistory.actionType());
+                        if (target != null) {
+                            end = target.getGridPosition();
+                            this.target = target;
+                            FindPath findPath = new FindPath();
+                            nodes = findPath.findPath(currentUnit.getGridPosition(), findPath.findClosestNearbyNode(grid, currentUnit.getGridPosition(), end), new GridGraph(grid));
+                            this.targetLabel.setText("Target = " + target.getName() + " (" + target.getID() + "), at " + end);
+                        } else {
+                            end = null;
+                            nodes = new Node[0];
+                            this.targetLabel.setText("Target = ");
+                        }
                     } else {
                         end = null;
                         nodes = new Node[0];
                         this.targetLabel.setText("Target = ");
                         this.currentAction.setText("Current Action = ");
                     }
-                } else {
-                    end = null;
-                    nodes = new Node[0];
-                    this.targetLabel.setText("Target = ");
-                    this.currentAction.setText("Current Action = ");
+
+                    if (!positionBefore.equals(currentUnit.getGridPosition())) {
+                        currentUnitLabel.setText(currentUnitLabel.getText() + ", moved from " + start + " to " + currentUnit.getGridPosition());
+                        currentUnitMoved = true;
+                    } else {
+                        currentUnitLabel.setText(currentUnitLabel.getText() + ", stayed at " + currentUnit.getGridPosition() + ", ");
+                        currentUnitMoved = false;
+                    }
                 }
 
-                if (!positionBefore.equals(currentUnit.getGridPosition())) {
-                    currentUnitLabel.setText(currentUnitLabel.getText() + ", moved from " + start + " to " + currentUnit.getGridPosition());
-                    currentUnitMoved = true;
-                } else {
-                    currentUnitLabel.setText(currentUnitLabel.getText() + ", stayed at " + currentUnit.getGridPosition() + ", ");
-                    currentUnitMoved = false;
+                if (!battlerGen2.isFightFinished() && !unitIterator.hasNext()) {
+                    unitIterator = battlerGen2.getUnits().listIterator();
                 }
-            }
 
-            if (!battlerGen2.isFightFinished() && !unitIterator.hasNext()) {
-                unitIterator = battlerGen2.getUnits().listIterator();
+                if (battlerGen2.isFightFinished()) {
+                    this.currentAction.setText("Current Action = battle finished");
+                }
+
+                repaint();
+                canDoNext = true;
+            } else {
+                System.out.println("Can't do next");
             }
-            repaint();
         });
         frame.add(nextButton, BorderLayout.SOUTH);
 

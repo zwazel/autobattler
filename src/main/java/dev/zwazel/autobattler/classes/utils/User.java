@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.Set;
 
 @EnableAutoConfiguration
@@ -14,26 +15,35 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-
     @NotNull
     private String username;
-
     @NotNull
     private String password;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<FormationEntity> formations;
-
     @ManyToMany
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<UserRole> roles;
+    private Date lastLogin;
+    private Date accountCreated;
 
     public User() {
+        accountCreated = new Date();
+        lastLogin = accountCreated;
     }
 
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+        accountCreated = new Date();
+        lastLogin = accountCreated;
+    }
+
+    public User(String username, String password, Date accountCreated) {
+        this.username = username;
+        this.password = password;
+        this.accountCreated = accountCreated;
+        this.lastLogin = accountCreated;
     }
 
     public long getId() {
@@ -78,6 +88,22 @@ public class User {
 
     public void setRoles(Set<UserRole> roles) {
         this.roles = roles;
+    }
+
+    public Date getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
+    public Date getAccountCreated() {
+        return accountCreated;
+    }
+
+    public void setAccountCreated(Date accountCreated) {
+        this.accountCreated = accountCreated;
     }
 
     @Override

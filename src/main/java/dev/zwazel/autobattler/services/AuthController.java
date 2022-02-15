@@ -67,6 +67,12 @@ public class AuthController {
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             user.setLastLogin(new Date());
+
+            // old accounts getting updated, so value might not be true, but at least we have one
+            if (user.getAccountCreated() == null) {
+                user.setAccountCreated(user.getLastLogin());
+            }
+
             userRepository.save(user);
 
             ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);

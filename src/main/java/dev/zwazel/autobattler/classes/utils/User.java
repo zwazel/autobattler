@@ -12,7 +12,6 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 public class User {
-    private final Date accountCreated;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -26,9 +25,11 @@ public class User {
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<UserRole> roles;
     private Date lastLogin;
+    private Date accountCreated;
 
     public User() {
         accountCreated = new Date();
+        lastLogin = accountCreated;
     }
 
     public User(String username, String password) {
@@ -95,6 +96,14 @@ public class User {
 
     public void setLastLogin(Date lastLogin) {
         this.lastLogin = lastLogin;
+    }
+
+    public Date getAccountCreated() {
+        return accountCreated;
+    }
+
+    public void setAccountCreated(Date accountCreated) {
+        this.accountCreated = accountCreated;
     }
 
     @Override

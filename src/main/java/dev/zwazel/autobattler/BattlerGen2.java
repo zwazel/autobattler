@@ -157,9 +157,6 @@ public class BattlerGen2 {
 
         formation = new Formation(new User("TestUser_" + side, "TestUser_" + side), units);
 
-        System.out.println("formation = ");
-        System.out.println(formation);
-
         return formation;
     }
 

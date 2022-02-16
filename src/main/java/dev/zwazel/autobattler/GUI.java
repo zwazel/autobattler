@@ -30,6 +30,7 @@ public class GUI extends Canvas {
     private final Label LAST_UNIT_LABEL = new Label("Last Unit = ");
     private final Label TARGET_LABEL = new Label("Target = ");
     private final Label CURRENT_ACTION = new Label("Current Action = ");
+    private final Label UNIT_LEGEND = new Label("UnitTextMeaning = (id,priority,health)");
 
     private final Color COLOR_START = Color.cyan;
     private final Color COLOR_CURRENT_UNIT = Color.blue;
@@ -55,7 +56,7 @@ public class GUI extends Canvas {
         this.SCALAR = scalar;
         this.unitIterator = BATTLER_GEN2.getUnits().listIterator();
 
-        FRAME.setSize((grid.getWidth() * SCALAR) + SCALAR * 2, (grid.getHeight() * SCALAR) + SCALAR * 3);
+        FRAME.setSize((grid.getWidth() * SCALAR) + SCALAR * 2, (grid.getHeight() * SCALAR) + (SCALAR * 5));
 
         FRAME.add(this, BorderLayout.CENTER);
 
@@ -132,6 +133,7 @@ public class GUI extends Canvas {
         labelPanel.add(LAST_UNIT_LABEL);
         labelPanel.add(TARGET_LABEL);
         labelPanel.add(CURRENT_ACTION);
+        labelPanel.add(UNIT_LEGEND);
         FRAME.add(labelPanel, BorderLayout.NORTH);
 
         FRAME.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -195,7 +197,7 @@ public class GUI extends Canvas {
                     g.setColor(Color.BLACK);
                     if (obstacle.getClass() == MyFirstUnit.class) {
                         MyFirstUnit unit = (MyFirstUnit) obstacle;
-                        g.drawString(unit.getName() + "(" + unit.getID() + "," + unit.getPriority() + ")", gridPositionNow.getX(), gridPositionNow.getY());
+                        g.drawString(unit.getName() + "(" + unit.getID() + "," + unit.getPriority() + "," + unit.getHealth() + ")", gridPositionNow.getX(), gridPositionNow.getY());
                     }
                 }
             }

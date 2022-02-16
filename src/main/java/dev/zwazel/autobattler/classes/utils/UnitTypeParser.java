@@ -17,7 +17,7 @@ public class UnitTypeParser {
         if (type != null) {
             switch (type) {
                 case MY_FIRST_UNIT -> {
-                    return new MyFirstUnit(unit.getId(), 1, unit.getName(), unit.getPosition(), unit.getPriority());
+                    return new MyFirstUnit(unit.getId(), unit.getPriority(), 1, unit.getName(), unit.getPosition());
                 }
                 default -> {
                     throw new UnknownUnitType();

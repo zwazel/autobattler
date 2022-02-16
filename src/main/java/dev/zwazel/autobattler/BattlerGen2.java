@@ -144,12 +144,13 @@ public class BattlerGen2 {
             int currentAmountUnits = i == 0 ? amountUnitsLeft : amountUnitsRight;
             int priorityCounter = 0;
             for (int j = 0; j < currentAmountUnits; j++) {
-                Vector vector = findFreeSpaceOnSide(currentSide);
+                Vector vector = findFreeRandomSpaceOnSide(currentSide);
                 if (vector == null) {
                     System.err.println("No free space on side " + currentSide);
                     break;
                 }
-                Unit unit = new MyFirstUnit(idCounter++, 1, getRandomUnitName(), vector, priorityCounter++);
+                Unit unit = new MyFirstUnit(idCounter++, priorityCounter++, 1, getRandomUnitName(), vector);
+                System.out.println(unit);
                 if (currentSide == FRIENDLY) {
                     unitsLeft.add(unit);
                 } else {
@@ -163,6 +164,35 @@ public class BattlerGen2 {
         right = new Formation(new User("TestUserRight", "TestUserRight"), unitsRight);
 
         return new Formation[]{left, right};
+    }
+
+    private Vector findFreeRandomSpaceOnSide(Side side) {
+        return findFreeRandomSpaceOnSide(side, 0);
+    }
+
+    private Vector findFreeRandomSpaceOnSide(Side side, int counter) {
+        FindPath findPath = new FindPath();
+
+        int starter = 0;
+        int end = grid.getWidth() / 2;
+        if (side == ENEMY) {
+            starter = grid.getWidth() / 2;
+            end = grid.getWidth();
+        }
+
+        // get random x between starter and end
+        int x = (int) (Math.random() * (end - starter)) + starter;
+        int y = (int) (Math.random() * grid.getHeight());
+
+        Vector vector = new Vector(x, y);
+
+        if (findPath.isOccupied(vector, grid) && counter < x + y) {
+            return findFreeRandomSpaceOnSide(side, counter + 1);
+        } else if (counter >= x + y) {
+            System.err.println("No free space on side " + side);
+            return null;
+        }
+        return vector;
     }
 
     private Vector findFreeSpaceOnSide(Side side) {

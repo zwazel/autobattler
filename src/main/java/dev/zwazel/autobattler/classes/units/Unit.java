@@ -45,7 +45,7 @@ public abstract class Unit implements Obstacle, Cloneable {
      * @param priority    the priority of the unit, used for sorting
      * @param type        the type of the unit
      */
-    public Unit(long id, int level, String name, String description, int health, int energy, char symbol, Vector position, int speed, int priority, UnitTypes type) {
+    public Unit(long id, int priority, int level, String name, String description, int health, int energy, char symbol, Vector position, int speed, UnitTypes type) {
         this.ID = id;
         this.level = level;
         this.health = getLevelHealth(health, level - 1);
@@ -78,7 +78,7 @@ public abstract class Unit implements Obstacle, Cloneable {
      * @param type        the type of the unit
      */
     public Unit(long id, int level, String name, String description, int health, int energy, char symbol, Vector position, Vector gridSize, int speed, BattlerGen2 battler, Side side, int priority, UnitTypes type) {
-        this(id, level, name, description, health, energy, symbol, position, speed, priority, type);
+        this(id, priority, level, name, description, health, energy, symbol, position, speed, type);
         this.gridSize = gridSize;
         this.battler = battler;
         this.side = side;

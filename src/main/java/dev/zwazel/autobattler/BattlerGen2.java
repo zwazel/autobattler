@@ -130,6 +130,7 @@ public class BattlerGen2 {
         new BattlerGen2(new FormationEntity(left, userLeft), new FormationEntity(right, userRight), false, true, gridSize);
     }
 
+    // TODO: 16.02.2022 randomize positions
     private Formation[] createTestFormation(int amountUnitsLeft, int amountUnitsRight) {
         Formation left;
         ArrayList<Unit> unitsLeft = new ArrayList<>();
@@ -138,28 +139,24 @@ public class BattlerGen2 {
         ArrayList<Unit> unitsRight = new ArrayList<>();
 
         long idCounter = 0;
-        int leftPriorityCounter = 0;
-        for (int i = 0; i < amountUnitsLeft; i++) {
-            Vector vector = findFreeSpaceOnSide(FRIENDLY);
-            if (vector == null) {
-                System.err.println("No free space on side " + FRIENDLY);
-                break;
+        for (int i = 0; i < 2; i++) {
+            Side currentSide = i == 0 ? FRIENDLY : ENEMY;
+            int currentAmountUnits = i == 0 ? amountUnitsLeft : amountUnitsRight;
+            int priorityCounter = 0;
+            for (int j = 0; j < currentAmountUnits; j++) {
+                Vector vector = findFreeSpaceOnSide(currentSide);
+                if (vector == null) {
+                    System.err.println("No free space on side " + currentSide);
+                    break;
+                }
+                Unit unit = new MyFirstUnit(idCounter++, 1, getRandomUnitName(), vector, priorityCounter++);
+                if (currentSide == FRIENDLY) {
+                    unitsLeft.add(unit);
+                } else {
+                    unitsRight.add(unit);
+                }
+                grid.updateOccupiedGrid(unit);
             }
-            Unit unit = new MyFirstUnit(idCounter++, 1, getRandomUnitName(), vector, leftPriorityCounter++);
-            unitsLeft.add(unit);
-            grid.updateOccupiedGrid(unit);
-        }
-
-        int rightPriorityCounter = 0;
-        for (int i = 0; i < amountUnitsRight; i++) {
-            Vector vector = findFreeSpaceOnSide(ENEMY);
-            if (vector == null) {
-                System.err.println("No free space on side " + ENEMY);
-                break;
-            }
-            Unit unit = new MyFirstUnit(idCounter++, 1, getRandomUnitName(), vector, rightPriorityCounter++);
-            unitsRight.add(unit);
-            grid.updateOccupiedGrid(unit);
         }
 
         left = new Formation(new User("TestUserLeft", "TestUserLeft"), unitsLeft);

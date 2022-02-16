@@ -195,7 +195,7 @@ public class GUI extends Canvas {
                     g.setColor(Color.BLACK);
                     if (obstacle.getClass() == MyFirstUnit.class) {
                         MyFirstUnit unit = (MyFirstUnit) obstacle;
-                        g.drawString(unit.getName() + "(" + unit.getID() + ")", gridPositionNow.getX(), gridPositionNow.getY());
+                        g.drawString(unit.getName() + "(" + unit.getID() + "," + unit.getPriority() + ")", gridPositionNow.getX(), gridPositionNow.getY());
                     }
                 }
             }

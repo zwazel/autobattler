@@ -159,7 +159,7 @@ public class GUI extends Canvas {
 
                 // draw rect around the cell
                 g.setColor(COLOR_GRID);
-                g.fillRect(gridPositionNow.getX(), gridPositionNow.getY(), SCALAR, SCALAR);
+                g.drawRect(gridPositionNow.getX(), gridPositionNow.getY(), SCALAR, SCALAR);
 
                 GridCell gridCell = grid.getGridCells()[column][row];
                 if (gridCell.getCurrentObstacle() != null) {

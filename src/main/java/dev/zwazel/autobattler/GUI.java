@@ -1,9 +1,9 @@
 package dev.zwazel.autobattler;
 
 import dev.zwazel.autobattler.classes.Obstacle;
+import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.units.MyFirstUnit;
-import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.utils.Vector;
 import dev.zwazel.autobattler.classes.utils.json.ActionHistory;
 import dev.zwazel.autobattler.classes.utils.map.*;
@@ -90,7 +90,7 @@ public class GUI extends Canvas {
                             this.target = target;
                             FindPath findPath = new FindPath();
                             System.out.println("GUI.GUI -> reconstructing path");
-                            nodes = findPath.findPath(currentUnit.getGridPosition(), findPath.findClosestNearbyNode(grid, currentUnit.getGridPosition(), end), new GridGraph(grid));
+                            nodes = findPath.findPath(currentUnit.getGridPosition(), end, new GridGraph(grid));
                             this.TARGET_LABEL.setText("Target = " + target.getName() + " (" + target.getID() + "), at " + end);
                         } else {
                             end = null;

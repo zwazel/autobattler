@@ -251,8 +251,7 @@ public class BattlerGen2 {
                     if (checkIfReachable) {
                         FindPath path = new FindPath();
                         System.out.println("BattlerGen2.findClosestOther");
-                        Vector vector = path.findClosestNearbyNode(grid, unit.getGridPosition(), unitChecking.getGridPosition());
-                        if (vector == null) {
+                        if (path.isReachable(unit.getGridPosition(), unitChecking.getGridPosition(), grid)) {
                             continue;
                         }
                     }

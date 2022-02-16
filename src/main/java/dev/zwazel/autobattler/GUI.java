@@ -89,7 +89,6 @@ public class GUI extends Canvas {
                             end = target.getGridPosition();
                             this.target = target;
                             FindPath findPath = new FindPath();
-                            System.out.println("GUI.GUI -> reconstructing path");
                             nodes = findPath.findPath(currentUnit.getGridPosition(), end, new GridGraph(grid));
                             this.TARGET_LABEL.setText("Target = " + target.getName() + " (" + target.getID() + "), at " + end);
                         } else {

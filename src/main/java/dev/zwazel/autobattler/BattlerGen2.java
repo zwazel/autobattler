@@ -250,8 +250,7 @@ public class BattlerGen2 {
                 if (includeDead || unitChecking.getMyState() != State.DEAD) {
                     if (checkIfReachable) {
                         FindPath path = new FindPath();
-                        System.out.println("BattlerGen2.findClosestOther");
-                        if (path.isReachable(unit.getGridPosition(), unitChecking.getGridPosition(), grid)) {
+                        if (!path.isReachable(unit.getGridPosition(), unitChecking.getGridPosition(), grid)) {
                             continue;
                         }
                     }

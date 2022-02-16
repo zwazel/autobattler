@@ -92,16 +92,13 @@ public class FindPath {
      * @return the next move steps
      */
     public Node[] getNextMoveSteps(Vector start, Vector vectorToGo, Grid grid, int moveCount) {
-        System.out.println("FindPath.getNextMoveSteps");
         Node[] path = new Node[0];
 
         if (moveCount <= 0) {
             return path;
         }
 
-        if (!isOccupied(vectorToGo, grid)) {
-            path = this.findPath(start, vectorToGo, new GridGraph(grid));
-        }
+        path = this.findPath(start, vectorToGo, new GridGraph(grid));
 
         return getNextMoveSteps(path, moveCount);
     }
@@ -114,7 +111,7 @@ public class FindPath {
      * @return true if the vector is occupied by an obstacle
      */
     public boolean isOccupied(Vector vector, Grid grid) {
-        return !isReachable(vector, vector, grid, false);
+        return grid.getGridCells()[vector.getX()][vector.getY()].getCurrentObstacle() != null;
     }
 
     /**
@@ -126,25 +123,6 @@ public class FindPath {
      * @return true if the vector is reachable from the start vector and not occupied by an obstacle
      */
     public boolean isReachable(Vector start, Vector end, Grid grid) {
-        return isReachable(start, end, grid, true);
-    }
-
-    /**
-     * checks if the given vector is reachable from the start vector in the given grid
-     *
-     * @param start     the start vector
-     * @param end       the end vector
-     * @param grid      the grid to check
-     * @param checkPath if false, the vector is only checked if it is not occupied by an obstacle. if true, the vector is also checked if it is reachable from the start vector
-     * @return true if the vector is reachable from the start vector and not occupied by an obstacle
-     */
-    private boolean isReachable(Vector start, Vector end, Grid grid, boolean checkPath) {
-        if (grid.getGridCells()[end.getX()][end.getY()].getCurrentObstacle() != null) {
-            return false;
-        } else if (!checkPath) {
-            return true;
-        }
-
         return (this.findPath(start, end, new GridGraph(grid)).length > 0);
     }
 

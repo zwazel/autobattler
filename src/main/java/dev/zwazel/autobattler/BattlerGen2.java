@@ -50,7 +50,7 @@ public class BattlerGen2 {
         enemyUnitList = new ArrayList<>();
     }
 
-    public BattlerGen2(FormationEntity formationLeft, FormationEntity formationRight, boolean createJson, boolean runWithGUI, Vector gridSize) {
+    public BattlerGen2(FormationEntity formationLeft, FormationEntity formationRight, boolean createJson, boolean runWithGUI, Vector gridSize, boolean mirrorEnemy) {
         friendlyUnitList = new ArrayList<>();
         enemyUnitList = new ArrayList<>();
         grid = new Grid(gridSize);
@@ -59,8 +59,8 @@ public class BattlerGen2 {
             friendlyUser = formationLeft.getUser();
             enemyUser = formationRight.getUser();
 
-            getFormationFromJson(FRIENDLY, formationLeft.getFormationJson());
-            getFormationFromJson(ENEMY, formationRight.getFormationJson());
+            getFormationFromJson(FRIENDLY, formationLeft.getFormationJson(), mirrorEnemy);
+            getFormationFromJson(ENEMY, formationRight.getFormationJson(), mirrorEnemy);
 
             friendlyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
             enemyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
@@ -120,22 +120,32 @@ public class BattlerGen2 {
         Vector gridSize = new Vector(10, 10);
         BattlerGen2 battlerGen2 = new BattlerGen2(gridSize);
 
-        Formation left = battlerGen2.createTestFormation(5, FRIENDLY, 0);
-        Formation right = battlerGen2.createTestFormation(5, FRIENDLY, 5);
+        int amountUnitsLeft = 5;
+        int amountUnitsRight = 5;
+        Formation left = battlerGen2.createTestFormation(amountUnitsLeft, FRIENDLY, 0, true);
+        Formation right = battlerGen2.createTestFormation(amountUnitsRight, ENEMY, amountUnitsLeft, true);
         User userLeft = left.getUser();
         User userRight = right.getUser();
 
-        new BattlerGen2(new FormationEntity(left, userLeft), new FormationEntity(right, userRight), false, true, gridSize);
+        new BattlerGen2(new FormationEntity(left, userLeft), new FormationEntity(right, userRight), false, true, gridSize, false);
     }
 
-    // TODO: 16.02.2022 randomize positions
-    private Formation createTestFormation(int amountUnits, Side side, long idCounter) {
+    /**
+     * Creates a test formation for testing purposes
+     *
+     * @param amountUnits amount of units in the formation
+     * @param side        side of the formation
+     * @param idCounter   id counter for the units, used to create unique ids
+     * @param random      whether the units should be randomly placed on their side or not
+     * @return the formation
+     */
+    private Formation createTestFormation(int amountUnits, Side side, long idCounter, boolean random) {
         Formation formation;
         ArrayList<Unit> units = new ArrayList<>();
 
         int priorityCounter = 0;
         for (int j = 0; j < amountUnits; j++) {
-            Vector vector = findFreeRandomSpaceOnSide(side);
+            Vector vector = (random) ? findFreeRandomSpaceOnSide(side) : findFreeSpaceOnSide(side);
             if (vector == null) {
                 System.err.println("No free space on side " + side);
                 break;
@@ -157,6 +167,13 @@ public class BattlerGen2 {
         return findFreeRandomSpaceOnSide(side, 0);
     }
 
+    /**
+     * find a random free space on the correct side
+     *
+     * @param side    the side to find a free space on
+     * @param counter keep track of how many times this method has been called, to prevent endless loops. stops after going through all spaces on the side
+     * @return a vector with the coordinates of the free space on the side or null if no free space was found
+     */
     private Vector findFreeRandomSpaceOnSide(Side side, int counter) {
         FindPath findPath = new FindPath();
 
@@ -176,7 +193,6 @@ public class BattlerGen2 {
         if (findPath.isOccupied(vector, grid) && counter < x + y) {
             return findFreeRandomSpaceOnSide(side, counter + 1);
         } else if (counter >= x + y) {
-            System.err.println("No free space on side " + side);
             return null;
         }
         return vector;
@@ -327,17 +343,17 @@ public class BattlerGen2 {
         System.out.println(vertical);
     }
 
-    private void getFormationFromJson(Side side, String json) throws UnknownUnitType {
+    private void getFormationFromJson(Side side, String json, boolean mirrorEnemy) throws UnknownUnitType {
         JsonElement jsonElement = JsonParser.parseString(json);
         JsonArray jsonArray = jsonElement.getAsJsonArray();
-        getUnitsFromJsonAndAssignThemToSide(side, jsonArray);
+        getUnitsFromJsonAndAssignThemToSide(side, jsonArray, mirrorEnemy);
     }
 
-    private void getUnitsFromJsonAndAssignThemToSide(Side side, JsonArray jsonArray) throws UnknownUnitType {
+    private void getUnitsFromJsonAndAssignThemToSide(Side side, JsonArray jsonArray, boolean mirrorEnemy) throws UnknownUnitType {
         for (int i = 0; i < jsonArray.size(); i++) {
             JsonObject unit = jsonArray.get(i).getAsJsonObject();
             Unit actualUnit = UnitTypeParser.getUnit(unit, this, side);
-            if (side == ENEMY) {
+            if (side == ENEMY && mirrorEnemy) {
                 mirrorSide(actualUnit);
             }
 
@@ -349,14 +365,14 @@ public class BattlerGen2 {
         }
     }
 
-    private User getFormationPlanFromFile(Side side, String fileName) throws URISyntaxException, FileNotFoundException, UnknownUnitType {
+    private User getFormationPlanFromFile(Side side, String fileName, boolean mirrorEnemy) throws URISyntaxException, FileNotFoundException, UnknownUnitType {
         GetFile getFile = new GetFile();
         File file = getFile.getFileFromResource(fileName);
         Reader reader = new FileReader(file);
         JsonElement jsonElement = JsonParser.parseReader(reader);
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         JsonArray jsonArray = jsonObject.get("formation").getAsJsonArray();
-        getUnitsFromJsonAndAssignThemToSide(side, jsonArray);
+        getUnitsFromJsonAndAssignThemToSide(side, jsonArray, mirrorEnemy);
 
         return new Gson().fromJson(jsonObject.get("user").getAsJsonObject(), User.class);
     }

@@ -20,7 +20,7 @@ public class MyFirstUnit extends Unit {
     }
 
     public MyFirstUnit(long id, int priority, int level, String name, Vector position, BattlerGen2 battler, Side side) {
-        super(id, level, name, "First Unit", 10, 100, 'u', position, battler.getGrid().getGridSize(), 1, battler, side, priority, UnitTypes.MY_FIRST_UNIT);
+        super(id, level, name, "First Unit", 10, 100, 'u', position, 1, battler, side, priority, UnitTypes.MY_FIRST_UNIT);
         this.setAbilities(new Ability[]{new DefaultPunch(this)});
     }
 
@@ -44,46 +44,6 @@ public class MyFirstUnit extends Unit {
             }
         }
         return null;
-    }
-
-    @Override
-    public Vector[] moveTowards(Unit target) {
-        if (target != null) {
-            Node[] nodes = new FindPath().getNextMoveSteps(this.getGridPosition(), target.getGridPosition(), this.getBattler().getGrid(), this.getSpeed());
-            if (nodes.length > 0) {
-                Vector[] vectors = new Vector[nodes.length];
-                for (int i = 0; i < nodes.length; i++) {
-                    Node node = nodes[i];
-                    vectors[i] = node.getMyGridCell().getPosition();
-                    move(node.getMyGridCell().getPosition(), false);
-                }
-                return vectors;
-            }
-        }
-        return new Vector[0];
-    }
-
-    @Override
-    public boolean move(Vector direction, boolean checkIfOccupied) {
-        if (!checkIfOccupied) {
-//            
-            this.setGridPosition(direction);
-            return true;
-        } else {
-            if (new FindPath().isReachable(this.getGridPosition(), direction, this.getBattler().getGrid())) {
-                this.setGridPosition(direction);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public void moveRandom() {
-        Random rand = new Random();
-        int n = rand.nextInt(Vector.DIRECTION.values().length);
-        Vector direction = Vector.DIRECTION.values()[n].getDirection();
-        move(direction, true);
     }
 
     @Override

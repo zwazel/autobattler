@@ -32,11 +32,9 @@ public class DefaultPunch extends Ability {
 
     @Override
     public boolean canBeUsed(Unit target) {
-//        
         boolean cooldownReady = this.getCurrentCooldown() <= 0;
-        boolean inRange = this.isInRange(target);
-//        
-//        
+        boolean inRange = this.isInRange(target, false);
+
         return cooldownReady && inRange;
     }
 

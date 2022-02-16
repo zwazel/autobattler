@@ -8,25 +8,92 @@ import dev.zwazel.autobattler.classes.enums.State;
 import dev.zwazel.autobattler.classes.enums.UnitTypes;
 import dev.zwazel.autobattler.classes.utils.Vector;
 import dev.zwazel.autobattler.classes.utils.json.ActionHistory;
+import dev.zwazel.autobattler.classes.utils.map.FindPath;
+import dev.zwazel.autobattler.classes.utils.map.Node;
 
 import java.util.Arrays;
+import java.util.Random;
 
 public abstract class Unit implements Obstacle, Cloneable {
+    /**
+     * The unit's unique ID.
+     */
     private final long ID;
+
+    /**
+     * the symbol of the unit.
+     */
     private final char symbol;
+
+    /**
+     * the type of the unit
+     */
     private final UnitTypes type;
+
+    /**
+     * the side of the unit
+     */
     private Side side;
+
+    /**
+     * the health of the unit
+     */
     private int health;
+
+    /**
+     * the energy of the unit
+     */
     private int energy;
+
+    /**
+     * the level of the unit
+     */
     private int level;
+
+    /**
+     * the priority of the unit, used to sort the units in the queue and to determine the order of the units
+     */
     private int priority;
+
+    /**
+     * the name of the unit
+     */
     private String name;
+
+    /**
+     * the description of the unit
+     */
     private String description;
+
+    /**
+     * the different abilities of the unit
+     */
     private Ability[] abilities = new Ability[0];
+
+    /**
+     * the position of the unit
+     */
     private Vector gridPosition;
-    private Vector gridSize;
+
+    /**
+     * the speed of the unit, tells how many tiles the unit can move in one turn
+     */
     private int speed;
+
+    /**
+     * tells if the unit can move diagonally or not
+     */
+    // TODO: 16.02.2022 IMPLEMENT THIS
+    private boolean canMoveDiagonally;
+
+    /**
+     * the battlerGen2 object
+     */
     private BattlerGen2 battler;
+
+    /**
+     * the current state of the unit
+     */
     private State myState = State.ALIVE;
 
     /**
@@ -69,41 +136,99 @@ public abstract class Unit implements Obstacle, Cloneable {
      * @param energy      the energy of the unit, used of some abilities
      * @param symbol      the symbol of the unit, used for printing in the console (in theory, actually it has never been used yet lol)
      * @param position    the position of the unit
-     * @param gridSize    the size of the grid
      * @param speed       the speed of the unit, how many squares it can move per turn
      * @param battler     the battler that the unit belongs to
      * @param side        the side of the unit
      * @param priority    the priority of the unit, used for sorting
      * @param type        the type of the unit
      */
-    public Unit(long id, int level, String name, String description, int health, int energy, char symbol, Vector position, Vector gridSize, int speed, BattlerGen2 battler, Side side, int priority, UnitTypes type) {
+    public Unit(long id, int level, String name, String description, int health, int energy, char symbol, Vector position, int speed, BattlerGen2 battler, Side side, int priority, UnitTypes type) {
         this(id, priority, level, name, description, health, energy, symbol, position, speed, type);
-        this.gridSize = gridSize;
         this.battler = battler;
         this.side = side;
     }
 
+    /**
+     * use said ability on the target
+     *
+     * @param ability the ability to use
+     * @param target  the target of the ability
+     */
     protected void useAbility(Ability ability, Unit target) {
-        ability.actuallyUse(target);
+        ability.processUse(target);
     }
 
+    /**
+     * method called by the battler to tell this unit to do something
+     *
+     * @return the action that the unit did
+     */
     public ActionHistory process() {
         return run();
     }
 
+    /**
+     * in this method, the unit will decide what to do.
+     *
+     * @return the action that the unit did. for example if the unit uses an ability.
+     */
     protected abstract ActionHistory run();
 
+    /**
+     * Calculates the health of the unit based on the level
+     *
+     * @param health the base health of the unit
+     * @param level  the level of the unit, always -1! (so the level is actually the level - 1). If the unit is level 1, in this method we get level 0.
+     * @return the health of the unit scaled by the level
+     */
     protected abstract int getLevelHealth(int health, int level);
 
+    /**
+     * Calculates the energy of the unit based on the level
+     *
+     * @param energy the base energy of the unit
+     * @param level  the level of the unit, always -1! (so the level is actually the level - 1). If the unit is level 1, in this method we get level 0.
+     * @return the energy of the unit scaled by the level
+     */
     protected abstract int getLevelEnergy(int energy, int level);
 
     protected abstract Ability findSuitableAbility();
 
-    protected abstract Vector[] moveTowards(Unit target);
+    protected Vector[] moveTowards(Unit target) {
+        if (target != null) {
+            Node[] nodes = new FindPath().getNextMoveSteps(this.getGridPosition(), target.getGridPosition(), this.getBattler().getGrid(), this.getSpeed());
+            if (nodes.length > 0) {
+                Vector[] vectors = new Vector[nodes.length];
+                for (int i = 0; i < nodes.length; i++) {
+                    Node node = nodes[i];
+                    vectors[i] = node.getMyGridCell().getPosition();
+                    move(node.getMyGridCell().getPosition(), false);
+                }
+                return vectors;
+            }
+        }
+        return new Vector[0];
+    }
 
-    protected abstract boolean move(Vector direction, boolean checkIfOccupied);
+    protected boolean move(Vector direction, boolean checkIfOccupied) {
+        if (!checkIfOccupied) {
+            this.setGridPosition(direction);
+            return true;
+        } else {
+            if (new FindPath().isReachable(this.getGridPosition(), direction, this.getBattler().getGrid())) {
+                this.setGridPosition(direction);
+                return true;
+            }
+        }
+        return false;
+    }
 
-    protected abstract void moveRandom();
+    protected void moveRandom() {
+        Random rand = new Random();
+        int n = rand.nextInt(Vector.DIRECTION.values().length);
+        Vector direction = Vector.DIRECTION.values()[n].getDirection();
+        move(direction, true);
+    }
 
     protected abstract Unit findTargetUnit(Side side);
 
@@ -181,14 +306,6 @@ public abstract class Unit implements Obstacle, Cloneable {
 
     public void setGridPosition(Vector gridPosition) {
         this.gridPosition = gridPosition;
-    }
-
-    public Vector getGridSize() {
-        return gridSize;
-    }
-
-    public void setGridSize(Vector gridSize) {
-        this.gridSize = gridSize;
     }
 
     public int getSpeed() {

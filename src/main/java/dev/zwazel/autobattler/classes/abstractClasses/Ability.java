@@ -37,14 +37,14 @@ public abstract class Ability extends RoundAffected {
         this.useMessages = getUseMessages();
     }
 
-    public abstract String[] getUseMessages();
+    protected abstract String[] getUseMessages();
 
     public String getRandomUseMessage(Unit target) {
         Random rand = new Random();
         return finalizeString(this.useMessages[rand.nextInt(this.useMessages.length)], target);
     }
 
-    public abstract String[] getKillMessages();
+    protected abstract String[] getKillMessages();
 
     public String getRandomKillMessage(Unit target) {
         Random rand = new Random();
@@ -55,11 +55,11 @@ public abstract class Ability extends RoundAffected {
         return s.replace("$targetName", target.getName()).replace("$id", "" + target.getID());
     }
 
-    public abstract int scaleOutputAmount(int level, int baseDamage);
+    protected abstract int scaleOutputAmount(int level, int baseDamage);
 
     public abstract boolean canBeUsed(Unit target);
 
-    protected boolean actuallyUse(Unit target) {
+    protected boolean processUse(Unit target) {
         return use(target);
     }
 
@@ -79,13 +79,25 @@ public abstract class Ability extends RoundAffected {
         }
     }
 
+    /**
+     * checks if the given vector is in range of the ability
+     *
+     * @param target the target vector
+     * @return true if the target is in range
+     */
     public boolean isInRange(Vector target) {
         Double distance = this.getOwner().getGridPosition().getDistanceFrom(target);
         return distance <= this.range;
     }
 
-    public boolean isInRange(Unit target) {
-        return (target != null && target.getMyState() != State.DEAD && isInRange(target.getGridPosition()));
+    /**
+     * checks if the given unit is in range of the ability, and check, if needed, if the unit is dead or not
+     *
+     * @param target the target unit
+     * @return true if the target is in range and alive or checkDead is true
+     */
+    public boolean isInRange(Unit target, boolean checkDead) {
+        return (target != null && (target.getMyState() != State.DEAD || checkDead) && isInRange(target.getGridPosition()));
     }
 
     public UsageType getCostType() {

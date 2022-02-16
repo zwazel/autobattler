@@ -47,16 +47,21 @@ public class FindPath {
         }
     }
 
+    // TODO: 16.02.2022 - make this method more efficient, it's slow, but it works
     public Node[] getNextMoveSteps(Vector start, Vector vectorToGo, Grid grid, int moveCount) {
+        System.out.println("FindPath.getNextMoveSteps");
         Node[] path = new Node[0];
 
         if (moveCount <= 0) {
             return path;
         }
 
-        if (isReachable(start, vectorToGo, grid)) {
+        if (!isOccupied(vectorToGo, grid)) {
             path = this.findPath(start, vectorToGo, new GridGraph(grid));
-        } else {
+        }
+
+        if (path.length <= 0) {
+            System.out.println("No path found, finding closest nearby node");
             vectorToGo = findClosestNearbyNode(grid, start, vectorToGo);
             if (vectorToGo != null) {
                 path = this.findPath(start, vectorToGo, new GridGraph(grid));
@@ -85,9 +90,12 @@ public class FindPath {
 
         PriorityQueue<Node> neighbors = new PriorityQueue<>(targetNode.getMyNeighbors().size(), new NodeComparator());
         neighbors.addAll(targetNode.getMyNeighbors());
+
+        // TODO: 16.02.2022 go through ALL nodes and find the closest one
         for (Node node : neighbors) {
+            System.out.println("node.getCost() = " + node.getCost());
             Vector vector = node.getMyGridCell().getPosition();
-            if (isReachable(start, vector, grid)) {
+            if (!isOccupied(vector, grid)) {
                 return vector;
             }
         }
@@ -102,10 +110,10 @@ public class FindPath {
         return isReachable(start, end, grid, true);
     }
 
-    public boolean isReachable(Vector start, Vector end, Grid grid, boolean checkPath) {
+    private boolean isReachable(Vector start, Vector end, Grid grid, boolean checkPath) {
         if (grid.getGridCells()[end.getX()][end.getY()].getCurrentObstacle() != null) {
             return false;
-        } else if(!checkPath) {
+        } else if (!checkPath) {
             return true;
         }
 

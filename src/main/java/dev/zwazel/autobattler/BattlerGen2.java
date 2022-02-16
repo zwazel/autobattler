@@ -120,8 +120,8 @@ public class BattlerGen2 {
         Vector gridSize = new Vector(10, 10);
         BattlerGen2 battlerGen2 = new BattlerGen2(gridSize);
 
-        int amountUnitsLeft = 5;
-        int amountUnitsRight = 5;
+        int amountUnitsLeft = 3;
+        int amountUnitsRight = amountUnitsLeft;
         Formation left = battlerGen2.createTestFormation(amountUnitsLeft, FRIENDLY, 0, true);
         Formation right = battlerGen2.createTestFormation(amountUnitsRight, ENEMY, amountUnitsLeft, true);
         User userLeft = left.getUser();
@@ -220,9 +220,14 @@ public class BattlerGen2 {
 
     private String getRandomUnitName() {
         String[] unitNames = new String[]{
-                "Tim", "Ash", "Phillip", "Moritz", "Mütz", "Marc", "Magnus", "Nadina", "Leon", "Bjarne", "Niklas", "Dennis"
+                "Tim", "Ash", "Phillip", "Moritz", "Mütz", "Marc", "Magnus", "Nadina", "Leon", "Bjarne", "Niklas",
+                "Dennis", "Loic", "Jerry", "Cherry", "BobbyLongDick", "Matilda", "George", "Richard", "Amy", "Perla",
+                "Hans", "Hansjürgen", "Daniel", "David", "Alyssa", "Karen", "Jorge", "Feuerkiller162", "Zwazel",
+                "Ash-Broccoli", "Uljanow", "Marconymous", "Dreamweaver", "Mühla", "LordMühla", "Shirin197", "Nahro",
+                "Pixem", "Fabian", "Florin", "FliegenderHolländer", "Sweaty Baguette", "Cream Walk", "Chief Queef",
+                "Easy.MR60", "boorgar", "Ugandalf", "ChickenLarry", "Noel", "Lösche", "Eärendil our most beloved star",
+                "Marisa", "Finn", "FaceofLight", "Snow/Henry", "Henry"
         };
-
 
         // get a random name from the list
         int randomIndex = (int) (Math.random() * unitNames.length);
@@ -238,22 +243,23 @@ public class BattlerGen2 {
         Unit closestUnit = null;
         Double shortestDistance = -1d;
 
-        for (Unit unitChecking : units) {
+        ArrayList<Unit> unitsToCheck = (sideToCheck == FRIENDLY) ? friendlyUnitList : enemyUnitList;
+
+        for (Unit unitChecking : unitsToCheck) {
             if (unitChecking != unit) {
-                if (unitChecking.getSide() == sideToCheck) {
-                    if (includeDead || unitChecking.getMyState() != State.DEAD) {
-                        if (checkIfReachable) {
-                            FindPath path = new FindPath();
-                            Vector vector = path.findClosestNearbyNode(grid, unit.getGridPosition(), unitChecking.getGridPosition());
-                            if (vector == null) {
-                                continue;
-                            }
+                if (includeDead || unitChecking.getMyState() != State.DEAD) {
+                    if (checkIfReachable) {
+                        FindPath path = new FindPath();
+                        System.out.println("BattlerGen2.findClosestOther");
+                        Vector vector = path.findClosestNearbyNode(grid, unit.getGridPosition(), unitChecking.getGridPosition());
+                        if (vector == null) {
+                            continue;
                         }
-                        Double temp = unit.getGridPosition().getDistanceFrom(unitChecking.getGridPosition());
-                        if (shortestDistance < 0 || temp < shortestDistance) {
-                            shortestDistance = temp;
-                            closestUnit = unitChecking;
-                        }
+                    }
+                    Double temp = unit.getGridPosition().getDistanceFrom(unitChecking.getGridPosition());
+                    if (shortestDistance < 0 || temp < shortestDistance) {
+                        shortestDistance = temp;
+                        closestUnit = unitChecking;
                     }
                 }
             }

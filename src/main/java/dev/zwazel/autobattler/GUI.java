@@ -39,6 +39,8 @@ public class GUI extends Canvas {
     private final Color COLOR_TARGET = Color.red;
     private final Color COLOR_LAST_UNIT = Color.yellow;
     private final Color COLOR_GRID = Color.gray;
+    private final Color COLOR_PATH_GRID = Color.BLACK;
+    private final Color COLOR_PATH = Color.RED;
 
     private Iterator<Unit> unitIterator;
     private Node[] nodes = new Node[0];
@@ -210,17 +212,17 @@ public class GUI extends Canvas {
                 if (nodeBefore == null) {
                     nodeBefore = currentUnit.getGridPosition();
                 }
-                g.setColor(Color.BLACK);
+                g.setColor(COLOR_PATH_GRID);
                 g.drawRect(n.getMyGridCell().getPosition().getX() * SCALAR, n.getMyGridCell().getPosition().getY() * SCALAR, SCALAR, SCALAR);
 
-                g.setColor(Color.RED);
+                g.setColor(COLOR_PATH);
                 g.drawLine(nodeBefore.getX() * SCALAR + (SCALAR / 2), nodeBefore.getY() * SCALAR + (SCALAR / 2), n.getMyGridCell().getPosition().getX() * SCALAR + (SCALAR / 2), n.getMyGridCell().getPosition().getY() * SCALAR + (SCALAR / 2));
                 g.drawString("" + DECIMAL_FORMAT.format(n.getCost()), n.getMyGridCell().getPosition().getX() * SCALAR, n.getMyGridCell().getPosition().getY() * SCALAR);
 
                 nodeBefore = n.getMyGridCell().getPosition();
             }
             if (nodeBefore != null) {
-                g.setColor(Color.RED);
+                g.setColor(COLOR_PATH);
                 g.drawLine(nodeBefore.getX() * SCALAR + (SCALAR / 2), nodeBefore.getY() * SCALAR + (SCALAR / 2), end.getX() * SCALAR + (SCALAR / 2), end.getY() * SCALAR + (SCALAR / 2));
             }
         }

@@ -1,7 +1,7 @@
 package dev.zwazel.autobattler.classes.utils.json;
 
 import com.google.gson.Gson;
-import dev.zwazel.autobattler.classes.units.Unit;
+import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.utils.Formation;
 import dev.zwazel.autobattler.classes.utils.Vector;
 

@@ -8,7 +8,7 @@ import dev.zwazel.autobattler.classes.enums.UnitTypes;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.units.MyFirstUnit;
 import dev.zwazel.autobattler.classes.units.SimpleUnit;
-import dev.zwazel.autobattler.classes.units.Unit;
+import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 
 public class UnitTypeParser {
     public static Unit getUnit(SimpleUnit unit) throws UnknownUnitType {

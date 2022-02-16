@@ -1,8 +1,7 @@
-package dev.zwazel.autobattler.classes.units;
+package dev.zwazel.autobattler.classes.abstractClasses;
 
 import dev.zwazel.autobattler.BattlerGen2;
 import dev.zwazel.autobattler.classes.Obstacle;
-import dev.zwazel.autobattler.classes.abilities.Ability;
 import dev.zwazel.autobattler.classes.enums.Action;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
@@ -84,7 +83,15 @@ public abstract class Unit implements Obstacle, Cloneable {
         this.side = side;
     }
 
-    public abstract ActionHistory run();
+    protected void useAbility(Ability ability, Unit target) {
+        ability.actuallyUse(target);
+    }
+
+    public ActionHistory process() {
+        return run();
+    }
+
+    protected abstract ActionHistory run();
 
     protected abstract int getLevelHealth(int health, int level);
 

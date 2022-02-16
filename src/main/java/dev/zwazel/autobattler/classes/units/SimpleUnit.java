@@ -1,5 +1,6 @@
 package dev.zwazel.autobattler.classes.units;
 
+import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.utils.UnitTypeParser;
 import dev.zwazel.autobattler.classes.utils.Vector;

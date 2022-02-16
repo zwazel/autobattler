@@ -2,7 +2,7 @@ package dev.zwazel.autobattler.classes.utils;
 
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.units.SimpleUnit;
-import dev.zwazel.autobattler.classes.units.Unit;
+import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.utils.database.FormationEntity;
 import dev.zwazel.autobattler.classes.utils.json.HistoryToJson;
 

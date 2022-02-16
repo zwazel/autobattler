@@ -1,8 +1,8 @@
 package dev.zwazel.autobattler.classes.utils.json;
 
-import dev.zwazel.autobattler.classes.abilities.Ability;
+import dev.zwazel.autobattler.classes.abstractClasses.Ability;
 import dev.zwazel.autobattler.classes.enums.Action;
-import dev.zwazel.autobattler.classes.units.Unit;
+import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.utils.Vector;
 
 import javax.validation.constraints.NotNull;

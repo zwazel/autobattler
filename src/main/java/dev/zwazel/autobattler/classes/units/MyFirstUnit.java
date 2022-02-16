@@ -1,8 +1,9 @@
 package dev.zwazel.autobattler.classes.units;
 
 import dev.zwazel.autobattler.BattlerGen2;
-import dev.zwazel.autobattler.classes.abilities.Ability;
+import dev.zwazel.autobattler.classes.abstractClasses.Ability;
 import dev.zwazel.autobattler.classes.abilities.DefaultPunch;
+import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.enums.Action;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.UnitTypes;
@@ -124,7 +125,7 @@ public class MyFirstUnit extends Unit {
             }
             case USE_ABILITY -> {
                 targets = new Unit[]{findTargetUnit(suitableAbility.getTargetSide())};
-                suitableAbility.use(targets[0]);
+                useAbility(suitableAbility, targets[0]);
             }
             case RETREAT -> {
 

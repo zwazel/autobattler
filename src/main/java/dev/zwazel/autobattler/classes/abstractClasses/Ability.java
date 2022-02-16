@@ -1,8 +1,7 @@
-package dev.zwazel.autobattler.classes.abilities;
+package dev.zwazel.autobattler.classes.abstractClasses;
 
 import dev.zwazel.autobattler.classes.RoundAffected;
 import dev.zwazel.autobattler.classes.enums.*;
-import dev.zwazel.autobattler.classes.units.Unit;
 import dev.zwazel.autobattler.classes.utils.Vector;
 
 import java.util.Random;
@@ -60,12 +59,11 @@ public abstract class Ability extends RoundAffected {
 
     public abstract boolean canBeUsed(Unit target);
 
-    public boolean use(Unit target) {
-
-        return actuallyUse(target);
+    protected boolean actuallyUse(Unit target) {
+        return use(target);
     }
 
-    public abstract boolean actuallyUse(Unit target);
+    protected abstract boolean use(Unit target);
 
     public void doOutput(Unit target) {
         switch (this.getOutputType()) {

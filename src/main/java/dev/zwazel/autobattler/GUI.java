@@ -64,67 +64,7 @@ public class GUI extends Canvas {
 
         Button nextButton = new Button("Next");
         nextButton.addActionListener(e -> {
-            if (canDoNext) {
-                canDoNext = false;
-
-                if (unitIterator.hasNext() && !BATTLER_GEN2.isFightFinished()) {
-                    lastUnit = currentUnit;
-                    if (lastUnit != null) {
-                        this.LAST_UNIT_LABEL.setText("Last Unit = " + lastUnit.getName() + " (" + lastUnit.getID() + "), at " + lastUnit.getGridPosition());
-                    }
-                    currentUnit = unitIterator.next();
-                    this.CURRENT_UNIT_LABEL.setText("Current Unit = " + currentUnit.getName() + " (" + currentUnit.getID() + ")");
-                    if (SHOW_LAST_POSITION) {
-                        start = currentUnit.getGridPosition();
-                    }
-                    Vector positionBefore = currentUnit.getGridPosition();
-                    ActionHistory actionHistory = BATTLER_GEN2.doTurn(unitIterator, currentUnit, false);
-                    if (!SHOW_LAST_POSITION) {
-                        start = currentUnit.getGridPosition();
-                    }
-                    if (actionHistory.targets().length > 0) {
-                        Unit target = actionHistory.targets()[0];
-                        this.CURRENT_ACTION.setText("Current Action = " + actionHistory.actionType());
-                        if (target != null) {
-                            end = target.getGridPosition();
-                            this.target = target;
-                            FindPath findPath = new FindPath();
-                            nodes = findPath.findPath(currentUnit.getGridPosition(), end, new GridGraph(grid));
-                            this.TARGET_LABEL.setText("Target = " + target.getName() + " (" + target.getID() + "), at " + end);
-                        } else {
-                            end = null;
-                            nodes = new Node[0];
-                            this.TARGET_LABEL.setText("Target = ");
-                        }
-                    } else {
-                        end = null;
-                        nodes = new Node[0];
-                        this.TARGET_LABEL.setText("Target = ");
-                        this.CURRENT_ACTION.setText("Current Action = ");
-                    }
-
-                    if (!positionBefore.equals(currentUnit.getGridPosition())) {
-                        CURRENT_UNIT_LABEL.setText(CURRENT_UNIT_LABEL.getText() + ", moved from " + start + " to " + currentUnit.getGridPosition());
-                        currentUnitMoved = true;
-                    } else {
-                        CURRENT_UNIT_LABEL.setText(CURRENT_UNIT_LABEL.getText() + ", stayed at " + currentUnit.getGridPosition() + ", ");
-                        currentUnitMoved = false;
-                    }
-                }
-
-                if (!BATTLER_GEN2.isFightFinished() && !unitIterator.hasNext()) {
-                    unitIterator = BATTLER_GEN2.getUnits().listIterator();
-                }
-
-                if (BATTLER_GEN2.isFightFinished()) {
-                    this.CURRENT_ACTION.setText("Current Action = battle finished");
-                }
-
-                repaint();
-                canDoNext = true;
-            } else {
-                System.out.println("Can't do next");
-            }
+            doTurn();
         });
         FRAME.add(nextButton, BorderLayout.SOUTH);
 
@@ -140,6 +80,71 @@ public class GUI extends Canvas {
 
         FRAME.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         FRAME.setVisible(true);
+    }
+
+    private void doTurn() {
+        if (canDoNext) {
+            Grid grid = BATTLER_GEN2.getGrid();
+            canDoNext = false;
+
+            if (unitIterator.hasNext() && !BATTLER_GEN2.isFightFinished()) {
+                lastUnit = currentUnit;
+                if (lastUnit != null) {
+                    this.LAST_UNIT_LABEL.setText("Last Unit = " + lastUnit.getName() + " (" + lastUnit.getID() + "), at " + lastUnit.getGridPosition());
+                }
+                currentUnit = unitIterator.next();
+                this.CURRENT_UNIT_LABEL.setText("Current Unit = " + currentUnit.getName() + " (" + currentUnit.getID() + ")");
+                if (SHOW_LAST_POSITION) {
+                    start = currentUnit.getGridPosition();
+                }
+                Vector positionBefore = currentUnit.getGridPosition();
+                ActionHistory actionHistory = BATTLER_GEN2.doTurn(unitIterator, currentUnit, false);
+                if (!SHOW_LAST_POSITION) {
+                    start = currentUnit.getGridPosition();
+                }
+                if (actionHistory.targets().length > 0) {
+                    Unit target = actionHistory.targets()[0];
+                    this.CURRENT_ACTION.setText("Current Action = " + actionHistory.actionType());
+                    if (target != null) {
+                        end = target.getGridPosition();
+                        this.target = target;
+                        FindPath findPath = new FindPath();
+                        nodes = findPath.findPath(currentUnit.getGridPosition(), end, new GridGraph(grid));
+                        this.TARGET_LABEL.setText("Target = " + target.getName() + " (" + target.getID() + "), at " + end);
+                    } else {
+                        end = null;
+                        nodes = new Node[0];
+                        this.TARGET_LABEL.setText("Target = ");
+                    }
+                } else {
+                    end = null;
+                    nodes = new Node[0];
+                    this.TARGET_LABEL.setText("Target = ");
+                    this.CURRENT_ACTION.setText("Current Action = ");
+                }
+
+                if (!positionBefore.equals(currentUnit.getGridPosition())) {
+                    CURRENT_UNIT_LABEL.setText(CURRENT_UNIT_LABEL.getText() + ", moved from " + start + " to " + currentUnit.getGridPosition());
+                    currentUnitMoved = true;
+                } else {
+                    CURRENT_UNIT_LABEL.setText(CURRENT_UNIT_LABEL.getText() + ", stayed at " + currentUnit.getGridPosition() + ", ");
+                    currentUnitMoved = false;
+                }
+            }
+
+            if (!BATTLER_GEN2.isFightFinished() && !unitIterator.hasNext()) {
+                unitIterator = BATTLER_GEN2.getUnits().listIterator();
+            }
+
+            if (BATTLER_GEN2.isFightFinished()) {
+                this.CURRENT_ACTION.setText("Current Action = battle finished");
+            }
+
+            repaint();
+            canDoNext = true;
+        } else {
+            System.out.println("Can't do next");
+        }
     }
 
     @Override

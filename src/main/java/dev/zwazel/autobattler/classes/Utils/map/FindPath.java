@@ -70,11 +70,18 @@ public class FindPath {
      * @param moveCount the number of steps to get
      * @return the next move steps
      */
-    public Node[] getNextMoveSteps(Node[] path, int moveCount) {
+    public Node[] getNextMoveSteps(Node[] path, int moveCount, Vector end) {
         if (path.length > 0) {
             int length = Math.min(path.length, moveCount);
             Node[] nodes = new Node[length];
             System.arraycopy(path, 0, nodes, 0, length);
+
+            // Make sure the Unit does not walk into the end position, if it has an obstacle there.
+            for (Node node : nodes) {
+                if (node.getMyGridCell().getPosition().equals(end) && node.getMyGridCell().getCurrentObstacle() != null) {
+                    return getNextMoveSteps(nodes, moveCount - 1, end);
+                }
+            }
 
             return nodes;
         }
@@ -100,7 +107,7 @@ public class FindPath {
 
         path = this.findPath(start, vectorToGo, new GridGraph(grid, canMoveDiagonally));
 
-        return getNextMoveSteps(path, moveCount);
+        return getNextMoveSteps(path, moveCount, vectorToGo);
     }
 
     /**

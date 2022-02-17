@@ -209,6 +209,7 @@ public abstract class Unit implements Obstacle, Cloneable {
         return new Vector[0];
     }
 
+    // TODO: 17.02.2022 use speed to move as much as possible. get a random destination within reach and move there by using the move method
     protected boolean move(Vector direction, boolean checkIfOccupied) {
         if (!checkIfOccupied) {
             this.setGridPosition(direction);

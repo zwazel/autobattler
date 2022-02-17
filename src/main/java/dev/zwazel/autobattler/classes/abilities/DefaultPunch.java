@@ -26,8 +26,8 @@ public class DefaultPunch extends Ability {
     }
 
     @Override
-    public int scaleOutputAmount(int level, int baseDamage) {
-        return (int) (baseDamage + (baseDamage * (level * 0.1)));
+    public int scaleOutputAmount(int level, int baseOutputAmount) {
+        return (int) (baseOutputAmount + (baseOutputAmount * ((level - 1) * 0.1)));
     }
 
     @Override

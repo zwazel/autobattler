@@ -28,7 +28,7 @@ public abstract class Ability extends RoundAffected {
         this.outputType = outputType;
         this.usageCostAmount = usageCost;
         this.range = range;
-        this.outPutAmount = scaleOutputAmount(owner.getLevel() - 1, outPutAmount);
+        this.outPutAmount = scaleOutputAmount(owner.getLevel(), outPutAmount);
         this.owner = owner;
         this.title = title;
         this.description = description;
@@ -55,7 +55,7 @@ public abstract class Ability extends RoundAffected {
         return s.replace("$targetName", target.getName()).replace("$id", "" + target.getID());
     }
 
-    protected abstract int scaleOutputAmount(int level, int baseDamage);
+    protected abstract int scaleOutputAmount(int level, int baseOutputAmount);
 
     public abstract boolean canBeUsed(Unit target);
 

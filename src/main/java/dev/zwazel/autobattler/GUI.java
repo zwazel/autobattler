@@ -201,6 +201,8 @@ public class GUI extends Canvas {
                         }
                     }
                     g.fillRect(gridPositionNow.getX(), gridPositionNow.getY(), SCALAR, SCALAR);
+
+                    // TODO: 17.02.2022 only draw infos for the selected unit (click on it)
                     g.setColor(Color.BLACK);
                     if (obstacle.getClass() == MyFirstUnit.class) {
                         MyFirstUnit unit = (MyFirstUnit) obstacle;

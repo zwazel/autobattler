@@ -11,6 +11,7 @@ import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.units.MyFirstUnit;
 import dev.zwazel.autobattler.classes.units.SimpleUnit;
 import dev.zwazel.autobattler.classes.utils.*;
+import dev.zwazel.autobattler.classes.utils.battle.CreateFormations;
 import dev.zwazel.autobattler.classes.utils.database.FormationEntity;
 import dev.zwazel.autobattler.classes.utils.json.ActionHistory;
 import dev.zwazel.autobattler.classes.utils.json.Export;
@@ -118,144 +119,20 @@ public class BattlerGen2 {
         Vector gridSize = new Vector(10, 10);
         BattlerGen2 battlerGen2 = new BattlerGen2(gridSize);
 
+        CreateFormations createFormations = new CreateFormations(battlerGen2.grid);
+
         int amountUnitsLeft = 3;
         int amountUnitsRight = amountUnitsLeft;
-        Formation left = battlerGen2.createTestFormation(amountUnitsLeft, FRIENDLY, 0, true, new UnitTypes[]{
+        Formation left = createFormations.createTestFormation(amountUnitsLeft, FRIENDLY, 0, true, new UnitTypes[]{
                 UnitTypes.MY_FIRST_UNIT,
         }, 1, 10);
-        Formation right = battlerGen2.createTestFormation(amountUnitsRight, ENEMY, amountUnitsLeft, true, new UnitTypes[]{
+        Formation right = createFormations.createTestFormation(amountUnitsRight, ENEMY, amountUnitsLeft, true, new UnitTypes[]{
                 UnitTypes.MY_FIRST_UNIT,
         }, 1, 10);
         User userLeft = left.getUser();
         User userRight = right.getUser();
 
         new BattlerGen2(new FormationEntity(left, userLeft), new FormationEntity(right, userRight), false, true, gridSize, false, true);
-    }
-
-    /**
-     * Creates a test formation for testing purposes
-     *
-     * @param amountUnits       amount of units in the formation
-     * @param side              side of the formation
-     * @param idCounter         id counter for the units, used to create unique ids
-     * @param randomPositioning whether the units should be randomly placed on their side or not
-     * @return the formation
-     */
-    private Formation createTestFormation(int amountUnits, Side side, long idCounter, boolean randomPositioning, UnitTypes[] allowedUnitTypes, int minLevel, int maxLevel) {
-        Formation formation;
-        ArrayList<Unit> units = new ArrayList<>();
-
-        int priorityCounter = 0;
-        for (int j = 0; j < amountUnits; j++) {
-
-            UnitTypes type = allowedUnitTypes[(int) (Math.random() * allowedUnitTypes.length)];
-
-            Vector vector = (randomPositioning) ? findFreeRandomSpaceOnSide(side) : findFreeSpaceOnSide(side);
-            if (vector == null) {
-                System.err.println("No free space on side " + side);
-                break;
-            }
-            Unit unit = createTestUnit(idCounter++, priorityCounter++, vector, type, minLevel, maxLevel);
-            if (unit == null) {
-                System.err.println("Unit is null");
-                break;
-            }
-            units.add(unit);
-            grid.updateOccupiedGrid(unit);
-        }
-
-        formation = new Formation(new User("TestUser_" + side, "TestUser_" + side), units);
-
-        return formation;
-    }
-
-    private Unit createTestUnit(long id, int priority, Vector position, UnitTypes type, int minLevel, int maxLevel) {
-        // get random number between min and max level
-        int level = minLevel + (int) (Math.random() * (maxLevel - minLevel));
-
-        SimpleUnit simpleUnit = new SimpleUnit(id, priority, level, position, type, getRandomUnitName());
-
-        try {
-            return simpleUnit.getUnit();
-        } catch (UnknownUnitType e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    private Vector findFreeRandomSpaceOnSide(Side side) {
-        return findFreeRandomSpaceOnSide(side, 0);
-    }
-
-    /**
-     * find a random free space on the correct side
-     *
-     * @param side    the side to find a free space on
-     * @param counter keep track of how many times this method has been called, to prevent endless loops. stops after going through all spaces on the side
-     * @return a vector with the coordinates of the free space on the side or null if no free space was found
-     */
-    private Vector findFreeRandomSpaceOnSide(Side side, int counter) {
-        FindPath findPath = new FindPath();
-
-        int starter = 0;
-        int end = grid.getWidth() / 2;
-        if (side == ENEMY) {
-            starter = grid.getWidth() / 2;
-            end = grid.getWidth();
-        }
-
-        // get random x between starter and end
-        int x = (int) (Math.random() * (end - starter)) + starter;
-        int y = (int) (Math.random() * grid.getHeight());
-
-        Vector vector = new Vector(x, y);
-
-        if (findPath.isOccupied(vector, grid) && counter <= x + y) {
-            return findFreeRandomSpaceOnSide(side, counter + 1);
-        } else if (counter > x + y) {
-            return null;
-        }
-        return vector;
-    }
-
-    private Vector findFreeSpaceOnSide(Side side) {
-        Vector vector;
-        FindPath findPath = new FindPath();
-
-        int starter = 0;
-        int end = grid.getWidth() / 2;
-        if (side == ENEMY) {
-            starter = grid.getWidth() / 2;
-            end = grid.getWidth();
-        }
-
-        for (int i = starter; i < end; i++) {
-            for (int j = 0; j < grid.getHeight(); j++) {
-                vector = new Vector(i, j);
-                if (!findPath.isOccupied(vector, grid)) {
-                    return vector;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    private String getRandomUnitName() {
-        String[] unitNames = new String[]{
-                "Tim", "Ash", "Phillip", "Moritz", "Mütz", "Marc", "Magnus", "Nadina", "Leon", "Bjarne", "Niklas",
-                "Dennis", "Loic", "Jerry", "Cherry", "BobbyLongDick", "Matilda", "George", "Richard", "Amy", "Perla",
-                "Hans", "Hansjürgen", "Daniel", "David", "Alyssa", "Karen", "Jorge", "Feuerkiller162", "Zwazel",
-                "Ash-Broccoli", "Uljanow", "Marconymous", "Dreamweaver", "Mühla", "LordMühla", "Shirin197", "Nahro",
-                "Pixem", "Fabian", "Florin", "FliegenderHolländer", "Sweaty Baguette", "Cream Walk", "Chief Queef",
-                "Easy.MR60", "boorgar", "Ugandalf", "ChickenLarry", "Noel", "Lösche", "Eärendil our most beloved star",
-                "Marisa", "Finn", "FaceofLight", "Snow/Henry", "Henry"
-        };
-
-        // get a random name from the list
-        int randomIndex = (int) (Math.random() * unitNames.length);
-        return unitNames[randomIndex];
     }
 
     private void mirrorSide(Unit unit) {

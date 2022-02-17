@@ -2,12 +2,12 @@ package dev.zwazel.autobattler;
 
 import com.google.gson.*;
 import dev.zwazel.autobattler.classes.Obstacle;
+import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.enums.Action;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.units.MyFirstUnit;
-import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.utils.*;
 import dev.zwazel.autobattler.classes.utils.database.FormationEntity;
 import dev.zwazel.autobattler.classes.utils.json.ActionHistory;
@@ -31,18 +31,10 @@ public class BattlerGen2 {
     private final Grid grid;
     private final ArrayList<Unit> friendlyUnitList;
     private final ArrayList<Unit> enemyUnitList;
-    private User friendlyUser;
-    private User enemyUser;
     private ArrayList<Unit> units;
     private History history;
     private boolean fightFinished = false;
     private Side winningSide;
-
-    public BattlerGen2() {
-        grid = new Grid(new Vector(10, 10));
-        friendlyUnitList = new ArrayList<>();
-        enemyUnitList = new ArrayList<>();
-    }
 
     public BattlerGen2(Vector gridSize) {
         grid = new Grid(gridSize);
@@ -56,8 +48,8 @@ public class BattlerGen2 {
         grid = new Grid(gridSize);
 
         try {
-            friendlyUser = formationLeft.getUser();
-            enemyUser = formationRight.getUser();
+            User friendlyUser = formationLeft.getUser();
+            User enemyUser = formationRight.getUser();
 
             getFormationFromJson(FRIENDLY, formationLeft.getFormationJson(), mirrorEnemy);
             getFormationFromJson(ENEMY, formationRight.getFormationJson(), mirrorEnemy);

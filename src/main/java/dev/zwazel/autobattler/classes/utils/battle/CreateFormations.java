@@ -17,9 +17,11 @@ import static dev.zwazel.autobattler.classes.enums.Side.ENEMY;
 
 public class CreateFormations {
     private final Grid grid;
+    private final boolean useFullWidth;
 
-    public CreateFormations(Grid grid) {
-        this.grid = grid;
+    public CreateFormations(Vector gridSize, boolean useFullWidth) {
+        this.grid = new Grid(gridSize);
+        this.useFullWidth = useFullWidth;
     }
 
     /**
@@ -78,6 +80,17 @@ public class CreateFormations {
         return findFreeRandomSpaceOnSide(side, 0);
     }
 
+    private int[] getStarterAndEnd(Side side) {
+        int starter = 0;
+        int end = (useFullWidth) ? grid.getWidth() : grid.getWidth() / 2;
+        if (side == ENEMY) {
+            starter = (useFullWidth) ? 0 : grid.getWidth() / 2;
+            end = grid.getWidth();
+        }
+
+        return new int[]{starter, end};
+    }
+
     /**
      * find a random free space on the correct side
      *
@@ -86,20 +99,17 @@ public class CreateFormations {
      * @return a vector with the coordinates of the free space on the side or null if no free space was found
      */
     public Vector findFreeRandomSpaceOnSide(Side side, int counter) {
-        FindPath findPath = new FindPath();
-
-        int starter = 0;
-        int end = grid.getWidth() / 2;
-        if (side == ENEMY) {
-            starter = grid.getWidth() / 2;
-            end = grid.getWidth();
-        }
+        int[] ints = getStarterAndEnd(side);
+        int starter = ints[0];
+        int end = ints[1];
 
         // get random x between starter and end
         int x = (int) (Math.random() * (end - starter)) + starter;
         int y = (int) (Math.random() * grid.getHeight());
 
         Vector vector = new Vector(x, y);
+
+        FindPath findPath = new FindPath();
 
         if (findPath.isOccupied(vector, grid) && counter <= x + y) {
             return findFreeRandomSpaceOnSide(side, counter + 1);
@@ -111,14 +121,11 @@ public class CreateFormations {
 
     public Vector findFreeSpaceOnSide(Side side) {
         Vector vector;
-        FindPath findPath = new FindPath();
+        int[] ints = getStarterAndEnd(side);
+        int starter = ints[0];
+        int end = ints[1];
 
-        int starter = 0;
-        int end = grid.getWidth() / 2;
-        if (side == ENEMY) {
-            starter = grid.getWidth() / 2;
-            end = grid.getWidth();
-        }
+        FindPath findPath = new FindPath();
 
         for (int i = starter; i < end; i++) {
             for (int j = 0; j < grid.getHeight(); j++) {

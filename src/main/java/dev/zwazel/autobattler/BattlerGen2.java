@@ -9,7 +9,6 @@ import dev.zwazel.autobattler.classes.enums.State;
 import dev.zwazel.autobattler.classes.enums.UnitTypes;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.units.MyFirstUnit;
-import dev.zwazel.autobattler.classes.units.SimpleUnit;
 import dev.zwazel.autobattler.classes.utils.*;
 import dev.zwazel.autobattler.classes.utils.battle.CreateFormations;
 import dev.zwazel.autobattler.classes.utils.database.FormationEntity;
@@ -117,9 +116,8 @@ public class BattlerGen2 {
 
     public static void main(String[] args) {
         Vector gridSize = new Vector(10, 10);
-        BattlerGen2 battlerGen2 = new BattlerGen2(gridSize);
 
-        CreateFormations createFormations = new CreateFormations(battlerGen2.grid);
+        CreateFormations createFormations = new CreateFormations(gridSize, false);
 
         int amountUnitsLeft = 3;
         int amountUnitsRight = amountUnitsLeft;

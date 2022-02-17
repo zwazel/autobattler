@@ -214,7 +214,7 @@ public abstract class Unit implements Obstacle, Cloneable {
             this.setGridPosition(direction);
             return true;
         } else {
-            if (new FindPath().isReachable(gridPosition, direction, battler.getGrid())) {
+            if (!new FindPath().isOccupied(direction, battler.getGrid())) {
                 this.setGridPosition(direction);
                 return true;
             }

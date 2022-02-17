@@ -4,8 +4,8 @@ import dev.zwazel.autobattler.classes.abstractClasses.ScaleAttributeWithLevel;
 
 public enum UnitTypes {
     MY_FIRST_UNIT("First unit", 10, 100, 1, false,
-            ((health, level) -> ((int) (health + (health * (level * 0.25))))),
-            ((energy, level) -> ((int) (energy + (energy * (level * 0.25))))));
+            ((health, level) -> ((int) (health + (health * ((level - 1) * 0.25))))),
+            ((energy, level) -> ((int) (energy + (energy * ((level - 1) * 0.25))))));
 
     /**
      * the description of the unit
@@ -25,7 +25,7 @@ public enum UnitTypes {
     /**
      * the movement speed of the unit, which says how many squares it can move per turn
      */
-    private final int moveSpeed;
+    private final int baseMoveSpeed;
 
     /**
      * whether the unit can move diagonally or not
@@ -42,11 +42,11 @@ public enum UnitTypes {
      */
     private final ScaleAttributeWithLevel scaleEnergy;
 
-    UnitTypes(String description, int baseHealth, int baseEnergy, int moveSpeed, boolean canMoveDiagonally, ScaleAttributeWithLevel scaleHealth, ScaleAttributeWithLevel scaleEnergy) {
+    UnitTypes(String description, int baseHealth, int baseEnergy, int baseMoveSpeed, boolean canMoveDiagonally, ScaleAttributeWithLevel scaleHealth, ScaleAttributeWithLevel scaleEnergy) {
         this.description = description;
         this.baseHealth = baseHealth;
         this.baseEnergy = baseEnergy;
-        this.moveSpeed = moveSpeed;
+        this.baseMoveSpeed = baseMoveSpeed;
         this.canMoveDiagonally = canMoveDiagonally;
         this.scaleHealth = scaleHealth;
         this.scaleEnergy = scaleEnergy;
@@ -65,8 +65,8 @@ public enum UnitTypes {
         return description;
     }
 
-    public int getMoveSpeed() {
-        return moveSpeed;
+    public int getBaseMoveSpeed() {
+        return baseMoveSpeed;
     }
 
     public boolean isCanMoveDiagonally() {

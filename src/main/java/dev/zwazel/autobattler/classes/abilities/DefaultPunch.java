@@ -1,8 +1,9 @@
 package dev.zwazel.autobattler.classes.abilities;
 
+import dev.zwazel.autobattler.classes.abstractClasses.Ability;
+import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.enums.AbilityOutputType;
 import dev.zwazel.autobattler.classes.enums.UsageType;
-import dev.zwazel.autobattler.classes.units.Unit;
 
 public class DefaultPunch extends Ability {
     public DefaultPunch(Unit owner) {
@@ -25,22 +26,20 @@ public class DefaultPunch extends Ability {
     }
 
     @Override
-    public int scaleOutputAmount(int level, int baseDamage) {
-        return (int) (baseDamage + (baseDamage * (level * 0.1)));
+    public int scaleOutputAmount(int level, int baseOutputAmount) {
+        return (int) (baseOutputAmount + (baseOutputAmount * ((level - 1) * 0.1)));
     }
 
     @Override
     public boolean canBeUsed(Unit target) {
-//        
         boolean cooldownReady = this.getCurrentCooldown() <= 0;
-        boolean inRange = this.isInRange(target);
-//        
-//        
+        boolean inRange = this.isInRange(target, false);
+
         return cooldownReady && inRange;
     }
 
     @Override
-    public boolean actuallyUse(Unit target) {
+    protected boolean use(Unit target) {
         if (canBeUsed(target)) {
             this.setCurrentCooldown(this.getCooldown());
             doOutput(target);

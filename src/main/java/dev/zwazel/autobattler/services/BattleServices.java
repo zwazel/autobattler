@@ -1,8 +1,12 @@
 package dev.zwazel.autobattler.services;
 
 import dev.zwazel.autobattler.BattlerGen2;
+import dev.zwazel.autobattler.classes.enums.Side;
+import dev.zwazel.autobattler.classes.enums.UnitTypes;
+import dev.zwazel.autobattler.classes.utils.Formation;
 import dev.zwazel.autobattler.classes.utils.User;
 import dev.zwazel.autobattler.classes.utils.Vector;
+import dev.zwazel.autobattler.classes.utils.battle.CreateFormations;
 import dev.zwazel.autobattler.classes.utils.database.FormationEntity;
 import dev.zwazel.autobattler.classes.utils.database.repositories.FormationEntityRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
@@ -62,7 +66,18 @@ public class BattleServices {
                 // TODO: 08.02.2022 FIND ENEMY FORMATION
 
                 if (formationEntity.isPresent()) {
-                    BattlerGen2 battler = new BattlerGen2(user1.get(), formationEntity.get(), user2.get(), formationEntity.get(), false, false, gridSize);
+                    CreateFormations createFormations = new CreateFormations(userGridSize, true);
+
+                    int minAmountUnits = 3;
+                    int maxAmountUnits = (userGridSize.getX() + userGridSize.getY()) / 2;
+                    int randomNumber = (int) (Math.random() * (maxAmountUnits - minAmountUnits + 1)) + minAmountUnits;
+                    Formation formation = createFormations.createTestFormation(randomNumber, Side.ENEMY, 0, true, new UnitTypes[]{
+                            UnitTypes.MY_FIRST_UNIT,
+                    }, 1, 1);
+
+                    FormationEntity formationEntityEnemyRandom = new FormationEntity(formation, new User("randomEnemy_" + randomNumber, "enemy"));
+
+                    BattlerGen2 battler = new BattlerGen2(formationEntity.get(), formationEntityEnemyRandom, false, false, gridSize, true, false);
                     History history = battler.getHistory();
 
                     if (history == null) {

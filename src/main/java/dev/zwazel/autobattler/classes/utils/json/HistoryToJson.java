@@ -1,12 +1,13 @@
 package dev.zwazel.autobattler.classes.utils.json;
 
 import com.google.gson.Gson;
-import dev.zwazel.autobattler.classes.units.Unit;
+import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.utils.Formation;
 import dev.zwazel.autobattler.classes.utils.Vector;
 
 import java.util.Iterator;
 
+// TODO: 16.02.2022 do a complete overhaul of this class
 public class HistoryToJson {
     // TODO: 29.01.2022 ADD WINNER INFORMATION!!
     public static String toJson(History history) {
@@ -48,6 +49,7 @@ public class HistoryToJson {
 
         StringBuilder json = new StringBuilder("{");
 
+        // TODO: 16.02.2022 only write stuff that has changed
         json.append("\"user\":{" + "\"id\":").append(actionHistory.user().getID()).append(",")
                 .append("\"side\":\"").append(actionHistory.user().getSide()).append("\",")
                 .append("\"health\":").append(actionHistory.user().getHealth()).append(",")
@@ -56,6 +58,8 @@ public class HistoryToJson {
 
         json.append(",\"targets\":[");
         int counter = 0;
+
+        // TODO: 16.02.2022 only write stuff that has changed (e.g. health)
         for (Unit unit : actionHistory.targets()) {
             json.append("{\"id\":").append(unit.getID()).append(",")
                     .append("\"side\":\"").append(unit.getSide()).append("\",")

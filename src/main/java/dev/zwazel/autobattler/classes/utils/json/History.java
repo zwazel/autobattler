@@ -5,6 +5,7 @@ import dev.zwazel.autobattler.classes.utils.Formation;
 
 import java.util.ArrayList;
 
+// TODO: 16.02.2022 do a complete overhaul of this class
 public class History {
     private final BattlerGen2 battler;
     private final Formation left;

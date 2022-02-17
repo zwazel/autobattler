@@ -36,14 +36,6 @@ public class User {
         this.username = username;
         this.password = password;
         accountCreated = new Date();
-        lastLogin = accountCreated;
-    }
-
-    public User(String username, String password, Date accountCreated) {
-        this.username = username;
-        this.password = password;
-        this.accountCreated = accountCreated;
-        this.lastLogin = accountCreated;
     }
 
     public long getId() {

@@ -7,6 +7,10 @@ public class GridGraph {
     private final Node[][] nodes;
 
     public GridGraph(Grid grid) {
+        this(grid, false);
+    }
+
+    public GridGraph(Grid grid, boolean allowDiagonal) {
         int cols = grid.getWidth();
         int rows = grid.getHeight();
 
@@ -33,6 +37,21 @@ public class GridGraph {
                 }
                 if (r < rows - 1) { // has east
                     neighbors.add(nodes[c][r + 1]);
+                }
+
+                if (allowDiagonal) {
+                    if (c > 0 && r > 0) { // has north-west
+                        neighbors.add(nodes[c - 1][r - 1]);
+                    }
+                    if (c < cols - 1 && r > 0) { // has north-east
+                        neighbors.add(nodes[c + 1][r - 1]);
+                    }
+                    if (c > 0 && r < rows - 1) { // has south-west
+                        neighbors.add(nodes[c - 1][r + 1]);
+                    }
+                    if (c < cols - 1 && r < rows - 1) { // has south-east
+                        neighbors.add(nodes[c + 1][r + 1]);
+                    }
                 }
             }
         }

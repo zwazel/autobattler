@@ -1,26 +1,22 @@
 package dev.zwazel.autobattler.classes.units;
 
 import dev.zwazel.autobattler.BattlerGen2;
-import dev.zwazel.autobattler.classes.abstractClasses.Ability;
 import dev.zwazel.autobattler.classes.abilities.DefaultPunch;
+import dev.zwazel.autobattler.classes.abstractClasses.Ability;
 import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.enums.Action;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.UnitTypes;
 import dev.zwazel.autobattler.classes.utils.Vector;
 import dev.zwazel.autobattler.classes.utils.json.ActionHistory;
-import dev.zwazel.autobattler.classes.utils.map.FindPath;
-import dev.zwazel.autobattler.classes.utils.map.Node;
-
-import java.util.Random;
 
 public class MyFirstUnit extends Unit {
-    public MyFirstUnit(long id, int priority, int level, String name, Vector position) {
-        super(id, priority, level, name, "First Unit", 10, 100, 'u', position, 1, UnitTypes.MY_FIRST_UNIT);
+    public MyFirstUnit(long id, int priority, int level, Vector position, String name) {
+        super(id, priority, level, 10, 100, 1, false, 'u', position, UnitTypes.MY_FIRST_UNIT, name, "First Unit");
     }
 
-    public MyFirstUnit(long id, int priority, int level, String name, Vector position, BattlerGen2 battler, Side side) {
-        super(id, level, name, "First Unit", 10, 100, 'u', position, 1, battler, side, priority, UnitTypes.MY_FIRST_UNIT);
+    public MyFirstUnit(long id, int priority, int level, Vector position, Side side, BattlerGen2 battler, String name) {
+        super(id, priority, level, 10, 100, 1, false, 'u', position, side, UnitTypes.MY_FIRST_UNIT, battler, name, "First Unit");
         this.setAbilities(new Ability[]{new DefaultPunch(this)});
     }
 
@@ -39,7 +35,6 @@ public class MyFirstUnit extends Unit {
         for (Ability ability : getAbilities()) {
             Unit target = findTargetUnit(ability.getTargetSide());
             if (ability.canBeUsed(target)) {
-//                
                 return ability;
             }
         }

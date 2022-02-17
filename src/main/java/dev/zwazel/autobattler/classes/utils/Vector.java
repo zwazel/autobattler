@@ -2,6 +2,8 @@ package dev.zwazel.autobattler.classes.utils;
 
 import com.google.gson.JsonObject;
 
+import java.util.Random;
+
 import static java.lang.Math.atan2;
 
 public class Vector {
@@ -24,6 +26,12 @@ public class Vector {
     public Vector(Vector vector) {
         this.x = vector.getX();
         this.y = vector.getY();
+    }
+
+    public static Vector getRandomDirection(boolean diagonalAllowed) {
+        Random rand = new Random();
+        int n = rand.nextInt((diagonalAllowed) ? Vector.DIRECTION.values().length : DIRECTION.DOWN.getNonDiagonalAmount());
+        return DIRECTION.values()[n].getDirection();
     }
 
     public double directionTo360(Vector vector) {
@@ -127,7 +135,11 @@ public class Vector {
         RIGHT(1, 0),
         LEFT(-1, 0),
         UP(0, -1),
-        DOWN(0, 1);
+        DOWN(0, 1),
+        UP_RIGHT(1, -1),
+        UP_LEFT(-1, -1),
+        DOWN_RIGHT(1, 1),
+        DOWN_LEFT(-1, 1);
 
         final Vector direction;
 
@@ -137,6 +149,10 @@ public class Vector {
 
         public Vector getDirection() {
             return direction;
+        }
+
+        public int getNonDiagonalAmount() {
+            return 4;
         }
     }
 }

@@ -150,7 +150,7 @@ public class BattlerGen2 {
                 System.err.println("No free space on side " + side);
                 break;
             }
-            Unit unit = new MyFirstUnit(idCounter++, priorityCounter++, 1, getRandomUnitName(), vector);
+            Unit unit = new MyFirstUnit(idCounter++, priorityCounter++, 1, vector, getRandomUnitName());
             units.add(unit);
             grid.updateOccupiedGrid(unit);
         }

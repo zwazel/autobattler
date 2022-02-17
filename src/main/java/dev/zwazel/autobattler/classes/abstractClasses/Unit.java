@@ -12,7 +12,6 @@ import dev.zwazel.autobattler.classes.utils.map.FindPath;
 import dev.zwazel.autobattler.classes.utils.map.Node;
 
 import java.util.Arrays;
-import java.util.Random;
 
 public abstract class Unit implements Obstacle, Cloneable {
     /**
@@ -83,7 +82,6 @@ public abstract class Unit implements Obstacle, Cloneable {
     /**
      * tells if the unit can move diagonally or not
      */
-    // TODO: 16.02.2022 IMPLEMENT THIS
     private boolean canMoveDiagonally;
 
     /**
@@ -111,7 +109,7 @@ public abstract class Unit implements Obstacle, Cloneable {
      * @param priority    the priority of the unit, used for sorting
      * @param type        the type of the unit
      */
-    public Unit(long id, int priority, int level, String name, String description, int health, int energy, char symbol, Vector position, int speed, UnitTypes type) {
+    public Unit(long id, int priority, int level, int health, int energy, int speed, boolean canMoveDiagonally, char symbol, Vector position, UnitTypes type, String name, String description) {
         this.ID = id;
         this.level = level;
         this.health = getLevelHealth(health, level - 1);
@@ -123,6 +121,7 @@ public abstract class Unit implements Obstacle, Cloneable {
         this.speed = speed;
         this.priority = priority;
         this.type = type;
+        this.canMoveDiagonally = canMoveDiagonally;
     }
 
     /**
@@ -142,8 +141,8 @@ public abstract class Unit implements Obstacle, Cloneable {
      * @param priority    the priority of the unit, used for sorting
      * @param type        the type of the unit
      */
-    public Unit(long id, int level, String name, String description, int health, int energy, char symbol, Vector position, int speed, BattlerGen2 battler, Side side, int priority, UnitTypes type) {
-        this(id, priority, level, name, description, health, energy, symbol, position, speed, type);
+    public Unit(long id, int priority, int level, int health, int energy, int speed, boolean canMoveDiagonally, char symbol, Vector position, Side side, UnitTypes type, BattlerGen2 battler, String name, String description) {
+        this(id, priority, level, health, energy, speed, canMoveDiagonally, symbol, position, type, name, description);
         this.battler = battler;
         this.side = side;
     }
@@ -196,7 +195,7 @@ public abstract class Unit implements Obstacle, Cloneable {
 
     protected Vector[] moveTowards(Unit target) {
         if (target != null) {
-            Node[] nodes = new FindPath().getNextMoveSteps(this.getGridPosition(), target.getGridPosition(), this.getBattler().getGrid(), this.getSpeed());
+            Node[] nodes = new FindPath().getNextMoveSteps(gridPosition, target.getGridPosition(), battler.getGrid(), speed, canMoveDiagonally);
             if (nodes.length > 0) {
                 Vector[] vectors = new Vector[nodes.length];
                 for (int i = 0; i < nodes.length; i++) {
@@ -215,7 +214,7 @@ public abstract class Unit implements Obstacle, Cloneable {
             this.setGridPosition(direction);
             return true;
         } else {
-            if (new FindPath().isReachable(this.getGridPosition(), direction, this.getBattler().getGrid())) {
+            if (new FindPath().isReachable(gridPosition, direction, battler.getGrid())) {
                 this.setGridPosition(direction);
                 return true;
             }
@@ -224,9 +223,7 @@ public abstract class Unit implements Obstacle, Cloneable {
     }
 
     protected void moveRandom() {
-        Random rand = new Random();
-        int n = rand.nextInt(Vector.DIRECTION.values().length);
-        Vector direction = Vector.DIRECTION.values()[n].getDirection();
+        Vector direction = Vector.getRandomDirection(canMoveDiagonally);
         move(direction, true);
     }
 
@@ -350,6 +347,14 @@ public abstract class Unit implements Obstacle, Cloneable {
 
     public UnitTypes getType() {
         return type;
+    }
+
+    public boolean isCanMoveDiagonally() {
+        return canMoveDiagonally;
+    }
+
+    public void setCanMoveDiagonally(boolean canMoveDiagonally) {
+        this.canMoveDiagonally = canMoveDiagonally;
     }
 
     @Override

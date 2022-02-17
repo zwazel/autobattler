@@ -91,14 +91,14 @@ public class FindPath {
      * @param moveCount  the number of steps to get
      * @return the next move steps
      */
-    public Node[] getNextMoveSteps(Vector start, Vector vectorToGo, Grid grid, int moveCount) {
+    public Node[] getNextMoveSteps(Vector start, Vector vectorToGo, Grid grid, int moveCount, boolean canMoveDiagonally) {
         Node[] path = new Node[0];
 
         if (moveCount <= 0) {
             return path;
         }
 
-        path = this.findPath(start, vectorToGo, new GridGraph(grid));
+        path = this.findPath(start, vectorToGo, new GridGraph(grid, canMoveDiagonally));
 
         return getNextMoveSteps(path, moveCount);
     }

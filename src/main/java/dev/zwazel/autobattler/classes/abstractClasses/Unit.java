@@ -97,52 +97,44 @@ public abstract class Unit implements Obstacle, Cloneable {
     /**
      * constructor to use when saving formation
      *
-     * @param id          the id of the unit
-     * @param level       the level of the unit
-     * @param name        the name of the unit
-     * @param description the description of the unit
-     * @param health      the health of the unit
-     * @param energy      the energy of the unit, used of some abilities
-     * @param symbol      the symbol of the unit, used for printing in the console (in theory, actually it has never been used yet lol)
-     * @param position    the position of the unit
-     * @param speed       the speed of the unit, how many squares it can move per turn
-     * @param priority    the priority of the unit, used for sorting
-     * @param type        the type of the unit
+     * @param id       the id of the unit
+     * @param level    the level of the unit
+     * @param name     the name of the unit
+     * @param symbol   the symbol of the unit, used for printing in the console (in theory, actually it has never been used yet lol)
+     * @param position the position of the unit
+     * @param priority the priority of the unit, used for sorting
+     * @param type     the type of the unit
      */
-    public Unit(long id, int priority, int level, int health, int energy, int speed, boolean canMoveDiagonally, char symbol, Vector position, UnitTypes type, String name, String description) {
+    public Unit(long id, int priority, int level, UnitTypes type, char symbol, Vector position, String name) {
         this.ID = id;
         this.level = level;
-        this.health = getLevelHealth(health, level - 1);
-        this.energy = getLevelEnergy(energy, level - 1);
+        this.health = type.scaleHealth(level - 1);
+        this.energy = type.scaleEnergy(level - 1);
         this.name = name;
-        this.description = description;
+        this.description = type.getDescription();
         this.symbol = symbol;
         this.gridPosition = position;
-        this.speed = speed;
+        this.speed = type.getMoveSpeed();
         this.priority = priority;
         this.type = type;
-        this.canMoveDiagonally = canMoveDiagonally;
+        this.canMoveDiagonally = type.isCanMoveDiagonally();
     }
 
     /**
      * constructor to use when the unit needs to be used in fight
      *
-     * @param id          the id of the unit
-     * @param level       the level of the unit
-     * @param name        the name of the unit
-     * @param description the description of the unit
-     * @param health      the health of the unit
-     * @param energy      the energy of the unit, used of some abilities
-     * @param symbol      the symbol of the unit, used for printing in the console (in theory, actually it has never been used yet lol)
-     * @param position    the position of the unit
-     * @param speed       the speed of the unit, how many squares it can move per turn
-     * @param battler     the battler that the unit belongs to
-     * @param side        the side of the unit
-     * @param priority    the priority of the unit, used for sorting
-     * @param type        the type of the unit
+     * @param id       the id of the unit
+     * @param level    the level of the unit
+     * @param name     the name of the unit
+     * @param symbol   the symbol of the unit, used for printing in the console (in theory, actually it has never been used yet lol)
+     * @param position the position of the unit
+     * @param battler  the battler that the unit belongs to
+     * @param side     the side of the unit
+     * @param priority the priority of the unit, used for sorting
+     * @param type     the type of the unit
      */
-    public Unit(long id, int priority, int level, int health, int energy, int speed, boolean canMoveDiagonally, char symbol, Vector position, Side side, UnitTypes type, BattlerGen2 battler, String name, String description) {
-        this(id, priority, level, health, energy, speed, canMoveDiagonally, symbol, position, type, name, description);
+    public Unit(long id, int priority, int level, UnitTypes type, char symbol, Vector position, Side side, BattlerGen2 battler, String name) {
+        this(id, priority, level, type, symbol, position, name);
         this.battler = battler;
         this.side = side;
     }
@@ -172,24 +164,6 @@ public abstract class Unit implements Obstacle, Cloneable {
      * @return the action that the unit did. for example if the unit uses an ability.
      */
     protected abstract ActionHistory run();
-
-    /**
-     * Calculates the health of the unit based on the level
-     *
-     * @param health the base health of the unit
-     * @param level  the level of the unit, always -1! (so the level is actually the level - 1). If the unit is level 1, in this method we get level 0.
-     * @return the health of the unit scaled by the level
-     */
-    protected abstract int getLevelHealth(int health, int level);
-
-    /**
-     * Calculates the energy of the unit based on the level
-     *
-     * @param energy the base energy of the unit
-     * @param level  the level of the unit, always -1! (so the level is actually the level - 1). If the unit is level 1, in this method we get level 0.
-     * @return the energy of the unit scaled by the level
-     */
-    protected abstract int getLevelEnergy(int energy, int level);
 
     protected abstract Ability findSuitableAbility();
 

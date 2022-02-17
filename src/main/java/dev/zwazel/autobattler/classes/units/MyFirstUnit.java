@@ -12,22 +12,12 @@ import dev.zwazel.autobattler.classes.utils.json.ActionHistory;
 
 public class MyFirstUnit extends Unit {
     public MyFirstUnit(long id, int priority, int level, Vector position, String name) {
-        super(id, priority, level, 10, 100, 1, false, 'u', position, UnitTypes.MY_FIRST_UNIT, name, "First Unit");
+        super(id, priority, level, UnitTypes.MY_FIRST_UNIT, 'u', position, name);
     }
 
     public MyFirstUnit(long id, int priority, int level, Vector position, Side side, BattlerGen2 battler, String name) {
-        super(id, priority, level, 10, 100, 1, false, 'u', position, side, UnitTypes.MY_FIRST_UNIT, battler, name, "First Unit");
+        super(id, priority, level, UnitTypes.MY_FIRST_UNIT, 'u', position, side, battler, name);
         this.setAbilities(new Ability[]{new DefaultPunch(this)});
-    }
-
-    @Override
-    protected int getLevelHealth(int health, int level) {
-        return (int) (health + (health * (level * 0.25)));
-    }
-
-    @Override
-    protected int getLevelEnergy(int energy, int level) {
-        return (int) (energy + (energy * (level * 0.25)));
     }
 
     @Override

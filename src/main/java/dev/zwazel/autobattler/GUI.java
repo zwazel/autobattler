@@ -30,7 +30,7 @@ public class GUI extends Canvas {
     private final Label LAST_UNIT_LABEL = new Label("Last Unit = ");
     private final Label TARGET_LABEL = new Label("Target = ");
     private final Label CURRENT_ACTION = new Label("Current Action = ");
-    private final Label UNIT_LEGEND = new Label("UnitTextMeaning = (id,priority,health)");
+    private final Label UNIT_LEGEND = new Label("UnitTextMeaning = (id,priority,level,health)");
 
     private final Color COLOR_START = Color.cyan;
     private final Color COLOR_CURRENT_UNIT = Color.blue;
@@ -204,7 +204,9 @@ public class GUI extends Canvas {
                     g.setColor(Color.BLACK);
                     if (obstacle.getClass() == MyFirstUnit.class) {
                         MyFirstUnit unit = (MyFirstUnit) obstacle;
-                        g.drawString(unit.getName() + "(" + unit.getID() + "," + unit.getPriority() + "," + unit.getHealth() + ")", gridPositionNow.getX(), gridPositionNow.getY());
+                        g.drawString(unit.getName() + "(" + unit.getID() + "," + unit.getPriority() + "," +
+                                        unit.getLevel() + "," + unit.getHealth() + ")",
+                                gridPositionNow.getX(), gridPositionNow.getY());
                     }
                 }
             }

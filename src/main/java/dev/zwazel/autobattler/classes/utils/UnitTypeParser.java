@@ -12,12 +12,14 @@ import dev.zwazel.autobattler.classes.units.SimpleUnit;
 
 public class UnitTypeParser {
     public static Unit getUnit(SimpleUnit unit) throws UnknownUnitType {
-        UnitTypes type = UnitTypes.findUnitType(unit.getUnitType());
+        UnitTypes type = (unit.getUnitType() == null) ? UnitTypes.findUnitType(unit.getUnitTypeString()) : unit.getUnitType();
+
+        int level = (unit.getLevel() == null) ? 1 : unit.getLevel();
 
         if (type != null) {
             switch (type) {
                 case MY_FIRST_UNIT -> {
-                    return new MyFirstUnit(unit.getId(), unit.getPriority(), 1, unit.getPosition(), unit.getName());
+                    return new MyFirstUnit(unit.getId(), unit.getPriority(), level, unit.getPosition(), unit.getName());
                 }
                 default -> {
                     throw new UnknownUnitType();
@@ -31,19 +33,15 @@ public class UnitTypeParser {
     public static Unit getUnit(JsonObject unitJson, BattlerGen2 battler, Side side) throws UnknownUnitType {
         JsonElement unitType = unitJson.get("type");
         UnitTypes type = UnitTypes.findUnitType(unitType.getAsString());
-        if (type != null) {
-            switch (type) {
-                case MY_FIRST_UNIT -> {
-                    return new MyFirstUnit(unitJson.get("id").getAsLong(), unitJson.get("priority").getAsInt(),
-                            unitJson.get("level").getAsInt(), new Vector(unitJson.get("position").getAsJsonObject()),
-                            side, battler, unitJson.get("name").getAsString());
-                }
-                default -> {
-                    throw new UnknownUnitType();
-                }
+        switch (type) {
+            case MY_FIRST_UNIT -> {
+                return new MyFirstUnit(unitJson.get("id").getAsLong(), unitJson.get("priority").getAsInt(),
+                        unitJson.get("level").getAsInt(), new Vector(unitJson.get("position").getAsJsonObject()),
+                        side, battler, unitJson.get("name").getAsString());
             }
-        } else {
-            throw new UnknownUnitType();
+            default -> {
+                throw new UnknownUnitType();
+            }
         }
     }
 }

@@ -6,8 +6,10 @@ import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.enums.Action;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
+import dev.zwazel.autobattler.classes.enums.UnitTypes;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.units.MyFirstUnit;
+import dev.zwazel.autobattler.classes.units.SimpleUnit;
 import dev.zwazel.autobattler.classes.utils.*;
 import dev.zwazel.autobattler.classes.utils.database.FormationEntity;
 import dev.zwazel.autobattler.classes.utils.json.ActionHistory;
@@ -118,8 +120,12 @@ public class BattlerGen2 {
 
         int amountUnitsLeft = 3;
         int amountUnitsRight = amountUnitsLeft;
-        Formation left = battlerGen2.createTestFormation(amountUnitsLeft, FRIENDLY, 0, true);
-        Formation right = battlerGen2.createTestFormation(amountUnitsRight, ENEMY, amountUnitsLeft, true);
+        Formation left = battlerGen2.createTestFormation(amountUnitsLeft, FRIENDLY, 0, true, new UnitTypes[]{
+                UnitTypes.MY_FIRST_UNIT,
+        }, 1, 10);
+        Formation right = battlerGen2.createTestFormation(amountUnitsRight, ENEMY, amountUnitsLeft, true, new UnitTypes[]{
+                UnitTypes.MY_FIRST_UNIT,
+        }, 1, 10);
         User userLeft = left.getUser();
         User userRight = right.getUser();
 
@@ -129,24 +135,31 @@ public class BattlerGen2 {
     /**
      * Creates a test formation for testing purposes
      *
-     * @param amountUnits amount of units in the formation
-     * @param side        side of the formation
-     * @param idCounter   id counter for the units, used to create unique ids
-     * @param random      whether the units should be randomly placed on their side or not
+     * @param amountUnits       amount of units in the formation
+     * @param side              side of the formation
+     * @param idCounter         id counter for the units, used to create unique ids
+     * @param randomPositioning whether the units should be randomly placed on their side or not
      * @return the formation
      */
-    private Formation createTestFormation(int amountUnits, Side side, long idCounter, boolean random) {
+    private Formation createTestFormation(int amountUnits, Side side, long idCounter, boolean randomPositioning, UnitTypes[] allowedUnitTypes, int minLevel, int maxLevel) {
         Formation formation;
         ArrayList<Unit> units = new ArrayList<>();
 
         int priorityCounter = 0;
         for (int j = 0; j < amountUnits; j++) {
-            Vector vector = (random) ? findFreeRandomSpaceOnSide(side) : findFreeSpaceOnSide(side);
+
+            UnitTypes type = allowedUnitTypes[(int) (Math.random() * allowedUnitTypes.length)];
+
+            Vector vector = (randomPositioning) ? findFreeRandomSpaceOnSide(side) : findFreeSpaceOnSide(side);
             if (vector == null) {
                 System.err.println("No free space on side " + side);
                 break;
             }
-            Unit unit = new MyFirstUnit(idCounter++, priorityCounter++, 1, vector, getRandomUnitName());
+            Unit unit = createTestUnit(idCounter++, priorityCounter++, vector, type, minLevel, maxLevel);
+            if (unit == null) {
+                System.err.println("Unit is null");
+                break;
+            }
             units.add(unit);
             grid.updateOccupiedGrid(unit);
         }
@@ -154,6 +167,21 @@ public class BattlerGen2 {
         formation = new Formation(new User("TestUser_" + side, "TestUser_" + side), units);
 
         return formation;
+    }
+
+    private Unit createTestUnit(long id, int priority, Vector position, UnitTypes type, int minLevel, int maxLevel) {
+        // get random number between min and max level
+        int level = minLevel + (int) (Math.random() * (maxLevel - minLevel));
+
+        SimpleUnit simpleUnit = new SimpleUnit(id, priority, level, position, type, getRandomUnitName());
+
+        try {
+            return simpleUnit.getUnit();
+        } catch (UnknownUnitType e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     private Vector findFreeRandomSpaceOnSide(Side side) {
@@ -183,9 +211,9 @@ public class BattlerGen2 {
 
         Vector vector = new Vector(x, y);
 
-        if (findPath.isOccupied(vector, grid) && counter < x + y) {
+        if (findPath.isOccupied(vector, grid) && counter <= x + y) {
             return findFreeRandomSpaceOnSide(side, counter + 1);
-        } else if (counter >= x + y) {
+        } else if (counter > x + y) {
             return null;
         }
         return vector;

@@ -1,6 +1,7 @@
 package dev.zwazel.autobattler.classes.enums;
 
 import dev.zwazel.autobattler.classes.abstractClasses.ScaleAttributeWithLevel;
+import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 
 public enum UnitTypes {
     MY_FIRST_UNIT("First unit", 10, 100, 1, false,
@@ -52,13 +53,18 @@ public enum UnitTypes {
         this.scaleEnergy = scaleEnergy;
     }
 
-    public static UnitTypes findUnitType(String name) {
+    public static UnitTypes findUnitType(String unitTypeName) throws UnknownUnitType {
+        if (unitTypeName == null) {
+            throw new IllegalArgumentException("unitTypeName cannot be null");
+        }
+
         for (UnitTypes type : UnitTypes.values()) {
-            if (type.toString().equals(name)) {
+            if (type.toString().equals(unitTypeName)) {
                 return type;
             }
         }
-        return null;
+
+        throw new UnknownUnitType(unitTypeName);
     }
 
     public String getDescription() {

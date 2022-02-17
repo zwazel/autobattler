@@ -42,7 +42,7 @@ public class BattlerGen2 {
         enemyUnitList = new ArrayList<>();
     }
 
-    public BattlerGen2(FormationEntity formationLeft, FormationEntity formationRight, boolean createJson, boolean runWithGUI, Vector gridSize, boolean mirrorEnemy) {
+    public BattlerGen2(FormationEntity formationLeft, FormationEntity formationRight, boolean createJson, boolean runWithGUI, Vector gridSize, boolean mirrorEnemy, boolean drawBoard) {
         friendlyUnitList = new ArrayList<>();
         enemyUnitList = new ArrayList<>();
         grid = new Grid(gridSize);
@@ -85,13 +85,17 @@ public class BattlerGen2 {
             if (runWithGUI) {
                 GUI gui = new GUI(this, 50);
             } else {
-                drawBoard();
+                if (drawBoard) {
+                    drawBoard();
+                }
                 while (!fightFinished) {
                     ListIterator<Unit> unitIterator = units.listIterator();
                     while (unitIterator.hasNext()) {
                         doTurn(unitIterator, true);
                     }
-                    drawBoard();
+                    if (drawBoard) {
+                        drawBoard();
+                    }
                 }
 
                 if (createJson) {
@@ -119,7 +123,7 @@ public class BattlerGen2 {
         User userLeft = left.getUser();
         User userRight = right.getUser();
 
-        new BattlerGen2(new FormationEntity(left, userLeft), new FormationEntity(right, userRight), false, true, gridSize, false);
+        new BattlerGen2(new FormationEntity(left, userLeft), new FormationEntity(right, userRight), false, true, gridSize, false, true);
     }
 
     /**

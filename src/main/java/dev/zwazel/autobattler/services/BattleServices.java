@@ -62,7 +62,7 @@ public class BattleServices {
                 // TODO: 08.02.2022 FIND ENEMY FORMATION
 
                 if (formationEntity.isPresent()) {
-                    BattlerGen2 battler = new BattlerGen2(formationEntity.get(), formationEntity.get(), false, false, gridSize, true);
+                    BattlerGen2 battler = new BattlerGen2(formationEntity.get(), formationEntity.get(), false, false, gridSize, true, false);
                     History history = battler.getHistory();
 
                     if (history == null) {

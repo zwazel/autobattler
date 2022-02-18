@@ -56,7 +56,6 @@ async function saveFormation() {
                         "x": pos.x,
                         "y": pos.y
                     },
-                    "unitType": idFromUnit,
                     "priority": priorityAndID,
                 };
                 priorityAndID++;

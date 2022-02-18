@@ -10,23 +10,21 @@ import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.units.MyFirstUnit;
 import dev.zwazel.autobattler.classes.units.SimpleUnit;
 
+/**
+ * An util class to parse a json or simple Unit object into an actual unit.
+ */
 public class UnitTypeParser {
     public static Unit getUnit(SimpleUnit unit) throws UnknownUnitType {
-        UnitTypes type = (unit.getUnitType() == null) ? UnitTypes.findUnitType(unit.getUnitTypeString()) : unit.getUnitType();
-
         int level = (unit.getLevel() == null) ? 1 : unit.getLevel();
+        UnitTypes type = unit.getUnitType();
 
-        if (type != null) {
-            switch (type) {
-                case MY_FIRST_UNIT -> {
-                    return new MyFirstUnit(unit.getId(), unit.getPriority(), level, unit.getPosition(), unit.getName());
-                }
-                default -> {
-                    throw new UnknownUnitType();
-                }
+        switch (type) {
+            case MY_FIRST_UNIT -> {
+                return new MyFirstUnit(unit.getId(), unit.getPriority(), level, unit.getPosition(), unit.getName());
             }
-        } else {
-            throw new UnknownUnitType();
+            default -> {
+                throw new UnknownUnitType(type);
+            }
         }
     }
 
@@ -40,7 +38,7 @@ public class UnitTypeParser {
                         side, battler, unitJson.get("name").getAsString());
             }
             default -> {
-                throw new UnknownUnitType();
+                throw new UnknownUnitType(type);
             }
         }
     }

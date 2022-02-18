@@ -114,23 +114,6 @@ public abstract class Unit implements Obstacle, Cloneable {
         }
     }
 
-    public Unit(long id, int priority, int level, UnitTypes type, char symbol, Vector position) {
-        this.ID = id;
-        this.level = level;
-        this.health = type.scaleHealth(level);
-        this.energy = type.scaleEnergy(level);
-        this.description = type.getDescription();
-        this.symbol = symbol;
-        this.gridPosition = position;
-        this.speed = type.getBaseMoveSpeed();
-        this.priority = priority;
-        this.type = type;
-        this.canMoveDiagonally = type.isCanMoveDiagonally();
-        if (name == null) {
-            this.name = type.getDefaultName();
-        }
-    }
-
     /**
      * constructor to use when the unit needs to be used in fight
      *
@@ -154,6 +137,23 @@ public abstract class Unit implements Obstacle, Cloneable {
         this(id, priority, level, type, symbol, position);
         this.battler = battler;
         this.side = side;
+    }
+
+    public Unit(long id, int priority, int level, UnitTypes type, char symbol, Vector position) {
+        this.ID = id;
+        this.level = level;
+        this.health = type.scaleHealth(level);
+        this.energy = type.scaleEnergy(level);
+        this.description = type.getDescription();
+        this.symbol = symbol;
+        this.gridPosition = position;
+        this.speed = type.scaleMoveSpeed(level);
+        this.priority = priority;
+        this.type = type;
+        this.canMoveDiagonally = type.isCanMoveDiagonally();
+        if (name == null) {
+            this.name = type.getDefaultName();
+        }
     }
 
     /**

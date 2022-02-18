@@ -80,8 +80,8 @@ public enum UnitTypes {
         this.customNamesAllowed = true;
         this.defaultName = this.name();
         this.slotSize = 1;
-        this.scaleHealth = ((health, level) -> health + ((level - 1) * 10)); // add 10 health per level
-        this.scaleEnergy = ((energy, level) -> energy + ((level - 1) * 10)); // add 10 energy per level
+        this.scaleHealth = ((health, level) -> health + ((level - 1) * 10)); // add 10 health per level, and make it so that the unit has its base health on level 1
+        this.scaleEnergy = ((energy, level) -> energy + ((level - 1) * 10)); // add 10 energy per level, and make it so that the unit has its base energy on level 1
         this.scaleMoveSpeed = ((moveSpeed, level) -> moveSpeed); // add 0 move speed per level, always keep it on 0!
     }
 

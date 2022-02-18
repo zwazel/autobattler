@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @EnableAutoConfiguration
@@ -37,13 +38,14 @@ public class User {
 
     public User() {
         accountCreated = new Date();
-        lastLogin = accountCreated;
+        this.units = new HashSet<>();
     }
 
     public User(String username, String password) {
         this.username = username;
         this.password = password;
         accountCreated = new Date();
+        this.units = new HashSet<>();
     }
 
     public long getId() {
@@ -104,6 +106,18 @@ public class User {
 
     public void setAccountCreated(Date accountCreated) {
         this.accountCreated = accountCreated;
+    }
+
+    public void addUnit(UnitModel unit) {
+        units.add(unit);
+    }
+
+    public Set<UnitModel> getUnits() {
+        return units;
+    }
+
+    public void setUnits(Set<UnitModel> units) {
+        this.units = units;
     }
 
     @Override

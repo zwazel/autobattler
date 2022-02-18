@@ -13,7 +13,7 @@ public class FormationUnitTable {
     @Column(name = "formation_unit_table", nullable = false)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "formation_entity_id")
     private FormationEntity formationEntity;
 
@@ -81,5 +81,16 @@ public class FormationUnitTable {
     public void setUnitPosition(Vector position) {
         this.positionX = position.getX();
         this.positionY = position.getY();
+    }
+
+    @Override
+    public String toString() {
+        return "FormationUnitTable{" +
+                "id=" + id +
+                ", unitModel=" + unitModel +
+                ", unitPriority=" + unitPriority +
+                ", positionX=" + positionX +
+                ", positionY=" + positionY +
+                '}';
     }
 }

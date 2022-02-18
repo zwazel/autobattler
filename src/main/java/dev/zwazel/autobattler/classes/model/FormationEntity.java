@@ -19,7 +19,7 @@ public class FormationEntity {
     @ManyToOne
     private User user;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<FormationUnitTable> formationUnitTable;
 
     public FormationEntity(Formation formation) {
@@ -64,6 +64,7 @@ public class FormationEntity {
         return "FormationEntity{" +
                 "id=" + id +
                 ", user=" + user +
+                ", formationUnitTable=" + formationUnitTable +
                 '}';
     }
 }

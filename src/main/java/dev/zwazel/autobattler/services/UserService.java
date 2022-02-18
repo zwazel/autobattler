@@ -1,10 +1,14 @@
 package dev.zwazel.autobattler.services;
 
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
-import dev.zwazel.autobattler.classes.utils.FormationServiceTemplate;
-import dev.zwazel.autobattler.classes.model.User;
 import dev.zwazel.autobattler.classes.model.FormationEntity;
+import dev.zwazel.autobattler.classes.model.FormationUnitTable;
+import dev.zwazel.autobattler.classes.model.UnitModel;
+import dev.zwazel.autobattler.classes.model.User;
+import dev.zwazel.autobattler.classes.utils.FormationServiceTemplate;
 import dev.zwazel.autobattler.classes.utils.database.repositories.FormationEntityRepository;
+import dev.zwazel.autobattler.classes.utils.database.repositories.FormationUnitTableRepository;
+import dev.zwazel.autobattler.classes.utils.database.repositories.UnitModelRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
 import dev.zwazel.autobattler.security.jwt.JwtUtils;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +23,14 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final FormationEntityRepository formationEntityRepository;
+    private final UnitModelRepository unitModelRepository;
+    private final FormationUnitTableRepository formationUnitTableRepository;
 
-    public UserService(UserRepository userRepository, FormationEntityRepository formationEntityRepository) {
+    public UserService(UserRepository userRepository, FormationEntityRepository formationEntityRepository, UnitModelRepository unitModelRepository, FormationUnitTableRepository formationUnitTableRepository) {
         this.userRepository = userRepository;
         this.formationEntityRepository = formationEntityRepository;
+        this.unitModelRepository = unitModelRepository;
+        this.formationUnitTableRepository = formationUnitTableRepository;
     }
 
     private Optional<User> getUserWithJWT(UserRepository userRepository, HttpServletRequest request) {
@@ -61,6 +69,9 @@ public class UserService {
 
                 if (!formationAlreadyExists) {
                     user.addFormation(formationEntity);
+
+                    System.out.println("formationEntity = " + formationEntity);
+
                     userRepository.save(user);
                     return ResponseEntity.ok("Formation added");
                 } else {

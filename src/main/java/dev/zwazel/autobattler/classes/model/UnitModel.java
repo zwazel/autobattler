@@ -16,11 +16,11 @@ public class UnitModel {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<FormationUnitTable> formationUnitTables;
 
     private String name;
@@ -82,5 +82,15 @@ public class UnitModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "UnitModel{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", level=" + level +
+                ", unitType=" + unitType +
+                '}';
     }
 }

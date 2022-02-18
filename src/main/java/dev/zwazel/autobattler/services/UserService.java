@@ -12,6 +12,7 @@ import dev.zwazel.autobattler.classes.utils.database.repositories.FormationUnitT
 import dev.zwazel.autobattler.classes.utils.database.repositories.UnitModelRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
 import dev.zwazel.autobattler.security.jwt.JwtUtils;
+import javassist.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -77,7 +78,7 @@ public class UserService {
             User user = userOptional.get();
 
             try {
-                FormationEntity formationEntity = formationServiceTemplate.getFormationEntity(user);
+                FormationEntity formationEntity = formationServiceTemplate.getFormationEntity(user, unitModelRepository);
                 boolean formationAlreadyExists = false;
 
                 if (!formationAlreadyExists) {
@@ -90,7 +91,7 @@ public class UserService {
                 } else {
                     return ResponseEntity.badRequest().body("Formation already exists");
                 }
-            } catch (UnknownUnitType e) {
+            } catch (UnknownUnitType | NotFoundException e) {
                 e.printStackTrace();
             }
         }

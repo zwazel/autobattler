@@ -1,6 +1,7 @@
 package dev.zwazel.autobattler.classes.utils;
 
 import dev.zwazel.autobattler.classes.abstractClasses.Unit;
+import dev.zwazel.autobattler.classes.model.User;
 
 import java.util.ArrayList;
 

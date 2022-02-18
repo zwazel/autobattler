@@ -1,7 +1,7 @@
 package dev.zwazel.autobattler.classes.utils.database.repositories;
 
 import dev.zwazel.autobattler.classes.utils.EnumUserRole;
-import dev.zwazel.autobattler.classes.utils.UserRole;
+import dev.zwazel.autobattler.classes.model.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,6 @@
-package dev.zwazel.autobattler.classes.utils.database;
+package dev.zwazel.autobattler.classes.model;
 
 import dev.zwazel.autobattler.classes.utils.Formation;
-import dev.zwazel.autobattler.classes.utils.User;
 import dev.zwazel.autobattler.classes.utils.json.HistoryToJson;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 

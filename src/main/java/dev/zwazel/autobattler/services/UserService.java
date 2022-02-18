@@ -2,8 +2,8 @@ package dev.zwazel.autobattler.services;
 
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.utils.FormationServiceTemplate;
-import dev.zwazel.autobattler.classes.utils.User;
-import dev.zwazel.autobattler.classes.utils.database.FormationEntity;
+import dev.zwazel.autobattler.classes.model.User;
+import dev.zwazel.autobattler.classes.model.FormationEntity;
 import dev.zwazel.autobattler.classes.utils.database.FormationOnly;
 import dev.zwazel.autobattler.classes.utils.database.repositories.FormationEntityRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;

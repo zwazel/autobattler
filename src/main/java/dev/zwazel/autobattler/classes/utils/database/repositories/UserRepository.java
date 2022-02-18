@@ -1,6 +1,6 @@
 package dev.zwazel.autobattler.classes.utils.database.repositories;
 
-import dev.zwazel.autobattler.classes.utils.User;
+import dev.zwazel.autobattler.classes.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

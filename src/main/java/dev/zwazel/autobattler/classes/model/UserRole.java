@@ -1,4 +1,6 @@
-package dev.zwazel.autobattler.classes.utils;
+package dev.zwazel.autobattler.classes.model;
+
+import dev.zwazel.autobattler.classes.utils.EnumUserRole;
 
 import javax.persistence.*;
 
@@ -15,7 +17,8 @@ public class UserRole {
         this.name = name;
     }
 
-    public UserRole() {}
+    public UserRole() {
+    }
 
     public long getId() {
         return id;

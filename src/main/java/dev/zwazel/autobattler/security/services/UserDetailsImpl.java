@@ -1,7 +1,7 @@
 package dev.zwazel.autobattler.security.services;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import dev.zwazel.autobattler.classes.utils.User;
+import dev.zwazel.autobattler.classes.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

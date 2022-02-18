@@ -1,8 +1,8 @@
 package dev.zwazel.autobattler.services;
 
 import dev.zwazel.autobattler.classes.utils.EnumUserRole;
-import dev.zwazel.autobattler.classes.utils.User;
-import dev.zwazel.autobattler.classes.utils.UserRole;
+import dev.zwazel.autobattler.classes.model.User;
+import dev.zwazel.autobattler.classes.model.UserRole;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRoleRepository;
 import dev.zwazel.autobattler.security.jwt.JwtUtils;

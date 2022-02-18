@@ -1,6 +1,6 @@
 package dev.zwazel.autobattler.classes.exceptions;
 
-import dev.zwazel.autobattler.classes.utils.User;
+import dev.zwazel.autobattler.classes.model.User;
 
 public class FormationNotFound extends Exception {
     public FormationNotFound(User user) {

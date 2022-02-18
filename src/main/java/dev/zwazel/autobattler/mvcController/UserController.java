@@ -1,6 +1,6 @@
 package dev.zwazel.autobattler.mvcController;
 
-import dev.zwazel.autobattler.classes.utils.User;
+import dev.zwazel.autobattler.classes.model.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 

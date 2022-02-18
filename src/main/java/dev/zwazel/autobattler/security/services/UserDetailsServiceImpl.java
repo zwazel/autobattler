@@ -1,8 +1,7 @@
 package dev.zwazel.autobattler.security.services;
 
-import dev.zwazel.autobattler.classes.utils.User;
+import dev.zwazel.autobattler.classes.model.User;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

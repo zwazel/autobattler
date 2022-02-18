@@ -20,9 +20,6 @@ public class UnitModel {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<FormationUnitTable> formationUnitTables;
-
     private String name;
 
     private int level;

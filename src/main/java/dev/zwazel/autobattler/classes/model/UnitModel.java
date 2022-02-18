@@ -7,7 +7,6 @@ import dev.zwazel.autobattler.classes.units.SimpleUnit;
 import dev.zwazel.autobattler.classes.utils.Vector;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 public class UnitModel {

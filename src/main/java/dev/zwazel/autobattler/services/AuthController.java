@@ -2,9 +2,9 @@ package dev.zwazel.autobattler.services;
 
 import dev.zwazel.autobattler.classes.enums.UnitTypes;
 import dev.zwazel.autobattler.classes.model.UnitModel;
-import dev.zwazel.autobattler.classes.utils.EnumUserRole;
 import dev.zwazel.autobattler.classes.model.User;
 import dev.zwazel.autobattler.classes.model.UserRole;
+import dev.zwazel.autobattler.classes.utils.EnumUserRole;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRoleRepository;
 import dev.zwazel.autobattler.security.jwt.JwtUtils;
@@ -70,6 +70,7 @@ public class AuthController {
             User user = optionalUser.get();
             user.setLastLogin(new Date());
 
+            // TODO: 18.02.2022 we probably don't need this anymore
             // old accounts getting updated, so value might not be true, but at least we have one
             if (user.getAccountCreated() == null) {
                 user.setAccountCreated(user.getLastLogin());

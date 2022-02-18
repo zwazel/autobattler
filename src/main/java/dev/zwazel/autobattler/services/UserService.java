@@ -2,10 +2,9 @@ package dev.zwazel.autobattler.services;
 
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.model.FormationEntity;
-import dev.zwazel.autobattler.classes.model.FormationUnitTable;
-import dev.zwazel.autobattler.classes.model.UnitModel;
 import dev.zwazel.autobattler.classes.model.User;
 import dev.zwazel.autobattler.classes.utils.FormationServiceTemplate;
+import dev.zwazel.autobattler.classes.utils.database.FormationOnly;
 import dev.zwazel.autobattler.classes.utils.database.repositories.FormationEntityRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.FormationUnitTableRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UnitModelRepository;
@@ -45,12 +44,13 @@ public class UserService {
     }
 
     @GetMapping(path = "/getAllFormations", produces = "application/json")
-    public List<FormationEntity> getAllFormations(HttpServletRequest request) {
+    public List<FormationOnly> getAllFormations(HttpServletRequest request) {
         Optional<User> userOptional = getUserWithJWT(userRepository, request);
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            return formationEntityRepository.findAllByUserOrderById(user);
+            List<FormationEntity> formationEntities = formationEntityRepository.findAllByUserOrderById(user);
+            return FormationServiceTemplate.getFormationOnlyList(formationEntities);
         }
         return null;
     }

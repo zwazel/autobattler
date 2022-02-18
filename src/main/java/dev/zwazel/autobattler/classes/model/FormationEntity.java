@@ -2,6 +2,7 @@ package dev.zwazel.autobattler.classes.model;
 
 import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.utils.Formation;
+import dev.zwazel.autobattler.classes.utils.json.HistoryToJson;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import javax.persistence.*;
@@ -57,6 +58,10 @@ public class FormationEntity {
 
     public void setFormationUnitTable(Set<FormationUnitTable> formationUnitTable) {
         this.formationUnitTable = formationUnitTable;
+    }
+
+    public String getFormationJson() {
+        return HistoryToJson.formationToJson(new Formation(this));
     }
 
     @Override

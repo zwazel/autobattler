@@ -79,6 +79,7 @@ public class UserService {
 
             try {
                 FormationEntity formationEntity = formationServiceTemplate.getFormationEntity(user, unitModelRepository);
+                // TODO: 18.02.2022 CHECK IF FORMATION ALREADY EXISTS!!!!
                 boolean formationAlreadyExists = false;
 
                 if (!formationAlreadyExists) {

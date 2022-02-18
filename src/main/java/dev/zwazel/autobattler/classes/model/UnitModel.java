@@ -40,6 +40,13 @@ public class UnitModel {
         this.unitType = unit.getType();
     }
 
+    public UnitModel(String name, int level, UnitTypes unitType, User user) {
+        this.name = name;
+        this.level = level;
+        this.unitType = unitType;
+        this.user = user;
+    }
+
     public Unit getUnit(int priority, Vector position) throws UnknownUnitType {
         return new SimpleUnit(this, priority, position).getUnit();
     }

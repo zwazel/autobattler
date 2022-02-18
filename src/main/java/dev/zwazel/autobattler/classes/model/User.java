@@ -1,5 +1,6 @@
 package dev.zwazel.autobattler.classes.model;
 
+import dev.zwazel.autobattler.classes.enums.UnitTypes;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import javax.persistence.*;
@@ -46,6 +47,7 @@ public class User {
         this.password = password;
         accountCreated = new Date();
         this.units = new HashSet<>();
+        units.add(new UnitModel("Karl", 1, UnitTypes.MY_FIRST_UNIT, this));
     }
 
     public long getId() {

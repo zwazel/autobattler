@@ -19,6 +19,7 @@ public class UnitModel {
     @JoinColumn(name = "user_id")
     private User user;
 
+    // TODO: 18.02.2022 NO : (doppelpunkt) BECAUSE FRONTEND USES THIS!!!!!
     private String name;
 
     private int level;

@@ -16,13 +16,11 @@ async function getAllUnitsOfUser() {
             const unitLevel = unitJson.level;
             const unitType = unitJson.unitType;
 
-            const unit = parseUnitTypeSimple(unitJson)
-
-            console.log(unit);
+            const unit = parseUnitTypeSimple(unitJson);
 
             // <div id="MY_FIRST_UNIT" class="draggableUnit" draggable="true">
             const unitDiv = document.createElement('div');
-            unitDiv.id = unitId + "-" + unitName;
+            unitDiv.id = "unitId-" + unitId + "-name:" + unitName + ":";
             unitDiv.className = "draggableUnit";
             unitDiv.draggable = true;
             unitDiv.innerHTML = `<p>${unitName}</p>`;
@@ -48,17 +46,18 @@ async function saveFormation() {
             if (formation[i][j] != null) {
                 let unit = formation[i][j];
                 const pos = getPosOutOfUnit(unit);
-                const type = getUnitTypefromUnit(unit);
+                const idFromUnit = getUnitIdFromUnit(unit);
+                const name = getUnitNameFromUnit(unit);
 
                 const data = {
-                    "name": type,
+                    "id": idFromUnit,
+                    "name": name,
                     "position": {
                         "x": pos.x,
                         "y": pos.y
                     },
-                    "unitType": type,
+                    "unitType": idFromUnit,
                     "priority": priorityAndID,
-                    "id": priorityAndID
                 };
                 priorityAndID++;
 
@@ -66,6 +65,8 @@ async function saveFormation() {
             }
         }
     }
+
+    console.log(formationToSave)
 
     const data = {
         "units": formationToSave
@@ -82,19 +83,47 @@ async function saveFormation() {
     });
 }
 
-function getUnitTypefromUnit(string) {
-    let index = string.indexOf("-");
-    return string.substring(0, index);
-}
+function getUnitNameFromUnit(string) {
+    const search = "name:";
 
-function getPosOutOfUnit(string) {
-    let index = string.indexOf("pos-");
+    let index = string.indexOf(search);
 
-    if(index === -1) {
+    if (index === -1) {
         return undefined;
     }
 
-    let indexOfNumber = index + 4;
+    string = string.substring(index + search.length, string.length);
+
+    index = string.indexOf(":");
+    return string.substring(0, index);
+}
+
+function getUnitIdFromUnit(string) {
+    const searchString = "unitId-";
+    let index = string.indexOf(searchString);
+
+    if (index === -1) {
+        return undefined;
+    }
+
+    string = string.substring(index + searchString.length, string.length);
+
+    index = string.indexOf("-");
+    let number = string.substring(0, index);
+
+    return +number;
+}
+
+function getPosOutOfUnit(string) {
+    const searchString = "pos-";
+
+    let index = string.indexOf(searchString);
+
+    if (index === -1) {
+        return undefined;
+    }
+
+    let indexOfNumber = index + searchString.length;
     let number = string.substring(indexOfNumber);
     return extractPosFromString(number);
 }
@@ -131,8 +160,6 @@ function drop(ev) {
     const target = ev.target;
     if (ev.target.id) {
         const pos = extractPosFromCell(target.id);
-        console.log("pos")
-        console.log(pos)
         if (formation[pos.x][pos.y] != null) {
             console.log("NO >:[")
         } else {
@@ -141,11 +168,8 @@ function drop(ev) {
 
             const originalId = original.id;
 
-            console.log("originalId")
-            console.log(originalId);
-
             const lastPos = getPosOutOfUnit(originalId);
-            if(lastPos) {
+            if (lastPos) {
                 formation[lastPos.y][lastPos.x] = null;
 
                 let index = originalId.indexOf("pos-");
@@ -159,27 +183,6 @@ function drop(ev) {
 
             ev.target.appendChild(original);
             formation[pos.y][pos.x] = original.id;
-
-            // if (original.id.includes("copy")) {
-            //     const originalId = original.id;
-            //     const lastPos = getPosOutOfUnit(originalId);
-            //     formation[lastPos.x][lastPos.y] = null;
-            //
-            //     let index = originalId.indexOf("pos-");
-            //     let indexOfNumber = index + 4;
-            //     let newId = originalId.substring(0, indexOfNumber);
-            //     newId += +pos.x + "-" + pos.y;
-            //     original.id = newId;
-            //     ev.target.appendChild(original);
-            //     formation[pos.x][pos.y] = original.id;
-            // } else {
-            //     const nodeCopy = original.cloneNode(true);
-            //     nodeCopy.id = original.id + "-copy-" + copyCounter++ + "-pos-" + pos.x + "-" + pos.y; /* We cannot use the same ID */
-            //     nodeCopy.addEventListener("dragstart", drag);
-            //     nodeCopy.removeEventListener("dragover", allowDrop);
-            //     ev.target.appendChild(original);
-            //     formation[pos.x][pos.y] = original.id;
-            // }
         }
     } else {
         console.log("target undefined, lol")

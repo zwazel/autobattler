@@ -1,5 +1,4 @@
 function parseUnitTypeSimple(unit) {
-    console.log(unit)
     return parseUnitType(unit, undefined, false);
 }
 

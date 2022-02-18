@@ -8,6 +8,7 @@ async function getAllUnitsOfUser() {
     if (response.ok) { // if HTTP-status is 200-299
         let json = await response.json();
 
+        const unitListContainer = document.getElementById("unitsToDragList");
         for (let i = 0; i < json.length; i++) {
             const unitJson = json[i];
             const unitId = unitJson.id;
@@ -27,6 +28,12 @@ async function getAllUnitsOfUser() {
             unitDiv.innerHTML = `<p>${unitName}</p>`;
 
             const unitImage = document.createElement('img');
+            unitImage.src = unit.image;
+            unitImage.className = "unitImage";
+            unitImage.draggable = false;
+
+            unitDiv.appendChild(unitImage);
+            unitListContainer.appendChild(unitDiv);
         }
     } else {
         alert("HTTP-Error: " + response.status);
@@ -82,6 +89,11 @@ function getUnitTypefromUnit(string) {
 
 function getPosOutOfUnit(string) {
     let index = string.indexOf("pos-");
+
+    if(index === -1) {
+        return undefined;
+    }
+
     let indexOfNumber = index + 4;
     let number = string.substring(indexOfNumber);
     return extractPosFromString(number);
@@ -119,31 +131,55 @@ function drop(ev) {
     const target = ev.target;
     if (ev.target.id) {
         const pos = extractPosFromCell(target.id);
+        console.log("pos")
+        console.log(pos)
         if (formation[pos.x][pos.y] != null) {
             console.log("NO >:[")
         } else {
             const data = ev.dataTransfer.getData("text");
             const original = document.getElementById(data);
-            if (original.id.includes("copy")) {
-                const originalId = original.id;
-                const lastPos = getPosOutOfUnit(originalId);
-                formation[lastPos.x][lastPos.y] = null;
+
+            const originalId = original.id;
+
+            console.log("originalId")
+            console.log(originalId);
+
+            const lastPos = getPosOutOfUnit(originalId);
+            if(lastPos) {
+                formation[lastPos.y][lastPos.x] = null;
 
                 let index = originalId.indexOf("pos-");
                 let indexOfNumber = index + 4;
                 let newId = originalId.substring(0, indexOfNumber);
                 newId += +pos.x + "-" + pos.y;
                 original.id = newId;
-                ev.target.appendChild(original);
-                formation[pos.x][pos.y] = original.id;
             } else {
-                const nodeCopy = original.cloneNode(true);
-                nodeCopy.id = original.id + "-copy-" + copyCounter++ + "-pos-" + pos.x + "-" + pos.y; /* We cannot use the same ID */
-                nodeCopy.addEventListener("dragstart", drag);
-                nodeCopy.removeEventListener("dragover", allowDrop);
-                ev.target.appendChild(nodeCopy);
-                formation[pos.x][pos.y] = nodeCopy.id;
+                original.id = originalId + "-pos-" + pos.x + "-" + pos.y;
             }
+
+            ev.target.appendChild(original);
+            formation[pos.y][pos.x] = original.id;
+
+            // if (original.id.includes("copy")) {
+            //     const originalId = original.id;
+            //     const lastPos = getPosOutOfUnit(originalId);
+            //     formation[lastPos.x][lastPos.y] = null;
+            //
+            //     let index = originalId.indexOf("pos-");
+            //     let indexOfNumber = index + 4;
+            //     let newId = originalId.substring(0, indexOfNumber);
+            //     newId += +pos.x + "-" + pos.y;
+            //     original.id = newId;
+            //     ev.target.appendChild(original);
+            //     formation[pos.x][pos.y] = original.id;
+            // } else {
+            //     const nodeCopy = original.cloneNode(true);
+            //     nodeCopy.id = original.id + "-copy-" + copyCounter++ + "-pos-" + pos.x + "-" + pos.y; /* We cannot use the same ID */
+            //     nodeCopy.addEventListener("dragstart", drag);
+            //     nodeCopy.removeEventListener("dragover", allowDrop);
+            //     ev.target.appendChild(original);
+            //     formation[pos.x][pos.y] = original.id;
+            // }
         }
     } else {
         console.log("target undefined, lol")

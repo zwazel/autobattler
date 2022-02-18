@@ -46,6 +46,10 @@ public class UnitModel {
         return user;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public Long getId() {
         return id;
     }
@@ -68,10 +72,6 @@ public class UnitModel {
 
     public void setUnitType(UnitTypes unitType) {
         this.unitType = unitType;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public String getName() {

@@ -12,19 +12,17 @@ import java.util.Set;
 @Entity
 @Table(name = "formation")
 public class FormationEntity {
+    @OneToMany
+    Set<FormationUnitTable> formationUnits;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-
-    @OneToMany
-    Set<FormationUnitTable> formationUnits;
-
     @ManyToOne
     private User user;
 
     public FormationEntity(Formation formation, User user) {
         this.formationUnits = new HashSet<>();
-        for(Unit unit : formation.getUnits()) {
+        for (Unit unit : formation.getUnits()) {
             // TODO: 18.02.2022
         }
 

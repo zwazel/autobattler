@@ -1,7 +1,5 @@
 package dev.zwazel.autobattler.classes.model;
 
-import dev.zwazel.autobattler.classes.utils.Vector;
-
 import javax.persistence.*;
 import java.util.Set;
 

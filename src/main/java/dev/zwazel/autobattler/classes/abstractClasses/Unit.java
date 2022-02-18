@@ -113,7 +113,7 @@ public abstract class Unit implements Obstacle, Cloneable {
             this.name = type.getDefaultName();
         }
     }
-    
+
     public Unit(long id, int priority, int level, UnitTypes type, char symbol, Vector position) {
         this.ID = id;
         this.level = level;

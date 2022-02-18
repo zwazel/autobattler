@@ -13,10 +13,6 @@ public class FormationUnitTable {
     @Column(name = "formation_unit_table", nullable = false)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "formation_entity_id")
-    private FormationEntity formationEntity;
-
     @ManyToOne
     private UnitModel unitModel;
 
@@ -29,21 +25,11 @@ public class FormationUnitTable {
     public FormationUnitTable() {
     }
 
-    public FormationUnitTable(FormationEntity formationEntity, Unit unit) {
-        this.formationEntity = formationEntity;
-
+    public FormationUnitTable(Unit unit) {
         this.unitModel = unit.getUnitModel();
         this.unitPriority = unit.getPriority();
         this.positionX = unit.getGridPosition().getX();
         this.positionY = unit.getGridPosition().getY();
-    }
-
-    public FormationEntity getFormationEntity() {
-        return formationEntity;
-    }
-
-    public void setFormationEntity(FormationEntity formationEntity) {
-        this.formationEntity = formationEntity;
     }
 
     public Long getId() {

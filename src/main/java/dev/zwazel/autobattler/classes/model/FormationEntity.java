@@ -27,7 +27,7 @@ public class FormationEntity {
 
         this.formationUnitTable = new HashSet<>();
         for (Unit unit : formation.getUnits()) {
-            FormationUnitTable formationUnitTable = new FormationUnitTable(this, unit);
+            FormationUnitTable formationUnitTable = new FormationUnitTable(unit);
             this.formationUnitTable.add(formationUnitTable);
         }
     }

@@ -4,9 +4,19 @@ import dev.zwazel.autobattler.classes.abstractClasses.ScaleAttributeWithLevel;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 
 public enum UnitTypes {
-    MY_FIRST_UNIT("First unit", 10, 100, 1, false,
+    MY_FIRST_UNIT("First unit", 10, 100, 1, false, true, "MY_FIRST_UNIT",
             ((health, level) -> ((int) (health + (health * ((level - 1) * 0.25))))),
             ((energy, level) -> ((int) (energy + (energy * ((level - 1) * 0.25))))));
+
+    /**
+     * the default name of every unit of this type. If no custom name is set, this name will be used.
+     */
+    private final String defaultName;
+
+    /**
+     * defines if the user can change the name of the unit
+     */
+    private final boolean customNamesAllowed;
 
     /**
      * the description of the unit
@@ -43,12 +53,14 @@ public enum UnitTypes {
      */
     private final ScaleAttributeWithLevel scaleEnergy;
 
-    UnitTypes(String description, int baseHealth, int baseEnergy, int baseMoveSpeed, boolean canMoveDiagonally, ScaleAttributeWithLevel scaleHealth, ScaleAttributeWithLevel scaleEnergy) {
+    UnitTypes(String description, int baseHealth, int baseEnergy, int baseMoveSpeed, boolean canMoveDiagonally, boolean customNamesAllowed, String defaultName, ScaleAttributeWithLevel scaleHealth, ScaleAttributeWithLevel scaleEnergy) {
         this.description = description;
         this.baseHealth = baseHealth;
         this.baseEnergy = baseEnergy;
         this.baseMoveSpeed = baseMoveSpeed;
         this.canMoveDiagonally = canMoveDiagonally;
+        this.customNamesAllowed = customNamesAllowed;
+        this.defaultName = defaultName;
         this.scaleHealth = scaleHealth;
         this.scaleEnergy = scaleEnergy;
     }
@@ -77,6 +89,14 @@ public enum UnitTypes {
 
     public boolean isCanMoveDiagonally() {
         return canMoveDiagonally;
+    }
+
+    public String getDefaultName() {
+        return defaultName;
+    }
+
+    public boolean isCustomNamesAllowed() {
+        return customNamesAllowed;
     }
 
     public int scaleHealth(int level) {

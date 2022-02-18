@@ -106,11 +106,19 @@ public abstract class Unit implements Obstacle, Cloneable {
      * @param type     the type of the unit
      */
     public Unit(long id, int priority, int level, UnitTypes type, char symbol, Vector position, String name) {
+        this(id, priority, level, type, symbol, position);
+        if (type.isCustomNamesAllowed()) {
+            this.name = name;
+        } else {
+            this.name = type.getDefaultName();
+        }
+    }
+    
+    public Unit(long id, int priority, int level, UnitTypes type, char symbol, Vector position) {
         this.ID = id;
         this.level = level;
         this.health = type.scaleHealth(level);
         this.energy = type.scaleEnergy(level);
-        this.name = name;
         this.description = type.getDescription();
         this.symbol = symbol;
         this.gridPosition = position;
@@ -118,6 +126,9 @@ public abstract class Unit implements Obstacle, Cloneable {
         this.priority = priority;
         this.type = type;
         this.canMoveDiagonally = type.isCanMoveDiagonally();
+        if (name == null) {
+            this.name = type.getDefaultName();
+        }
     }
 
     /**
@@ -135,6 +146,12 @@ public abstract class Unit implements Obstacle, Cloneable {
      */
     public Unit(long id, int priority, int level, UnitTypes type, char symbol, Vector position, Side side, BattlerGen2 battler, String name) {
         this(id, priority, level, type, symbol, position, name);
+        this.battler = battler;
+        this.side = side;
+    }
+
+    public Unit(long id, int priority, int level, UnitTypes type, char symbol, Vector position, Side side, BattlerGen2 battler) {
+        this(id, priority, level, type, symbol, position);
         this.battler = battler;
         this.side = side;
     }
@@ -221,7 +238,9 @@ public abstract class Unit implements Obstacle, Cloneable {
     }
 
     public void setName(String name) {
-        this.name = name;
+        if (this.type.isCustomNamesAllowed()) {
+            this.name = name;
+        }
     }
 
     public String getDescription() {

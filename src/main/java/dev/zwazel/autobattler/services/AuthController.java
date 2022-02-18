@@ -1,5 +1,7 @@
 package dev.zwazel.autobattler.services;
 
+import dev.zwazel.autobattler.classes.enums.UnitTypes;
+import dev.zwazel.autobattler.classes.model.UnitModel;
 import dev.zwazel.autobattler.classes.utils.EnumUserRole;
 import dev.zwazel.autobattler.classes.model.User;
 import dev.zwazel.autobattler.classes.model.UserRole;
@@ -124,7 +126,12 @@ public class AuthController {
         }
         user.setRoles(roles);
 
+        user = userRepository.save(user);
+
+        user.addUnit(new UnitModel("Karl", 1, UnitTypes.MY_FIRST_UNIT, user));
+
         userRepository.save(user);
+
 //        return ResponseEntity.ok().body(new MessageResponse("User registered successfully!"));
         return "redirect:/signin";
     }

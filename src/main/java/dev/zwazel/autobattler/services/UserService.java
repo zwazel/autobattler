@@ -5,6 +5,7 @@ import dev.zwazel.autobattler.classes.model.FormationEntity;
 import dev.zwazel.autobattler.classes.model.User;
 import dev.zwazel.autobattler.classes.utils.FormationServiceTemplate;
 import dev.zwazel.autobattler.classes.utils.database.FormationOnly;
+import dev.zwazel.autobattler.classes.utils.database.UserOnly;
 import dev.zwazel.autobattler.classes.utils.database.repositories.FormationEntityRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.FormationUnitTableRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UnitModelRepository;
@@ -90,7 +91,7 @@ public class UserService {
     }
 
     @GetMapping(path = "/getAll", produces = "application/json")
-    public Iterable<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserOnly> getAllUsers() {
+        return userRepository.findAllUserOnly();
     }
 }

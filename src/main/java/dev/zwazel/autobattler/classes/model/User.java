@@ -1,6 +1,5 @@
 package dev.zwazel.autobattler.classes.model;
 
-import dev.zwazel.autobattler.classes.enums.UnitTypes;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import javax.persistence.*;

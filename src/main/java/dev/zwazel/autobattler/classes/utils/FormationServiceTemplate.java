@@ -21,12 +21,7 @@ public class FormationServiceTemplate {
 
     public FormationEntity getFormationEntity(User user) throws UnknownUnitType {
         Formation formation = getFormation(user);
-        FormationEntity formationEntity = new FormationEntity();
-        String formationjson = HistoryToJson.formationToJson(formation);
-
-        formationEntity.setFormationJson(formationjson);
-        formationEntity.setUser(user);
-        return formationEntity;
+        return new FormationEntity(formation);
     }
 
     public Formation getFormation(User user) throws UnknownUnitType {

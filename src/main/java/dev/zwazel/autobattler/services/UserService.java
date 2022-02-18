@@ -57,7 +57,7 @@ public class UserService {
 
             try {
                 FormationEntity formationEntity = formationServiceTemplate.getFormationEntity(user);
-                boolean formationAlreadyExists = formationEntityRepository.existsByFormationJson(formationEntity.getFormationJson());
+                boolean formationAlreadyExists = false;
 
                 if (!formationAlreadyExists) {
                     user.addFormation(formationEntity);

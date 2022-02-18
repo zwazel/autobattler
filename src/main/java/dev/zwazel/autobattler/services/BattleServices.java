@@ -3,11 +3,11 @@ package dev.zwazel.autobattler.services;
 import dev.zwazel.autobattler.BattlerGen2;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.UnitTypes;
-import dev.zwazel.autobattler.classes.utils.Formation;
+import dev.zwazel.autobattler.classes.model.FormationEntity;
 import dev.zwazel.autobattler.classes.model.User;
+import dev.zwazel.autobattler.classes.utils.Formation;
 import dev.zwazel.autobattler.classes.utils.Vector;
 import dev.zwazel.autobattler.classes.utils.battle.CreateFormations;
-import dev.zwazel.autobattler.classes.model.FormationEntity;
 import dev.zwazel.autobattler.classes.utils.database.repositories.FormationEntityRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
 import dev.zwazel.autobattler.classes.utils.json.History;
@@ -75,7 +75,7 @@ public class BattleServices {
                             UnitTypes.MY_FIRST_UNIT,
                     }, 1, 1);
 
-                    FormationEntity formationEntityEnemyRandom = new FormationEntity(formation, new User("randomEnemy_" + randomNumber, "enemy"));
+                    FormationEntity formationEntityEnemyRandom = new FormationEntity(formation);
 
                     BattlerGen2 battler = new BattlerGen2(formationEntity.get(), formationEntityEnemyRandom, false, false, gridSize, true, false);
                     History history = battler.getHistory();

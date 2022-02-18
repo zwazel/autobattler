@@ -6,6 +6,7 @@ import dev.zwazel.autobattler.classes.enums.Action;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
 import dev.zwazel.autobattler.classes.enums.UnitTypes;
+import dev.zwazel.autobattler.classes.model.UnitModel;
 import dev.zwazel.autobattler.classes.utils.Vector;
 import dev.zwazel.autobattler.classes.utils.json.ActionHistory;
 import dev.zwazel.autobattler.classes.utils.map.FindPath;
@@ -154,6 +155,10 @@ public abstract class Unit implements Obstacle, Cloneable {
         if (name == null) {
             this.name = type.getDefaultName();
         }
+    }
+
+    public UnitModel getUnitModel() {
+        return new UnitModel(this);
     }
 
     /**

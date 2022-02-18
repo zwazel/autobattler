@@ -12,21 +12,24 @@ import java.util.Set;
 @Entity
 @Table(name = "formation")
 public class FormationEntity {
-    @OneToMany
-    Set<FormationUnitTable> formationUnits;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
     @ManyToOne
     private User user;
 
-    public FormationEntity(Formation formation, User user) {
-        this.formationUnits = new HashSet<>();
-        for (Unit unit : formation.getUnits()) {
-            // TODO: 18.02.2022
-        }
+    @OneToMany
+    private Set<FormationUnitTable> formationUnitTable;
 
-        this.user = user;
+    public FormationEntity(Formation formation) {
+        this.user = formation.getUser();
+
+        this.formationUnitTable = new HashSet<>();
+        for (Unit unit : formation.getUnits()) {
+            FormationUnitTable formationUnitTable = new FormationUnitTable(this, unit);
+            this.formationUnitTable.add(formationUnitTable);
+        }
     }
 
     public FormationEntity() {
@@ -46,6 +49,14 @@ public class FormationEntity {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public Set<FormationUnitTable> getFormationUnitTable() {
+        return formationUnitTable;
+    }
+
+    public void setFormationUnitTable(Set<FormationUnitTable> formationUnitTable) {
+        this.formationUnitTable = formationUnitTable;
     }
 
     @Override

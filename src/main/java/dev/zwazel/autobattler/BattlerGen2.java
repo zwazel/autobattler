@@ -19,6 +19,7 @@ import dev.zwazel.autobattler.classes.utils.battle.CreateFormations;
 import dev.zwazel.autobattler.classes.utils.json.ActionHistory;
 import dev.zwazel.autobattler.classes.utils.json.Export;
 import dev.zwazel.autobattler.classes.utils.json.History;
+import dev.zwazel.autobattler.classes.utils.json.HistoryToJson;
 import dev.zwazel.autobattler.classes.utils.map.FindPath;
 import dev.zwazel.autobattler.classes.utils.map.Grid;
 import dev.zwazel.autobattler.classes.utils.map.GridCell;
@@ -53,15 +54,15 @@ public class BattlerGen2 {
         enemyUnitList = new ArrayList<>();
         grid = new Grid(gridSize);
 
-        Formation _formationLeft = new Formation(formationLeft.getUser(), formationLeft.getFormationUnits());
-        Formation _formationRight = new Formation(formationRight.getUser(), getUnits());
+        Formation _formationLeft = new Formation(formationLeft);
+        Formation _formationRight = new Formation(formationRight);
 
         try {
             User friendlyUser = formationLeft.getUser();
             User enemyUser = formationRight.getUser();
 
-            getFormationFromJson(FRIENDLY, formationLeft.getFormationJson(), mirrorEnemy);
-            getFormationFromJson(ENEMY, formationRight.getFormationJson(), mirrorEnemy);
+            getFormationFromJson(FRIENDLY, HistoryToJson.formationToJson(_formationLeft), mirrorEnemy);
+            getFormationFromJson(ENEMY, HistoryToJson.formationToJson(_formationRight), mirrorEnemy);
 
             friendlyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
             enemyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
@@ -134,10 +135,8 @@ public class BattlerGen2 {
         Formation right = createFormations.createTestFormation(amountUnitsRight, ENEMY, amountUnitsLeft, true, new UnitTypes[]{
                 UnitTypes.MY_FIRST_UNIT,
         }, 1, 10);
-        User userLeft = left.getUser();
-        User userRight = right.getUser();
 
-        new BattlerGen2(new FormationEntity(left, userLeft), new FormationEntity(right, userRight), false, true, gridSize, false, true);
+        new BattlerGen2(new FormationEntity(left), new FormationEntity(right), false, true, gridSize, false, true);
     }
 
     private void mirrorSide(Unit unit) {

@@ -11,6 +11,6 @@ import java.util.Optional;
 @Repository
 public interface FormationEntityRepository extends JpaRepository<FormationEntity, Long> {
     List<FormationOnly> findAllByUserIdOrderById(Long userId);
-    boolean existsByFormationJson(String formationJson);
+    boolean existsFormationEntityByFormationUnitTableAndAndUserId(String formationUnitTable, Long userId);
     Optional<FormationEntity> findByUserIdAndId(Long userId, Long id);
 }

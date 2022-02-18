@@ -2,7 +2,9 @@ package dev.zwazel.autobattler.classes.model;
 
 import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.enums.UnitTypes;
+import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.units.SimpleUnit;
+import dev.zwazel.autobattler.classes.utils.Vector;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -38,8 +40,8 @@ public class UnitModel {
         this.unitType = unit.getType();
     }
 
-    public Unit getUnit() {
-        return new SimpleUnit(this).getUnit();
+    public Unit getUnit(int priority, Vector position) throws UnknownUnitType {
+        return new SimpleUnit(this, priority, position).getUnit();
     }
 
     public User getUser() {

@@ -2,6 +2,37 @@ let copyCounter = 0;
 
 let formation;
 
+async function getAllUnitsOfUser() {
+    let response = await fetch(`/api/user/getAllUnits`);
+
+    if (response.ok) { // if HTTP-status is 200-299
+        let json = await response.json();
+
+        for (let i = 0; i < json.length; i++) {
+            const unitJson = json[i];
+            const unitId = unitJson.id;
+            const unitName = unitJson.name;
+            const unitLevel = unitJson.level;
+            const unitType = unitJson.unitType;
+
+            const unit = parseUnitTypeSimple(unitJson)
+
+            console.log(unit);
+
+            // <div id="MY_FIRST_UNIT" class="draggableUnit" draggable="true">
+            const unitDiv = document.createElement('div');
+            unitDiv.id = unitId + "-" + unitName;
+            unitDiv.className = "draggableUnit";
+            unitDiv.draggable = true;
+            unitDiv.innerHTML = `<p>${unitName}</p>`;
+
+            const unitImage = document.createElement('img');
+        }
+    } else {
+        alert("HTTP-Error: " + response.status);
+    }
+}
+
 async function saveFormation() {
     let formationToSave = [];
     let priorityAndID = 1;
@@ -120,5 +151,7 @@ function drop(ev) {
 }
 
 loadGridSizeAndDrawFieldAccordingly("user").then(() => {
-    initDraggableElements();
+    getAllUnitsOfUser().then(() => {
+        initDraggableElements();
+    })
 });

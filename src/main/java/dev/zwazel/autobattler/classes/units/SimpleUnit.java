@@ -3,6 +3,7 @@ package dev.zwazel.autobattler.classes.units;
 import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.enums.UnitTypes;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
+import dev.zwazel.autobattler.classes.model.UnitModel;
 import dev.zwazel.autobattler.classes.utils.UnitTypeParser;
 import dev.zwazel.autobattler.classes.utils.Vector;
 
@@ -18,6 +19,15 @@ public class SimpleUnit {
     private String name;
 
     public SimpleUnit() {
+    }
+
+    public SimpleUnit(UnitModel unitModel, int priority, Vector position) {
+        this.id = unitModel.getId();
+        this.level = unitModel.getLevel();
+        this.unitType = unitModel.getUnitType();
+        this.name = unitModel.getName();
+        this.priority = priority;
+        this.position = position;
     }
 
     public SimpleUnit(long id, int priority, int level, Vector position, String unitType, String name) throws UnknownUnitType {

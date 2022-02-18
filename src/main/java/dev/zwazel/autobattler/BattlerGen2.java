@@ -53,6 +53,9 @@ public class BattlerGen2 {
         enemyUnitList = new ArrayList<>();
         grid = new Grid(gridSize);
 
+        Formation _formationLeft = new Formation(formationLeft.getUser(), formationLeft.getFormationUnits());
+        Formation _formationRight = new Formation(formationRight.getUser(), getUnits());
+
         try {
             User friendlyUser = formationLeft.getUser();
             User enemyUser = formationRight.getUser();

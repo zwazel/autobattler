@@ -1,13 +1,13 @@
 package dev.zwazel.autobattler.classes.utils;
 
 import dev.zwazel.autobattler.classes.abstractClasses.Unit;
+import dev.zwazel.autobattler.classes.model.UnitModel;
 import dev.zwazel.autobattler.classes.model.User;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class Formation {
-
-
     private final User user;
 
     private final ArrayList<Unit> units;
@@ -26,6 +26,13 @@ public class Formation {
             }
         } else {
             this.units = units;
+        }
+    }
+
+    public Formation(User user, Set<UnitModel> units) {
+        this(user, new ArrayList<>());
+        for (UnitModel unitModel : units) {
+            this.units.add(unitModel.getUnit());
         }
     }
 

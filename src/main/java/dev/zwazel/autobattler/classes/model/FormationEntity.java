@@ -1,10 +1,12 @@
 package dev.zwazel.autobattler.classes.model;
 
+import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.utils.Formation;
-import dev.zwazel.autobattler.classes.utils.json.HistoryToJson;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @EnableAutoConfiguration
 @Entity
@@ -14,19 +16,18 @@ public class FormationEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(name = "formation", length = 8192)
-    private String formationJson;
+    @OneToMany
+    Set<FormationUnitTable> formationUnits;
 
     @ManyToOne
     private User user;
 
-    public FormationEntity(String formationJson, User user) {
-        this.formationJson = formationJson;
-        this.user = user;
-    }
-
     public FormationEntity(Formation formation, User user) {
-        this.formationJson = HistoryToJson.formationToJson(formation);
+        this.formationUnits = new HashSet<>();
+        for(Unit unit : formation.getUnits()) {
+            // TODO: 18.02.2022
+        }
+
         this.user = user;
     }
 
@@ -49,19 +50,10 @@ public class FormationEntity {
         this.id = id;
     }
 
-    public String getFormationJson() {
-        return formationJson;
-    }
-
-    public void setFormationJson(String formationJson) {
-        this.formationJson = formationJson;
-    }
-
     @Override
     public String toString() {
         return "FormationEntity{" +
                 "id=" + id +
-                ", formationJson='" + formationJson + '\'' +
                 ", user=" + user +
                 '}';
     }

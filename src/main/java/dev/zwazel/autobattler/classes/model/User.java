@@ -14,16 +14,25 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
     @NotNull
     private String username;
+
     @NotNull
     private String password;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<FormationEntity> formations;
+
     @ManyToMany
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<UserRole> roles;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<UnitModel> units;
+
     private Date lastLogin;
+
     private Date accountCreated;
 
     public User() {

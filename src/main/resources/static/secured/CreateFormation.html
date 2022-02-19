@@ -14,11 +14,7 @@
 
 <button onclick="saveFormation()">Save Formation</button>
 
-<div class="unitsToDrag">
-    <div id="MY_FIRST_UNIT" class="draggableUnit" draggable="true">
-        <p draggable="false">My first Unit</p>
-        <img draggable="false" src="img/units/my_first_unit/goodSoupMobil.png" alt="">
-    </div>
+<div id="unitsToDragList" class="unitsToDrag">
 </div>
 
 <div id="gamearea">
@@ -29,5 +25,8 @@
 <script src="js/util/Position.js"></script>
 <script src="js/util/CreateArray.js"></script>
 <script src="js/DrawGrid.js"></script>
+<script src="js/classes/units/Unit.js"></script>
+<script src="js/classes/units/MyFirstUnit.js"></script>
+<script src="js/util/ParseUnitType.js"></script>
 <script src="js/pages/createFormation.js"></script>
 </html>

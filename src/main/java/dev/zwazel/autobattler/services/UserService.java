@@ -1,17 +1,23 @@
 package dev.zwazel.autobattler.services;
 
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
+import dev.zwazel.autobattler.classes.model.FormationEntity;
+import dev.zwazel.autobattler.classes.model.UnitModel;
+import dev.zwazel.autobattler.classes.model.User;
 import dev.zwazel.autobattler.classes.utils.FormationServiceTemplate;
-import dev.zwazel.autobattler.classes.utils.User;
-import dev.zwazel.autobattler.classes.utils.database.FormationEntity;
 import dev.zwazel.autobattler.classes.utils.database.FormationOnly;
+import dev.zwazel.autobattler.classes.utils.database.UnitOnly;
+import dev.zwazel.autobattler.classes.utils.database.UserOnly;
 import dev.zwazel.autobattler.classes.utils.database.repositories.FormationEntityRepository;
+import dev.zwazel.autobattler.classes.utils.database.repositories.UnitModelRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
 import dev.zwazel.autobattler.security.jwt.JwtUtils;
+import javassist.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -19,10 +25,12 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final FormationEntityRepository formationEntityRepository;
+    private final UnitModelRepository unitModelRepository;
 
-    public UserService(UserRepository userRepository, FormationEntityRepository formationEntityRepository) {
+    public UserService(UserRepository userRepository, FormationEntityRepository formationEntityRepository, UnitModelRepository unitModelRepository) {
         this.userRepository = userRepository;
         this.formationEntityRepository = formationEntityRepository;
+        this.unitModelRepository = unitModelRepository;
     }
 
     private Optional<User> getUserWithJWT(UserRepository userRepository, HttpServletRequest request) {
@@ -37,36 +45,62 @@ public class UserService {
     }
 
     @GetMapping(path = "/getAllFormations", produces = "application/json")
-    public Iterable<FormationOnly> getAllFormations(HttpServletRequest request) {
+    public List<FormationOnly> getAllFormations(HttpServletRequest request) {
         Optional<User> userOptional = getUserWithJWT(userRepository, request);
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            return formationEntityRepository.findAllByUserIdOrderById(user.getId());
+            List<FormationEntity> formationEntities = formationEntityRepository.findAllByUserOrderById(user);
+            return FormationServiceTemplate.getFormationOnlyList(formationEntities);
         }
         return null;
     }
 
+    @GetMapping(path = "/getAllUnits", produces = "application/json")
+    public List<UnitOnly> getAllUnits(HttpServletRequest request) {
+        Optional<User> userOptional = getUserWithJWT(userRepository, request);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            List<UnitModel> unitModels = unitModelRepository.findAllByUserOrderByLevel(user);
+            return FormationServiceTemplate.getUnitOnlyList(unitModels);
+        }
+        return null;
+    }
+
+    // TODO: 19.02.2022 - SET A LIMIT OF HOW MANY FORMATIONS A USER CAN HAVE
+    // TODO: 19.02.2022 - SET A LIMIT OF HOW MANY UNITS PER FORMATION A USER CAN HAVE
     @PostMapping(path = "/addFormation")
     public ResponseEntity<String> setFormationForUser(@RequestBody FormationServiceTemplate formationServiceTemplate, HttpServletRequest request) {
-        System.out.println("formationServiceTemplate = " + formationServiceTemplate);
-
         Optional<User> userOptional = getUserWithJWT(userRepository, request);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
 
             try {
-                FormationEntity formationEntity = formationServiceTemplate.getFormationEntity(user);
-                boolean formationAlreadyExists = formationEntityRepository.existsByFormationJson(formationEntity.getFormationJson());
+                FormationEntity formationEntity = formationServiceTemplate.getFormationEntity(user, unitModelRepository);
+
+                // this might not be the most performant way to check if a formation already exists, but my brain cant figure out how to do it better right now. so this has to do for now. And I mean i'll limit the amount of formations a user can have to a smaller number, so it won't take too long!
+                boolean formationAlreadyExists = false;
+                List<FormationEntity> formationEntities = formationEntityRepository.findAllByUserOrderById(user);
+                for (FormationEntity formationEntityToCheck : formationEntities) {
+                    if (formationEntityToCheck.getFormationJson().equals(formationEntity.getFormationJson())) {
+                        formationAlreadyExists = true;
+                        break;
+                    }
+                }
 
                 if (!formationAlreadyExists) {
                     user.addFormation(formationEntity);
+
+                    System.out.println("formation has been added");
+
                     userRepository.save(user);
                     return ResponseEntity.ok("Formation added");
                 } else {
+                    System.err.println("formation already exists");
                     return ResponseEntity.badRequest().body("Formation already exists");
                 }
-            } catch (UnknownUnitType e) {
+            } catch (UnknownUnitType | NotFoundException e) {
                 e.printStackTrace();
             }
         }
@@ -79,7 +113,7 @@ public class UserService {
     }
 
     @GetMapping(path = "/getAll", produces = "application/json")
-    public Iterable<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserOnly> getAllUsers() {
+        return userRepository.findAllUserOnly();
     }
 }

@@ -1,15 +1,28 @@
 package dev.zwazel.autobattler.classes.utils;
 
 import dev.zwazel.autobattler.classes.abstractClasses.Unit;
+import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
+import dev.zwazel.autobattler.classes.model.FormationEntity;
+import dev.zwazel.autobattler.classes.model.User;
 
 import java.util.ArrayList;
 
 public class Formation {
-
-
     private final User user;
 
     private final ArrayList<Unit> units;
+
+    public Formation(FormationEntity formationEntity) {
+        this.user = formationEntity.getUser();
+        this.units = new ArrayList<>();
+        formationEntity.getFormationUnitTable().forEach(formationUnitEntity -> {
+            try {
+                this.units.add(formationUnitEntity.getUnit());
+            } catch (UnknownUnitType e) {
+                e.printStackTrace();
+            }
+        });
+    }
 
     public Formation(User user, ArrayList<Unit> units) {
         this(user, units, true);

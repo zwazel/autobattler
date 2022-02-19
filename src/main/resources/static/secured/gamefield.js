@@ -60,15 +60,6 @@ async function playHistory(history) {
     }
 }
 
-function parseUnitType(unit, side) {
-    const type = unit.type;
-
-    switch (type) {
-        case "MY_FIRST_UNIT":
-            return new MyFirstUnit(side, unit.id, unit.name, unit.level, unit.position, unit.priority)
-    }
-}
-
 async function initUnits(units) {
     for (let i = 0; i < units.length; i++) {
         let unit = units[i];

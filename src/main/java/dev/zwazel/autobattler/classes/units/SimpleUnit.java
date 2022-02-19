@@ -3,19 +3,40 @@ package dev.zwazel.autobattler.classes.units;
 import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.enums.UnitTypes;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
+import dev.zwazel.autobattler.classes.model.UnitModel;
 import dev.zwazel.autobattler.classes.utils.UnitTypeParser;
 import dev.zwazel.autobattler.classes.utils.Vector;
 
+/**
+ * Util class that works as a bridge to create a unit of a certain type.
+ */
 public class SimpleUnit {
     private long id;
     private int priority;
     private Integer level;
     private Vector position;
-    private String unitTypeString;
     private UnitTypes unitType;
     private String name;
 
     public SimpleUnit() {
+    }
+
+    public SimpleUnit(UnitModel unitModel, int priority, Vector position) {
+        this.id = unitModel.getId();
+        this.level = unitModel.getLevel();
+        this.unitType = unitModel.getUnitType();
+        this.name = unitModel.getName();
+        this.priority = priority;
+        this.position = position;
+    }
+
+    public SimpleUnit(long id, int priority, int level, Vector position, String unitType, String name) throws UnknownUnitType {
+        this.id = id;
+        this.priority = priority;
+        this.level = level;
+        this.position = position;
+        this.unitType = UnitTypes.findUnitType(unitType);
+        this.name = name;
     }
 
     public SimpleUnit(long id, int priority, int level, Vector position, UnitTypes unitType, String name) {
@@ -24,15 +45,6 @@ public class SimpleUnit {
         this.level = level;
         this.position = position;
         this.unitType = unitType;
-        this.name = name;
-    }
-
-    public SimpleUnit(long id, int priority, int level, Vector position, String unitTypeString, String name) {
-        this.id = id;
-        this.priority = priority;
-        this.level = level;
-        this.position = position;
-        this.unitTypeString = unitTypeString;
         this.name = name;
     }
 
@@ -56,14 +68,6 @@ public class SimpleUnit {
         this.position = position;
     }
 
-    public String getUnitTypeString() {
-        return unitTypeString;
-    }
-
-    public void setUnitTypeString(String unitTypeString) {
-        this.unitTypeString = unitTypeString;
-    }
-
     public int getPriority() {
         return priority;
     }
@@ -84,6 +88,10 @@ public class SimpleUnit {
         return unitType;
     }
 
+    public void setUnitType(String unitType) throws UnknownUnitType {
+        this.unitType = UnitTypes.findUnitType(unitType);
+    }
+
     public void setUnitType(UnitTypes unitType) {
         this.unitType = unitType;
     }
@@ -101,7 +109,6 @@ public class SimpleUnit {
         return "SimpleUnit{" +
                 "name='" + name + '\'' +
                 ", position=" + position +
-                ", unitType='" + unitTypeString + '\'' +
                 ", priority=" + priority +
                 ", id=" + id +
                 '}';

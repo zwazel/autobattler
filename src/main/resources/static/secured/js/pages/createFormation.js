@@ -2,6 +2,58 @@ let copyCounter = 0;
 
 let formation;
 
+async function getAllUnitsOfUser() {
+    let response = await fetch(`/api/user/getAllUnits`);
+
+    if (response.ok) { // if HTTP-status is 200-299
+        let json = await response.json();
+
+        const unitListContainer = document.getElementById("unitsToDragList");
+        for (let i = 0; i < json.length; i++) {
+            const unitJson = json[i];
+            const unitId = unitJson.id;
+            const unitName = unitJson.name;
+            const unitLevel = unitJson.level;
+            const unitType = unitJson.unitType;
+            const customNamesAllowed = unitJson.customNamesAllowed;
+
+            const unit = parseUnitTypeSimple(unitJson);
+
+            const unitDiv = document.createElement('div');
+            unitDiv.id = "unitId-" + unitId + "-name:" + unitName + ":";
+            unitDiv.className = "draggableUnit";
+            unitDiv.draggable = true;
+            if (!customNamesAllowed) {
+                unitDiv.innerHTML = `<p>${unitName}</p>`;
+            }
+
+            const unitImage = document.createElement('img');
+            unitImage.src = unit.image;
+            unitImage.className = "unitImage";
+            unitImage.draggable = false;
+
+            unitDiv.appendChild(unitImage);
+
+            if (customNamesAllowed) {
+                const lineBreaker = document.createElement('br');
+                unitDiv.appendChild(lineBreaker);
+
+                const changeUnitNameField = document.createElement('input');
+                changeUnitNameField.id = "changeUnitNameField-" + unitId;
+                changeUnitNameField.className = "changeUnitNameField";
+                changeUnitNameField.type = "text";
+                changeUnitNameField.value = unitName;
+                changeUnitNameField.draggable = false;
+                unitDiv.appendChild(changeUnitNameField);
+            }
+
+            unitListContainer.appendChild(unitDiv);
+        }
+    } else {
+        alert("HTTP-Error: " + response.status);
+    }
+}
+
 async function saveFormation() {
     let formationToSave = [];
     let priorityAndID = 1;
@@ -10,17 +62,17 @@ async function saveFormation() {
             if (formation[i][j] != null) {
                 let unit = formation[i][j];
                 const pos = getPosOutOfUnit(unit);
-                const type = getUnitTypefromUnit(unit);
+                const idFromUnit = getUnitIdFromUnit(unit);
+                const name = getUnitNameFromUnitInputField(unit);
 
                 const data = {
-                    "name": type,
+                    "id": idFromUnit,
+                    "name": name,
                     "position": {
                         "x": pos.x,
                         "y": pos.y
                     },
-                    "unitType": type,
                     "priority": priorityAndID,
-                    "id": priorityAndID
                 };
                 priorityAndID++;
 
@@ -33,8 +85,6 @@ async function saveFormation() {
         "units": formationToSave
     };
 
-    console.log(data);
-
     await fetch('/api/user/addFormation', {
         method: 'POST',
         headers: {
@@ -44,14 +94,52 @@ async function saveFormation() {
     });
 }
 
-function getUnitTypefromUnit(string) {
-    let index = string.indexOf("-");
+function getUnitNameFromUnitInputField(string) {
+    const unitField = document.getElementById("changeUnitNameField-" + getUnitIdFromUnit(string));
+    return unitField.value;
+}
+
+function getUnitNameFromUnit(string) {
+    const search = "name:";
+
+    let index = string.indexOf(search);
+
+    if (index === -1) {
+        return undefined;
+    }
+
+    string = string.substring(index + search.length, string.length);
+
+    index = string.indexOf(":");
     return string.substring(0, index);
 }
 
+function getUnitIdFromUnit(string) {
+    const searchString = "unitId-";
+    let index = string.indexOf(searchString);
+
+    if (index === -1) {
+        return undefined;
+    }
+
+    string = string.substring(index + searchString.length, string.length);
+
+    index = string.indexOf("-");
+    let number = string.substring(0, index);
+
+    return +number;
+}
+
 function getPosOutOfUnit(string) {
-    let index = string.indexOf("pos-");
-    let indexOfNumber = index + 4;
+    const searchString = "pos-";
+
+    let index = string.indexOf(searchString);
+
+    if (index === -1) {
+        return undefined;
+    }
+
+    let indexOfNumber = index + searchString.length;
     let number = string.substring(indexOfNumber);
     return extractPosFromString(number);
 }
@@ -93,26 +181,24 @@ function drop(ev) {
         } else {
             const data = ev.dataTransfer.getData("text");
             const original = document.getElementById(data);
-            if (original.id.includes("copy")) {
-                const originalId = original.id;
-                const lastPos = getPosOutOfUnit(originalId);
-                formation[lastPos.x][lastPos.y] = null;
+
+            const originalId = original.id;
+
+            const lastPos = getPosOutOfUnit(originalId);
+            if (lastPos) {
+                formation[lastPos.y][lastPos.x] = null;
 
                 let index = originalId.indexOf("pos-");
                 let indexOfNumber = index + 4;
                 let newId = originalId.substring(0, indexOfNumber);
                 newId += +pos.x + "-" + pos.y;
                 original.id = newId;
-                ev.target.appendChild(original);
-                formation[pos.x][pos.y] = original.id;
             } else {
-                const nodeCopy = original.cloneNode(true);
-                nodeCopy.id = original.id + "-copy-" + copyCounter++ + "-pos-" + pos.x + "-" + pos.y; /* We cannot use the same ID */
-                nodeCopy.addEventListener("dragstart", drag);
-                nodeCopy.removeEventListener("dragover", allowDrop);
-                ev.target.appendChild(nodeCopy);
-                formation[pos.x][pos.y] = nodeCopy.id;
+                original.id = originalId + "-pos-" + pos.x + "-" + pos.y;
             }
+
+            ev.target.appendChild(original);
+            formation[pos.y][pos.x] = original.id;
         }
     } else {
         console.log("target undefined, lol")
@@ -120,5 +206,7 @@ function drop(ev) {
 }
 
 loadGridSizeAndDrawFieldAccordingly("user").then(() => {
-    initDraggableElements();
+    getAllUnitsOfUser().then(() => {
+        initDraggableElements();
+    })
 });

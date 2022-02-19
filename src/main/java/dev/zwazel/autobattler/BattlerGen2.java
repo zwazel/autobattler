@@ -8,13 +8,18 @@ import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.enums.State;
 import dev.zwazel.autobattler.classes.enums.UnitTypes;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
+import dev.zwazel.autobattler.classes.model.FormationEntity;
+import dev.zwazel.autobattler.classes.model.User;
 import dev.zwazel.autobattler.classes.units.MyFirstUnit;
-import dev.zwazel.autobattler.classes.utils.*;
+import dev.zwazel.autobattler.classes.utils.Formation;
+import dev.zwazel.autobattler.classes.utils.GetFile;
+import dev.zwazel.autobattler.classes.utils.UnitTypeParser;
+import dev.zwazel.autobattler.classes.utils.Vector;
 import dev.zwazel.autobattler.classes.utils.battle.CreateFormations;
-import dev.zwazel.autobattler.classes.utils.database.FormationEntity;
 import dev.zwazel.autobattler.classes.utils.json.ActionHistory;
 import dev.zwazel.autobattler.classes.utils.json.Export;
 import dev.zwazel.autobattler.classes.utils.json.History;
+import dev.zwazel.autobattler.classes.utils.json.HistoryToJson;
 import dev.zwazel.autobattler.classes.utils.map.FindPath;
 import dev.zwazel.autobattler.classes.utils.map.Grid;
 import dev.zwazel.autobattler.classes.utils.map.GridCell;
@@ -49,12 +54,15 @@ public class BattlerGen2 {
         enemyUnitList = new ArrayList<>();
         grid = new Grid(gridSize);
 
+        Formation _formationLeft = new Formation(formationLeft);
+        Formation _formationRight = new Formation(formationRight);
+
         try {
             User friendlyUser = formationLeft.getUser();
             User enemyUser = formationRight.getUser();
 
-            getFormationFromJson(FRIENDLY, formationLeft.getFormationJson(), mirrorEnemy);
-            getFormationFromJson(ENEMY, formationRight.getFormationJson(), mirrorEnemy);
+            getFormationFromJson(FRIENDLY, HistoryToJson.formationToJson(_formationLeft), mirrorEnemy);
+            getFormationFromJson(ENEMY, HistoryToJson.formationToJson(_formationRight), mirrorEnemy);
 
             friendlyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
             enemyUnitList.sort(Comparator.comparingInt(Unit::getPriority));
@@ -127,10 +135,8 @@ public class BattlerGen2 {
         Formation right = createFormations.createTestFormation(amountUnitsRight, ENEMY, amountUnitsLeft, true, new UnitTypes[]{
                 UnitTypes.MY_FIRST_UNIT,
         }, 1, 10);
-        User userLeft = left.getUser();
-        User userRight = right.getUser();
 
-        new BattlerGen2(new FormationEntity(left, userLeft), new FormationEntity(right, userRight), false, true, gridSize, false, true);
+        new BattlerGen2(new FormationEntity(left), new FormationEntity(right), false, true, gridSize, false, true);
     }
 
     private void mirrorSide(Unit unit) {

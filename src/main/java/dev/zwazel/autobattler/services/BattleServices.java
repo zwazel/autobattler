@@ -70,6 +70,10 @@ public class BattleServices {
                     CreateFormations createFormations = new CreateFormations(userGridSize, true);
 
                     int minAmountUnits = formationEntity.get().getAmountUnits() - 1;
+                    if (minAmountUnits <= 0) {
+                        minAmountUnits = 1;
+                    }
+
                     int maxAmountUnits = formationEntity.get().getAmountUnits() + 1;
                     if (maxAmountUnits > unitSlots) {
                         maxAmountUnits = unitSlots;

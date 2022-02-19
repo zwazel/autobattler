@@ -23,14 +23,20 @@ async function getAllUnitsOfUser() {
             unitDiv.id = "unitId-" + unitId + "-name:" + unitName + ":";
             unitDiv.className = "draggableUnit";
             unitDiv.draggable = true;
-            unitDiv.innerHTML = `<p>${unitName}</p>`;
 
             const unitImage = document.createElement('img');
             unitImage.src = unit.image;
             unitImage.className = "unitImage";
             unitImage.draggable = false;
 
-            unitDiv.appendChild(unitImage);
+            const changeUnitNameField = document.createElement('input');
+            changeUnitNameField.id = "changeUnitNameField-" + unitId;
+            changeUnitNameField.className = "changeUnitNameField";
+            changeUnitNameField.type = "text";
+            changeUnitNameField.value = unitName;
+            changeUnitNameField.draggable = false;
+
+            unitDiv.append(unitImage, changeUnitNameField);
             unitListContainer.appendChild(unitDiv);
         }
     } else {
@@ -47,7 +53,7 @@ async function saveFormation() {
                 let unit = formation[i][j];
                 const pos = getPosOutOfUnit(unit);
                 const idFromUnit = getUnitIdFromUnit(unit);
-                const name = getUnitNameFromUnit(unit);
+                const name = getUnitNameFromUnitInputField(unit);
 
                 const data = {
                     "id": idFromUnit,
@@ -65,13 +71,9 @@ async function saveFormation() {
         }
     }
 
-    console.log(formationToSave)
-
     const data = {
         "units": formationToSave
     };
-
-    console.log(data);
 
     await fetch('/api/user/addFormation', {
         method: 'POST',
@@ -80,6 +82,11 @@ async function saveFormation() {
         },
         body: JSON.stringify(data)
     });
+}
+
+function getUnitNameFromUnitInputField(string) {
+    const unitField = document.getElementById("changeUnitNameField-" + getUnitIdFromUnit(string));
+    return unitField.value;
 }
 
 function getUnitNameFromUnit(string) {

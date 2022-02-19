@@ -15,28 +15,38 @@ async function getAllUnitsOfUser() {
             const unitName = unitJson.name;
             const unitLevel = unitJson.level;
             const unitType = unitJson.unitType;
+            const customNamesAllowed = unitJson.customNamesAllowed;
 
             const unit = parseUnitTypeSimple(unitJson);
 
-            // <div id="MY_FIRST_UNIT" class="draggableUnit" draggable="true">
             const unitDiv = document.createElement('div');
             unitDiv.id = "unitId-" + unitId + "-name:" + unitName + ":";
             unitDiv.className = "draggableUnit";
             unitDiv.draggable = true;
+            if (!customNamesAllowed) {
+                unitDiv.innerHTML = `<p>${unitName}</p>`;
+            }
 
             const unitImage = document.createElement('img');
             unitImage.src = unit.image;
             unitImage.className = "unitImage";
             unitImage.draggable = false;
 
-            const changeUnitNameField = document.createElement('input');
-            changeUnitNameField.id = "changeUnitNameField-" + unitId;
-            changeUnitNameField.className = "changeUnitNameField";
-            changeUnitNameField.type = "text";
-            changeUnitNameField.value = unitName;
-            changeUnitNameField.draggable = false;
+            unitDiv.appendChild(unitImage);
 
-            unitDiv.append(unitImage, changeUnitNameField);
+            if (customNamesAllowed) {
+                const lineBreaker = document.createElement('br');
+                unitDiv.appendChild(lineBreaker);
+
+                const changeUnitNameField = document.createElement('input');
+                changeUnitNameField.id = "changeUnitNameField-" + unitId;
+                changeUnitNameField.className = "changeUnitNameField";
+                changeUnitNameField.type = "text";
+                changeUnitNameField.value = unitName;
+                changeUnitNameField.draggable = false;
+                unitDiv.appendChild(changeUnitNameField);
+            }
+
             unitListContainer.appendChild(unitDiv);
         }
     } else {

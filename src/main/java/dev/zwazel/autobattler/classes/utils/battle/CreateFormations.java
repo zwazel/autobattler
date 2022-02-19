@@ -39,14 +39,41 @@ public class CreateFormations {
 
         int slotsTaken = 0;
         int priorityCounter = 0;
+
+        float averageOfLevels = (float) (minLevel + maxLevel) / 2;
+
+        System.out.println("averageOfLevels = " + averageOfLevels);
+
+        int[] possibleSlotSizes = new int[allowedUnitTypes.length];
+        for (int i = 0; i < allowedUnitTypes.length; i++) {
+            possibleSlotSizes[i] = allowedUnitTypes[i].getSlotSize();
+        }
+
         for (int j = 0; j < amountUnits; j++) {
             if (slotsTaken >= unitSlots) {
                 break;
             }
 
             UnitTypes type = allowedUnitTypes[(int) (Math.random() * allowedUnitTypes.length)];
-            while (slotsTaken + type.getSlotSize() > unitSlots) {
-                type = allowedUnitTypes[(int) (Math.random() * allowedUnitTypes.length)];
+            int tempSlotAmountTaken = type.getSlotSize() + slotsTaken;
+            if (tempSlotAmountTaken > unitSlots) {
+                boolean isPossibleToFillSlot = false;
+                for (int possibleSlotSize : possibleSlotSizes) {
+                    if (possibleSlotSize + slotsTaken <= unitSlots) {
+                        isPossibleToFillSlot = true;
+                        break;
+                    }
+                }
+
+                if (isPossibleToFillSlot) {
+                    while (tempSlotAmountTaken > unitSlots) {
+                        type = allowedUnitTypes[(int) (Math.random() * allowedUnitTypes.length)];
+                        tempSlotAmountTaken = type.getSlotSize() + slotsTaken;
+                    }
+                } else {
+                    System.err.println("no more possible slots to fill! could not find a unit type of a slot size of " + (unitSlots - slotsTaken));
+                    break;
+                }
             }
 
             slotsTaken += type.getSlotSize();

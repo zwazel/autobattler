@@ -79,10 +79,6 @@ public class BattleServices {
                         maxAmountUnits = unitSlots;
                     }
 
-                    System.out.println("min level = " + formationEntity.get().getMinLevel());
-                    System.out.println("max level = " + formationEntity.get().getMaxLevel());
-                    System.out.println("average level = " + formationEntity.get().getAverageLevel());
-
                     int randomNumber = (int) (Math.random() * (maxAmountUnits - minAmountUnits + 1)) + minAmountUnits;
                     Formation formation = createFormations.createTestFormation(Side.ENEMY, 0, true, new UnitTypes[]{
                             UnitTypes.MY_FIRST_UNIT,

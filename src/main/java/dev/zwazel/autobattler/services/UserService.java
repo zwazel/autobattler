@@ -68,6 +68,8 @@ public class UserService {
         return null;
     }
 
+    // TODO: 19.02.2022 - SET A LIMIT OF HOW MANY FORMATIONS A USER CAN HAVE
+    // TODO: 19.02.2022 - SET A LIMIT OF HOW MANY UNITS PER FORMATION A USER CAN HAVE
     @PostMapping(path = "/addFormation")
     public ResponseEntity<String> setFormationForUser(@RequestBody FormationServiceTemplate formationServiceTemplate, HttpServletRequest request) {
         Optional<User> userOptional = getUserWithJWT(userRepository, request);

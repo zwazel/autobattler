@@ -61,11 +61,6 @@ public abstract class Unit implements Obstacle, Cloneable {
     private String name;
 
     /**
-     * the description of the unit
-     */
-    private String description;
-
-    /**
      * the different abilities of the unit
      */
     private Ability[] abilities = new Ability[0];
@@ -79,11 +74,6 @@ public abstract class Unit implements Obstacle, Cloneable {
      * the speed of the unit, tells how many tiles the unit can move in one turn
      */
     private int speed;
-
-    /**
-     * tells if the unit can move diagonally or not
-     */
-    private boolean canMoveDiagonally;
 
     /**
      * the battlerGen2 object
@@ -145,13 +135,11 @@ public abstract class Unit implements Obstacle, Cloneable {
         this.level = level;
         this.health = type.scaleHealth(level);
         this.energy = type.scaleEnergy(level);
-        this.description = type.getDescription();
         this.symbol = symbol;
         this.gridPosition = position;
         this.speed = type.scaleMoveSpeed(level);
         this.priority = priority;
         this.type = type;
-        this.canMoveDiagonally = type.isCanMoveDiagonally();
         if (name == null) {
             this.name = type.getDefaultName();
         }
@@ -191,7 +179,7 @@ public abstract class Unit implements Obstacle, Cloneable {
 
     protected Vector[] moveTowards(Unit target) {
         if (target != null) {
-            Node[] nodes = new FindPath().getNextMoveSteps(gridPosition, target.getGridPosition(), battler.getGrid(), speed, canMoveDiagonally);
+            Node[] nodes = new FindPath().getNextMoveSteps(gridPosition, target.getGridPosition(), battler.getGrid(), speed, type.isCanMoveDiagonally());
             if (nodes.length > 0) {
                 Vector[] vectors = new Vector[nodes.length];
                 for (int i = 0; i < nodes.length; i++) {
@@ -220,7 +208,7 @@ public abstract class Unit implements Obstacle, Cloneable {
     }
 
     protected void moveRandom() {
-        Vector direction = Vector.getRandomDirection(canMoveDiagonally);
+        Vector direction = Vector.getRandomDirection(type.isCanMoveDiagonally());
         move(direction, true);
     }
 
@@ -249,11 +237,7 @@ public abstract class Unit implements Obstacle, Cloneable {
     }
 
     public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+        return type.getDescription();
     }
 
     public int getHealth() {
@@ -349,11 +333,7 @@ public abstract class Unit implements Obstacle, Cloneable {
     }
 
     public boolean isCanMoveDiagonally() {
-        return canMoveDiagonally;
-    }
-
-    public void setCanMoveDiagonally(boolean canMoveDiagonally) {
-        this.canMoveDiagonally = canMoveDiagonally;
+        return type.isCanMoveDiagonally();
     }
 
     @Override
@@ -378,9 +358,8 @@ public abstract class Unit implements Obstacle, Cloneable {
     @Override
     public Unit clone() {
         try {
-            Unit clone = (Unit) super.clone();
             // TODO: copy mutable state here, so the clone can't change the internals of the original
-            return clone;
+            return (Unit) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }

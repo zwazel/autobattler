@@ -1,12 +1,14 @@
 package dev.zwazel.autobattler.classes.utils;
 
 import dev.zwazel.autobattler.classes.abstractClasses.Unit;
+import dev.zwazel.autobattler.classes.enums.UnitTypes;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.model.FormationEntity;
 import dev.zwazel.autobattler.classes.model.UnitModel;
 import dev.zwazel.autobattler.classes.model.User;
 import dev.zwazel.autobattler.classes.units.SimpleUnit;
 import dev.zwazel.autobattler.classes.utils.database.FormationOnly;
+import dev.zwazel.autobattler.classes.utils.database.UnitOnly;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UnitModelRepository;
 import javassist.NotFoundException;
 
@@ -22,6 +24,39 @@ public class FormationServiceTemplate {
 
     public FormationServiceTemplate(ArrayList<SimpleUnit> units) {
         this.units = units;
+    }
+
+    public static List<UnitOnly> getUnitOnlyList(List<UnitModel> unitModels) {
+        List<UnitOnly> unitOnlyList = new ArrayList<>();
+        for (UnitModel unitModel : unitModels) {
+            unitOnlyList.add(new UnitOnly() {
+                @Override
+                public long getId() {
+                    return unitModel.getId();
+                }
+
+                @Override
+                public String getName() {
+                    return unitModel.getName();
+                }
+
+                @Override
+                public int getLevel() {
+                    return unitModel.getLevel();
+                }
+
+                @Override
+                public UnitTypes getUnitType() {
+                    return unitModel.getUnitType();
+                }
+
+                @Override
+                public boolean isCustomNamesAllowed() {
+                    return unitModel.isCustomNamesAllowed();
+                }
+            });
+        }
+        return unitOnlyList;
     }
 
     public static List<FormationOnly> getFormationOnlyList(List<FormationEntity> formationEntities) {

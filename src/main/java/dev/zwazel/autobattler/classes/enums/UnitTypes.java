@@ -117,10 +117,6 @@ public enum UnitTypes {
         return description;
     }
 
-    public int getBaseMoveSpeed() {
-        return baseMoveSpeed;
-    }
-
     public boolean isCanMoveDiagonally() {
         return canMoveDiagonally;
     }

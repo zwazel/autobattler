@@ -88,6 +88,10 @@ public class UnitModel {
         this.name = name;
     }
 
+    public boolean isCustomNamesAllowed() {
+        return unitType.isCustomNamesAllowed();
+    }
+
     @Override
     public String toString() {
         return "UnitModel{" +

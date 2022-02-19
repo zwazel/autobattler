@@ -10,4 +10,6 @@ public interface UnitOnly {
     int getLevel();
 
     UnitTypes getUnitType();
+
+    boolean isCustomNamesAllowed();
 }

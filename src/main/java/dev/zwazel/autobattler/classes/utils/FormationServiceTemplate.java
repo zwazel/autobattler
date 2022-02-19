@@ -52,6 +52,11 @@ public class FormationServiceTemplate {
             Optional<UnitModel> unitModel = unitModelRepository.findById(simpleUnit.getId());
             if (unitModel.isPresent()) {
                 simpleUnit.setUnitType(unitModel.get().getUnitType());
+
+                if (!unitModel.get().getName().equals(simpleUnit.getName())) {
+                    unitModel.get().setName(simpleUnit.getName());
+                    unitModelRepository.save(unitModel.get());
+                }
             } else {
                 throw new NotFoundException("UnitModel with id " + simpleUnit.getId() + " not found");
             }

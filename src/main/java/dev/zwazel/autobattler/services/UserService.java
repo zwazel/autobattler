@@ -70,25 +70,32 @@ public class UserService {
 
     @PostMapping(path = "/addFormation")
     public ResponseEntity<String> setFormationForUser(@RequestBody FormationServiceTemplate formationServiceTemplate, HttpServletRequest request) {
-        System.out.println("formationServiceTemplate = " + formationServiceTemplate);
-
         Optional<User> userOptional = getUserWithJWT(userRepository, request);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
 
             try {
                 FormationEntity formationEntity = formationServiceTemplate.getFormationEntity(user, unitModelRepository);
-                // TODO: 18.02.2022 CHECK IF FORMATION ALREADY EXISTS!!!!
+
+                // this might not be the most performant way to check if a formation already exists, but my brain cant figure out how to do it better right now. so this has to do for now. And I mean i'll limit the amount of formations a user can have to a smaller number, so it won't take too long!
                 boolean formationAlreadyExists = false;
+                List<FormationEntity> formationEntities = formationEntityRepository.findAllByUserOrderById(user);
+                for (FormationEntity formationEntityToCheck : formationEntities) {
+                    if (formationEntityToCheck.getFormationJson().equals(formationEntity.getFormationJson())) {
+                        formationAlreadyExists = true;
+                        break;
+                    }
+                }
 
                 if (!formationAlreadyExists) {
                     user.addFormation(formationEntity);
 
-                    System.out.println("formationEntity = " + formationEntity);
+                    System.out.println("formation has been added");
 
                     userRepository.save(user);
                     return ResponseEntity.ok("Formation added");
                 } else {
+                    System.err.println("formation already exists");
                     return ResponseEntity.badRequest().body("Formation already exists");
                 }
             } catch (UnknownUnitType | NotFoundException e) {

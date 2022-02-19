@@ -70,12 +70,6 @@ public class AuthController {
             User user = optionalUser.get();
             user.setLastLogin(new Date());
 
-            // TODO: 18.02.2022 we probably don't need this anymore
-            // old accounts getting updated, so value might not be true, but at least we have one
-            if (user.getAccountCreated() == null) {
-                user.setAccountCreated(user.getLastLogin());
-            }
-
             userRepository.save(user);
 
             ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
@@ -129,7 +123,9 @@ public class AuthController {
 
         user = userRepository.save(user);
 
-        user.addUnit(new UnitModel("Karl", 1, UnitTypes.MY_FIRST_UNIT, user));
+        user.addUnit(new UnitModel(1, UnitTypes.MY_FIRST_UNIT, user));
+        user.addUnit(new UnitModel(1, UnitTypes.MY_FIRST_UNIT, user));
+        user.addUnit(new UnitModel(1, UnitTypes.MY_FIRST_UNIT, user));
 
         userRepository.save(user);
 

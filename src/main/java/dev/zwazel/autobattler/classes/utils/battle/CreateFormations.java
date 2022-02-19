@@ -33,14 +33,23 @@ public class CreateFormations {
      * @param randomPositioning whether the units should be randomly placed on their side or not
      * @return the formation
      */
-    public Formation createTestFormation(int amountUnits, Side side, long idCounter, boolean randomPositioning, UnitTypes[] allowedUnitTypes, int minLevel, int maxLevel) {
+    public Formation createTestFormation(Side side, long idCounter, boolean randomPositioning, UnitTypes[] allowedUnitTypes, int minLevel, int maxLevel, int amountUnits, int unitSlots) {
         Formation formation;
         ArrayList<Unit> units = new ArrayList<>();
 
+        int slotsTaken = 0;
         int priorityCounter = 0;
         for (int j = 0; j < amountUnits; j++) {
+            if (slotsTaken >= unitSlots) {
+                break;
+            }
 
             UnitTypes type = allowedUnitTypes[(int) (Math.random() * allowedUnitTypes.length)];
+            while (slotsTaken + type.getSlotSize() > unitSlots) {
+                type = allowedUnitTypes[(int) (Math.random() * allowedUnitTypes.length)];
+            }
+
+            slotsTaken += type.getSlotSize();
 
             Vector vector = (randomPositioning) ? findFreeRandomSpaceOnSide(side) : findFreeSpaceOnSide(side);
             if (vector == null) {
@@ -48,6 +57,7 @@ public class CreateFormations {
                 break;
             }
             Unit unit = createTestUnit(idCounter++, priorityCounter++, vector, type, minLevel, maxLevel);
+
             if (unit == null) {
                 System.err.println("Unit is null");
                 break;

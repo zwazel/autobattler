@@ -28,6 +28,7 @@ import java.util.Optional;
 public class BattleServices {
     private final Vector gridSize = new Vector(10, 10);
     private final Vector userGridSize = new Vector(3, 10);
+    private final int unitSlots = 5;
 
     private final UserRepository userRepository;
     private final FormationEntityRepository formationEntityRepository;
@@ -68,12 +69,20 @@ public class BattleServices {
                 if (formationEntity.isPresent()) {
                     CreateFormations createFormations = new CreateFormations(userGridSize, true);
 
-                    int minAmountUnits = 3;
-                    int maxAmountUnits = (userGridSize.getX() + userGridSize.getY()) / 2;
+                    int minAmountUnits = formationEntity.get().getAmountUnits() - 1;
+                    int maxAmountUnits = formationEntity.get().getAmountUnits() + 1;
+                    if (maxAmountUnits > unitSlots) {
+                        maxAmountUnits = unitSlots;
+                    }
+
+                    System.out.println("min level = " + formationEntity.get().getMinLevel());
+                    System.out.println("max level = " + formationEntity.get().getMaxLevel());
+                    System.out.println("average level = " + formationEntity.get().getAverageLevel());
+
                     int randomNumber = (int) (Math.random() * (maxAmountUnits - minAmountUnits + 1)) + minAmountUnits;
-                    Formation formation = createFormations.createTestFormation(randomNumber, Side.ENEMY, 0, true, new UnitTypes[]{
+                    Formation formation = createFormations.createTestFormation(Side.ENEMY, 0, true, new UnitTypes[]{
                             UnitTypes.MY_FIRST_UNIT,
-                    }, 1, 1);
+                    }, formationEntity.get().getMinLevel(), formationEntity.get().getMaxLevel(), randomNumber, unitSlots);
 
                     FormationEntity formationEntityEnemyRandom = new FormationEntity(formation);
 

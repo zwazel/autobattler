@@ -124,17 +124,18 @@ public class BattlerGen2 {
 
     public static void main(String[] args) {
         Vector gridSize = new Vector(10, 10);
+        int unitSlots = 5;
 
         CreateFormations createFormations = new CreateFormations(gridSize, false);
 
         int amountUnitsLeft = 3;
         int amountUnitsRight = amountUnitsLeft;
-        Formation left = createFormations.createTestFormation(amountUnitsLeft, FRIENDLY, 0, true, new UnitTypes[]{
+        Formation left = createFormations.createTestFormation(FRIENDLY, 0, true, new UnitTypes[]{
                 UnitTypes.MY_FIRST_UNIT,
-        }, 1, 10);
-        Formation right = createFormations.createTestFormation(amountUnitsRight, ENEMY, amountUnitsLeft, true, new UnitTypes[]{
+        }, 1, 10, amountUnitsLeft, unitSlots);
+        Formation right = createFormations.createTestFormation(ENEMY, amountUnitsLeft, true, new UnitTypes[]{
                 UnitTypes.MY_FIRST_UNIT,
-        }, 1, 10);
+        }, 1, 10, amountUnitsRight, unitSlots);
 
         new BattlerGen2(new FormationEntity(left), new FormationEntity(right), false, true, gridSize, false, true);
     }

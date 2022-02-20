@@ -34,9 +34,6 @@ public class CreateFormations {
      * @return the formation
      */
     public Formation createTestFormation(Side side, long idCounter, boolean randomPositioning, UnitTypes[] allowedUnitTypes, int minLevel, int maxLevel, int amountUnits, int unitSlots) {
-        System.out.println("minLevel = " + minLevel);
-        System.out.println("maxLevel = " + maxLevel);
-
         Formation formation;
         ArrayList<Unit> units = new ArrayList<>();
 
@@ -131,7 +128,7 @@ public class CreateFormations {
                 } else {
                     newLevel = (int) (unit.getLevel() + newLevelChanger);
                 }
-                
+
                 unit.setLevel(newLevel);
             }
 

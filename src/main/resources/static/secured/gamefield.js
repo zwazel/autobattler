@@ -149,22 +149,15 @@ async function removeUnit(unit, removeFromArray = false) {
 }
 
 function getUnitIcon(unit) {
-    let unitId = unit.id;
     let unitName = unit.name;
     let unitImage = unit.image;
-
-    let pUnitId = document.createElement("p")
-    pUnitId.id = "unitId-" + unitId
-    pUnitId.innerHTML = unitId
-
-    let pUnitName = document.createElement("p")
-    pUnitName.id = "unitName-" + unitName
-    pUnitName.innerHTML = unitName
+    let unitLevel = unit.level;
+    let unitHealth = unit.health;
 
     let divP = document.createElement("div")
     divP.classList.add("unitTextInfo")
     divP.classList.add(unit.side)
-    divP.append(unitId, unitName)
+    divP.innerHTML = `<p>${unitName}</p><p>Level: ${unitLevel}</p><p>Health: ${unitHealth}</p>`;
 
     let imgUnit = document.createElement("img")
     imgUnit.classList.add("characterIconImage")
@@ -257,6 +250,7 @@ async function startBattle() {
         let response = await fetch(`/api/battle/getFightHistory/${selectedFormation.id}`);
         if (response.ok) { // if HTTP-status is 200-299
             let json = await response.json();
+            console.log(json);
 
             await removeAllUnits(true);
 

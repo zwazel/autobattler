@@ -41,6 +41,8 @@ public class HistoryToJson {
 
         json += "}";
 
+        System.out.println(json);
+
         return json;
     }
 
@@ -100,30 +102,36 @@ public class HistoryToJson {
     }
 
     public static String formationToJson(Formation formation) {
-        Gson gson = new Gson();
         StringBuilder json = new StringBuilder("[");
 
         Iterator<Unit> iterator = formation.getUnits().iterator();
         while (iterator.hasNext()) {
             Unit unit = iterator.next();
-            json.append("{");
-            json.append("\"id\":").append(unit.getID())
-                    .append(",\"type\":").append("\"").append(unit.getType()).append("\"")
-                    .append(",\"name\":").append("\"").append(unit.getName()).append("\"")
-                    .append(",\"priority\":").append(unit.getPriority())
-                    .append(",\"position\":").append(gson.toJson(unit.getGridPosition()))
-                    .append(",\"level\":").append(unit.getLevel());
+            json.append(unitToJson(unit));
 
-            if(unit.getSide() != null) {
-                json.append(",\"side\":").append("\"").append(unit.getSide()).append("\"");
-            }
-
-            json.append("}");
             if (iterator.hasNext()) {
                 json.append(",");
             }
         }
         json.append("]");
+        return json.toString();
+    }
+
+    public static String unitToJson(Unit unit) {
+        Gson gson = new Gson();
+        StringBuilder json = new StringBuilder("{");
+        json.append("\"id\":").append(unit.getID())
+                .append(",\"type\":").append("\"").append(unit.getType()).append("\"")
+                .append(",\"name\":").append("\"").append(unit.getName()).append("\"")
+                .append(",\"priority\":").append(unit.getPriority())
+                .append(",\"position\":").append(gson.toJson(unit.getGridPosition()))
+                .append(",\"level\":").append(unit.getLevel());
+
+        if (unit.getSide() != null) {
+            json.append(",\"side\":").append("\"").append(unit.getSide()).append("\"");
+        }
+
+        json.append("}");
         return json.toString();
     }
 }

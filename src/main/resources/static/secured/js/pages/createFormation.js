@@ -186,6 +186,7 @@ function drop(ev) {
 
             const lastPos = getPosOutOfUnit(originalId);
             if (lastPos) {
+                console.log("lastPos: " + lastPos.x + " " + lastPos.y);
                 formation[lastPos.y][lastPos.x] = null;
 
                 let index = originalId.indexOf("pos-");
@@ -195,6 +196,7 @@ function drop(ev) {
                 original.id = newId;
             } else {
                 original.id = originalId + "-pos-" + pos.x + "-" + pos.y;
+                console.log("has no last pos");
             }
 
             ev.target.appendChild(original);

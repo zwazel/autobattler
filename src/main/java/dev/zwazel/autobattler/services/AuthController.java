@@ -123,6 +123,7 @@ public class AuthController {
 
         user = userRepository.save(user);
 
+        // add starter units to user
         user.addUnit(new UnitModel(1, UnitTypes.MY_FIRST_UNIT, user));
         user.addUnit(new UnitModel(1, UnitTypes.MY_FIRST_UNIT, user));
         user.addUnit(new UnitModel(1, UnitTypes.MY_FIRST_UNIT, user));

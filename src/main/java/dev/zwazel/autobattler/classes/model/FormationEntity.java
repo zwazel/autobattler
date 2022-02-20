@@ -64,6 +64,38 @@ public class FormationEntity {
         return HistoryToJson.formationToJson(new Formation(this));
     }
 
+    public int getAmountUnits() {
+        return formationUnitTable.size();
+    }
+
+    public int getMinLevel() {
+        int minLevel = Integer.MAX_VALUE;
+        for (FormationUnitTable formationUnitTable : this.formationUnitTable) {
+            if (formationUnitTable.getUnitModel().getLevel() < minLevel) {
+                minLevel = formationUnitTable.getUnitModel().getLevel();
+            }
+        }
+        return minLevel;
+    }
+
+    public int getMaxLevel() {
+        int maxLevel = Integer.MIN_VALUE;
+        for (FormationUnitTable formationUnitTable : this.formationUnitTable) {
+            if (formationUnitTable.getUnitModel().getLevel() > maxLevel) {
+                maxLevel = formationUnitTable.getUnitModel().getLevel();
+            }
+        }
+        return maxLevel;
+    }
+
+    public float getAverageLevel() {
+        int totalLevel = 0;
+        for (FormationUnitTable formationUnitTable : this.formationUnitTable) {
+            totalLevel += formationUnitTable.getUnitModel().getLevel();
+        }
+        return (float) totalLevel / this.formationUnitTable.size();
+    }
+
     @Override
     public String toString() {
         return "FormationEntity{" +

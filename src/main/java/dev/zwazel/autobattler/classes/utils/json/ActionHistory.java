@@ -5,7 +5,6 @@ import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.enums.Action;
 import dev.zwazel.autobattler.classes.utils.Vector;
 
-import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -14,10 +13,9 @@ public final class ActionHistory {
     private final Unit user;
     private final Unit[] targets;
     private final Ability ability;
-    private final Vector @NotNull [] positions;
+    private final Vector[] positions;
 
-    public ActionHistory(Action actionType, Unit user, Unit[] targets,
-                         Ability ability, Vector[] positions) {
+    public ActionHistory(Action actionType, Unit user, Unit[] targets, Ability ability, Vector[] positions) {
         if (actionType == null) {
             throw new NullPointerException("actionType cannot be null");
         }
@@ -26,14 +24,17 @@ public final class ActionHistory {
         if (user == null) {
             throw new NullPointerException("user cannot be null");
         }
-        this.user = user;
+        this.user = user.clone();
 
-        for (var target : targets) {
+        this.targets = new Unit[targets.length];
+        for (int i = 0; i < targets.length; i++) {
+            Unit target = targets[i];
             if (target == null) {
                 throw new NullPointerException("Target cannot be null");
+            } else {
+                this.targets[i] = target.clone();
             }
         }
-        this.targets = targets;
 
         this.ability = ability;
 
@@ -56,23 +57,23 @@ public final class ActionHistory {
                 '}';
     }
 
-    public @NotNull Action actionType() {
+    public Action actionType() {
         return actionType;
     }
 
-    public @NotNull Unit user() {
+    public Unit user() {
         return user;
     }
 
-    public Unit @NotNull [] targets() {
+    public Unit[] targets() {
         return targets;
     }
 
-    public @NotNull Ability ability() {
+    public Ability ability() {
         return ability;
     }
 
-    public Vector @NotNull [] positions() {
+    public Vector[] positions() {
         return positions;
     }
 

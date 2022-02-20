@@ -38,6 +38,7 @@ function manageHistoryPlayback(history) {
 
 async function playHistory(history) {
     let historyObject = history[index++];
+
     let unit = historyObject.user;
 
     if (unit.side === "ENEMY") {
@@ -47,6 +48,22 @@ async function playHistory(history) {
     }
 
     if (unit !== undefined) {
+        unit.health = historyObject.user.health;
+
+        for (let i = 0; i < historyObject.targets.length; i++) {
+            let target = historyObject.targets[i];
+
+            if (target.side === "ENEMY") {
+                target = findUnit(unitsRight, target.id)
+            } else {
+                target = findUnit(unitsLeft, target.id)
+            }
+            if (target !== undefined) {
+                // that doesn't do anything yet, because the target isn't getting updated on the board right now (I would have to remove and place it as well)
+                target.health = historyObject.targets[i].health;
+            }
+        }
+
         if (historyObject.type === "DIE") {
             console.log("UNIT DIED: " + unit.name + "(" + unit.id + ")")
             await removeUnit(unit)
@@ -87,16 +104,21 @@ function findUnit(array, id) {
 }
 
 async function moveUnit(unit, positions) {
-    for (let i = 0; i < positions.length; i++) {
-        let position = positions[i];
-        if (i === 0) {
-            await removeUnit(unit)
-            await placeUnit(unit, position)
-        } else {
-            setTimeout(async function () {
+    if (positions.length <= 0) {
+        await removeUnit(unit)
+        await placeUnit(unit, unit.position)
+    } else {
+        for (let i = 0; i < positions.length; i++) {
+            let position = positions[i];
+            if (i === 0) {
                 await removeUnit(unit)
                 await placeUnit(unit, position)
-            }, movementDelay);
+            } else {
+                setTimeout(async function () {
+                    await removeUnit(unit)
+                    await placeUnit(unit, position)
+                }, movementDelay);
+            }
         }
     }
 
@@ -149,22 +171,15 @@ async function removeUnit(unit, removeFromArray = false) {
 }
 
 function getUnitIcon(unit) {
-    let unitId = unit.id;
     let unitName = unit.name;
     let unitImage = unit.image;
-
-    let pUnitId = document.createElement("p")
-    pUnitId.id = "unitId-" + unitId
-    pUnitId.innerHTML = unitId
-
-    let pUnitName = document.createElement("p")
-    pUnitName.id = "unitName-" + unitName
-    pUnitName.innerHTML = unitName
+    let unitLevel = unit.level;
+    let unitHealth = unit.health;
 
     let divP = document.createElement("div")
     divP.classList.add("unitTextInfo")
     divP.classList.add(unit.side)
-    divP.append(unitId, unitName)
+    divP.innerHTML = `<p>${unitName}</p><p>Level: ${unitLevel}</p><p>Health: ${unitHealth}</p>`;
 
     let imgUnit = document.createElement("img")
     imgUnit.classList.add("characterIconImage")
@@ -247,7 +262,7 @@ function toggleDisableButtons() {
 }
 
 loadGridSizeAndDrawFieldAccordingly("battle").then(() => {
-    loadFormations();
+    loadFormations().then(() => ({}));
 })
 
 async function startBattle() {

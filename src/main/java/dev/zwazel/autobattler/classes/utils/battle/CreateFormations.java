@@ -33,14 +33,48 @@ public class CreateFormations {
      * @param randomPositioning whether the units should be randomly placed on their side or not
      * @return the formation
      */
-    public Formation createTestFormation(int amountUnits, Side side, long idCounter, boolean randomPositioning, UnitTypes[] allowedUnitTypes, int minLevel, int maxLevel) {
+    public Formation createTestFormation(Side side, long idCounter, boolean randomPositioning, UnitTypes[] allowedUnitTypes, int minLevel, int maxLevel, int amountUnits, int unitSlots) {
         Formation formation;
         ArrayList<Unit> units = new ArrayList<>();
 
+        int slotsTaken = 0;
         int priorityCounter = 0;
+
+        float targetLevelAverage = (float) (minLevel + maxLevel) / 2;
+
+        int[] possibleSlotSizes = new int[allowedUnitTypes.length];
+        for (int i = 0; i < allowedUnitTypes.length; i++) {
+            possibleSlotSizes[i] = allowedUnitTypes[i].getSlotSize();
+        }
+
         for (int j = 0; j < amountUnits; j++) {
+            if (slotsTaken >= unitSlots) {
+                break;
+            }
 
             UnitTypes type = allowedUnitTypes[(int) (Math.random() * allowedUnitTypes.length)];
+            int tempSlotAmountTaken = type.getSlotSize() + slotsTaken;
+            if (tempSlotAmountTaken > unitSlots) {
+                boolean isPossibleToFillSlot = false;
+                for (int possibleSlotSize : possibleSlotSizes) {
+                    if (possibleSlotSize + slotsTaken <= unitSlots) {
+                        isPossibleToFillSlot = true;
+                        break;
+                    }
+                }
+
+                if (isPossibleToFillSlot) {
+                    while (tempSlotAmountTaken > unitSlots) {
+                        type = allowedUnitTypes[(int) (Math.random() * allowedUnitTypes.length)];
+                        tempSlotAmountTaken = type.getSlotSize() + slotsTaken;
+                    }
+                } else {
+                    System.err.println("no more possible slots to fill! could not find a unit type of a slot size of " + (unitSlots - slotsTaken));
+                    break;
+                }
+            }
+
+            slotsTaken += type.getSlotSize();
 
             Vector vector = (randomPositioning) ? findFreeRandomSpaceOnSide(side) : findFreeSpaceOnSide(side);
             if (vector == null) {
@@ -48,6 +82,7 @@ public class CreateFormations {
                 break;
             }
             Unit unit = createTestUnit(idCounter++, priorityCounter++, vector, type, minLevel, maxLevel);
+
             if (unit == null) {
                 System.err.println("Unit is null");
                 break;
@@ -56,9 +91,67 @@ public class CreateFormations {
             grid.updateOccupiedGrid(unit);
         }
 
+        float averageLevel = getAverage(units);
+
+        int maxLevelDifference = 5;
+
+        float difference = Math.abs(averageLevel - targetLevelAverage);
+        while (difference > maxLevelDifference) {
+            difference = approachAverage(units, targetLevelAverage, maxLevelDifference);
+        }
+
+        int counter = 0;
+        while (counter < units.size() && difference > 0) {
+            counter++;
+            difference = approachAverage(units, targetLevelAverage, 0);
+        }
+
         formation = new Formation(new User("TestUser_" + side, "TestUser_" + side), units);
 
         return formation;
+    }
+
+    private float approachAverage(ArrayList<Unit> units, float targetLevelAverage, int maxLevelDifference) {
+        float averageLevel = getAverage(units);
+        float difference = Math.abs(averageLevel - targetLevelAverage);
+        for (Unit unit : units) {
+            float levelDifference = Math.abs(unit.getLevel() - targetLevelAverage);
+
+            if (levelDifference > maxLevelDifference) {
+                int newLevel;
+                float newLevelChanger = levelDifference / units.size();
+                if (averageLevel > targetLevelAverage) {
+                    newLevel = (int) (unit.getLevel() - newLevelChanger);
+                    if (newLevel <= 0) {
+                        newLevel = 1;
+                    }
+                } else {
+                    newLevel = (int) (unit.getLevel() + newLevelChanger);
+                }
+
+                unit.setLevel(newLevel);
+            }
+
+            averageLevel = getAverage(units);
+
+            difference = Math.abs(averageLevel - targetLevelAverage);
+
+            if (difference <= maxLevelDifference) {
+                break;
+            }
+        }
+
+        return difference;
+    }
+
+    private float getAverage(ArrayList<Unit> units) {
+        // get average level of units in the formation
+        float averageLevel = 0;
+        for (Unit unitInFormation : units) {
+            averageLevel += unitInFormation.getLevel();
+        }
+        averageLevel /= units.size();
+        return averageLevel;
     }
 
     public Unit createTestUnit(long id, int priority, Vector position, UnitTypes type, int minLevel, int maxLevel) {

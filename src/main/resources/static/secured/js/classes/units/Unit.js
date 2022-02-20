@@ -1,5 +1,13 @@
+function scaleAttribute(level, attribute, scaleFunction) {
+    return parseInt(scaleFunction(level, attribute));
+}
+
+function scaleAttributeDefault(level, attribute) {
+    return parseInt(attribute + ((level - 1) * 10));
+}
+
 class Unit {
-    constructor(type, side, id, name, level, position, priority, image) {
+    constructor(type, side, id, name, level, health, position, priority, image) {
         this._type = type;
         this._side = side;
         this._id = id;
@@ -8,6 +16,7 @@ class Unit {
         this._position = position;
         this._priority = priority;
         this._image = image;
+        this._health = health;
     }
 
     get type() {
@@ -72,5 +81,13 @@ class Unit {
 
     set image(value) {
         this._image = value;
+    }
+
+    get health() {
+        return this._health;
+    }
+
+    set health(value) {
+        this._health = value;
     }
 }

@@ -34,6 +34,9 @@ public class CreateFormations {
      * @return the formation
      */
     public Formation createTestFormation(Side side, long idCounter, boolean randomPositioning, UnitTypes[] allowedUnitTypes, int minLevel, int maxLevel, int amountUnits, int unitSlots) {
+        System.out.println("minLevel = " + minLevel);
+        System.out.println("maxLevel = " + maxLevel);
+
         Formation formation;
         ArrayList<Unit> units = new ArrayList<>();
 
@@ -96,7 +99,7 @@ public class CreateFormations {
         float averageLevel = getAverage(units);
         System.out.println("averageLevel = " + averageLevel);
 
-        float maxLevelDifference = targetLevelAverage / 6;
+        float maxLevelDifference = 5;
         System.out.println("maxLevelDifference = " + maxLevelDifference);
 
         float difference = Math.abs(averageLevel - targetLevelAverage);
@@ -113,13 +116,22 @@ public class CreateFormations {
 
                 if (levelDifference > maxLevelDifference) {
                     System.out.println("levelDifference is too high");
-                    int newLevel = (int) ((unit.getLevel()) + (levelDifference / units.size()));
+                    int newLevel;
+                    if (averageLevel > targetLevelAverage) {
+                        newLevel = (int) ((unit.getLevel()) - (levelDifference / units.size()));
+                        if (newLevel <= 0) {
+                            newLevel = 1;
+                        }
+                    } else {
+                        newLevel = (int) ((unit.getLevel()) + (levelDifference / units.size()));
+                    }
 
                     System.out.println("newLevel = " + newLevel);
                     unit.setLevel(newLevel);
                 }
                 System.out.println("----------------------------------------------------");
 
+                System.out.println("targetLevelAverage = " + targetLevelAverage);
                 averageLevel = getAverage(units);
                 System.out.println("averageLevel = " + averageLevel);
                 difference = Math.abs(averageLevel - targetLevelAverage);

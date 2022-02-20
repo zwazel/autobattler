@@ -24,23 +24,14 @@ public class CreateFormations {
         this.useFullWidth = useFullWidth;
     }
 
-    /**
-     * Creates a test formation for testing purposes
-     *
-     * @param amountUnits       amount of units in the formation
-     * @param side              side of the formation
-     * @param idCounter         id counter for the units, used to create unique ids
-     * @param randomPositioning whether the units should be randomly placed on their side or not
-     * @return the formation
-     */
-    public Formation createTestFormation(Side side, long idCounter, boolean randomPositioning, UnitTypes[] allowedUnitTypes, int minLevel, int maxLevel, int amountUnits, int unitSlots) {
+    public Formation createTestFormation(Side side, long idCounter, boolean randomPositioning, UnitTypes[] allowedUnitTypes, int minLevel, int maxLevel, float targetLevelAverage, int amountUnits, int unitSlots) {
+        System.out.println("targetLevelAverage = " + targetLevelAverage);
+
         Formation formation;
         ArrayList<Unit> units = new ArrayList<>();
 
         int slotsTaken = 0;
         int priorityCounter = 0;
-
-        float targetLevelAverage = (float) (minLevel + maxLevel) / 2;
 
         int[] possibleSlotSizes = new int[allowedUnitTypes.length];
         for (int i = 0; i < allowedUnitTypes.length; i++) {
@@ -109,6 +100,24 @@ public class CreateFormations {
         formation = new Formation(new User("TestUser_" + side, "TestUser_" + side), units);
 
         return formation;
+    }
+
+    /**
+     * creates a formation, with random positioning and random unit types and random levels.
+     * this method takes the min and max level of the units into account and tries to create a formation with the average level.
+     *
+     * @param side              the side of the formation
+     * @param idCounter         the id counter of the formation (used to create unique ids for the units)
+     * @param randomPositioning if true, the units will be placed randomly on the side, otherwise they will be placed in a straight line
+     * @param allowedUnitTypes  the unit types that are allowed in the formation
+     * @param minLevel          the minimum level of the units
+     * @param maxLevel          the maximum level of the units
+     * @param amountUnits       the amount of units that should be in the formation, the formation will never have more units than this. but it is not guaranteed to have so many units, as it can't exceed the amount of slots.
+     * @param unitSlots         the amount of slots that the formation has
+     * @return the formation
+     */
+    public Formation createTestFormation(Side side, long idCounter, boolean randomPositioning, UnitTypes[] allowedUnitTypes, int minLevel, int maxLevel, int amountUnits, int unitSlots) {
+        return createTestFormation(side, idCounter, randomPositioning, allowedUnitTypes, minLevel, maxLevel, (float) ((minLevel + maxLevel) / 2), amountUnits, unitSlots);
     }
 
     private float approachAverage(ArrayList<Unit> units, float targetLevelAverage, int maxLevelDifference) {

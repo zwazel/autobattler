@@ -40,9 +40,7 @@ public class CreateFormations {
         int slotsTaken = 0;
         int priorityCounter = 0;
 
-        float averageOfLevels = (float) (minLevel + maxLevel) / 2;
-
-        System.out.println("averageOfLevels = " + averageOfLevels);
+        float targetLevelAverage = (float) (minLevel + maxLevel) / 2;
 
         int[] possibleSlotSizes = new int[allowedUnitTypes.length];
         for (int i = 0; i < allowedUnitTypes.length; i++) {
@@ -93,9 +91,63 @@ public class CreateFormations {
             grid.updateOccupiedGrid(unit);
         }
 
+        System.out.println("targetLevelAverage = " + targetLevelAverage);
+
+        float averageLevel = getAverage(units);
+        System.out.println("averageLevel = " + averageLevel);
+
+        float maxLevelDifference = targetLevelAverage / 6;
+        System.out.println("maxLevelDifference = " + maxLevelDifference);
+
+        float difference = Math.abs(averageLevel - targetLevelAverage);
+        System.out.println("difference = " + difference);
+        System.out.println();
+        while (difference > maxLevelDifference) {
+            System.out.println("DIFFERENCE IS TOO HIGH");
+            System.out.println("going through units");
+            System.out.println("---");
+            for (Unit unit : units) {
+                System.out.println("unit = " + unit);
+                float levelDifference = Math.abs(unit.getLevel() - targetLevelAverage);
+                System.out.println("levelDifference between unit level and target = " + levelDifference);
+
+                if (levelDifference > maxLevelDifference) {
+                    System.out.println("levelDifference is too high");
+                    int newLevel = (int) ((unit.getLevel()) + (levelDifference / units.size()));
+
+                    System.out.println("newLevel = " + newLevel);
+                    unit.setLevel(newLevel);
+                }
+                System.out.println("----------------------------------------------------");
+
+                averageLevel = getAverage(units);
+                System.out.println("averageLevel = " + averageLevel);
+                difference = Math.abs(averageLevel - targetLevelAverage);
+                System.out.println("difference = " + difference);
+                if (difference <= maxLevelDifference) {
+                    System.out.println("we're balanced :)");
+                    break;
+                }
+
+                System.out.println("######################################################");
+            }
+        }
+
+        System.out.println(getAverage(units));
+
         formation = new Formation(new User("TestUser_" + side, "TestUser_" + side), units);
 
         return formation;
+    }
+
+    private float getAverage(ArrayList<Unit> units) {
+        // get average level of units in the formation
+        float averageLevel = 0;
+        for (Unit unitInFormation : units) {
+            averageLevel += unitInFormation.getLevel();
+        }
+        averageLevel /= units.size();
+        return averageLevel;
     }
 
     public Unit createTestUnit(long id, int priority, Vector position, UnitTypes type, int minLevel, int maxLevel) {

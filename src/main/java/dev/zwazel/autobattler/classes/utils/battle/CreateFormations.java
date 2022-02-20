@@ -94,62 +94,57 @@ public class CreateFormations {
             grid.updateOccupiedGrid(unit);
         }
 
-        System.out.println("targetLevelAverage = " + targetLevelAverage);
-
         float averageLevel = getAverage(units);
-        System.out.println("averageLevel = " + averageLevel);
 
-        float maxLevelDifference = 5;
-        System.out.println("maxLevelDifference = " + maxLevelDifference);
+        int maxLevelDifference = 5;
 
         float difference = Math.abs(averageLevel - targetLevelAverage);
-        System.out.println("difference = " + difference);
-        System.out.println();
         while (difference > maxLevelDifference) {
-            System.out.println("DIFFERENCE IS TOO HIGH");
-            System.out.println("going through units");
-            System.out.println("---");
-            for (Unit unit : units) {
-                System.out.println("unit = " + unit);
-                float levelDifference = Math.abs(unit.getLevel() - targetLevelAverage);
-                System.out.println("levelDifference between unit level and target = " + levelDifference);
-
-                if (levelDifference > maxLevelDifference) {
-                    System.out.println("levelDifference is too high");
-                    int newLevel;
-                    if (averageLevel > targetLevelAverage) {
-                        newLevel = (int) ((unit.getLevel()) - (levelDifference / units.size()));
-                        if (newLevel <= 0) {
-                            newLevel = 1;
-                        }
-                    } else {
-                        newLevel = (int) ((unit.getLevel()) + (levelDifference / units.size()));
-                    }
-
-                    System.out.println("newLevel = " + newLevel);
-                    unit.setLevel(newLevel);
-                }
-                System.out.println("----------------------------------------------------");
-
-                System.out.println("targetLevelAverage = " + targetLevelAverage);
-                averageLevel = getAverage(units);
-                System.out.println("averageLevel = " + averageLevel);
-                difference = Math.abs(averageLevel - targetLevelAverage);
-                System.out.println("difference = " + difference);
-                if (difference <= maxLevelDifference) {
-                    System.out.println("we're balanced :)");
-                    break;
-                }
-
-                System.out.println("######################################################");
-            }
+            difference = approachAverage(units, targetLevelAverage, maxLevelDifference);
         }
 
-        System.out.println(getAverage(units));
+        int counter = 0;
+        while (counter < units.size() && difference > 0) {
+            counter++;
+            difference = approachAverage(units, targetLevelAverage, 0);
+        }
 
         formation = new Formation(new User("TestUser_" + side, "TestUser_" + side), units);
 
         return formation;
+    }
+
+    private float approachAverage(ArrayList<Unit> units, float targetLevelAverage, int maxLevelDifference) {
+        float averageLevel = getAverage(units);
+        float difference = Math.abs(averageLevel - targetLevelAverage);
+        for (Unit unit : units) {
+            float levelDifference = Math.abs(unit.getLevel() - targetLevelAverage);
+
+            if (levelDifference > maxLevelDifference) {
+                int newLevel;
+                float newLevelChanger = levelDifference / units.size();
+                if (averageLevel > targetLevelAverage) {
+                    newLevel = (int) (unit.getLevel() - newLevelChanger);
+                    if (newLevel <= 0) {
+                        newLevel = 1;
+                    }
+                } else {
+                    newLevel = (int) (unit.getLevel() + newLevelChanger);
+                }
+                
+                unit.setLevel(newLevel);
+            }
+
+            averageLevel = getAverage(units);
+
+            difference = Math.abs(averageLevel - targetLevelAverage);
+
+            if (difference <= maxLevelDifference) {
+                break;
+            }
+        }
+
+        return difference;
     }
 
     private float getAverage(ArrayList<Unit> units) {

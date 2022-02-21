@@ -24,9 +24,14 @@ public class CreateFormations {
         this.useFullWidth = useFullWidth;
     }
 
-    public Formation createTestFormation(Side side, long idCounter, boolean randomPositioning, UnitTypes[] allowedUnitTypes, int minLevel, int maxLevel, float targetLevelAverage, int amountUnits, int unitSlots) {
-        System.out.println("targetLevelAverage = " + targetLevelAverage);
+    public Formation createTestFormation(Side side, long idCounter, boolean randomPositioning, UnitTypes[] allowedUnitTypes, int minLevel, int maxLevel, int amountUnits, int unitSlots) {
+        // get a random number between amountUnits + minlevel and amountUnits + maxLevel
+        int totalLevel = (amountUnits + minLevel) + (int) (Math.random() * ((amountUnits + maxLevel) - (amountUnits + minLevel)));
 
+        return createTestFormation(side, idCounter, randomPositioning, allowedUnitTypes, minLevel, maxLevel, totalLevel, amountUnits, unitSlots);
+    }
+
+    public Formation createTestFormation(Side side, long idCounter, boolean randomPositioning, UnitTypes[] allowedUnitTypes, int minLevel, int maxLevel, int targetTotalLevel, int amountUnits, int unitSlots) {
         Formation formation;
         ArrayList<Unit> units = new ArrayList<>();
 
@@ -82,19 +87,27 @@ public class CreateFormations {
             grid.updateOccupiedGrid(unit);
         }
 
-        float averageLevel = getAverage(units);
+        int totalLevel = getTotalLevel(units);
 
         int maxLevelDifference = 5;
 
-        float difference = Math.abs(averageLevel - targetLevelAverage);
+        float difference = Math.abs(totalLevel - targetTotalLevel);
         while (difference > maxLevelDifference) {
-            difference = approachAverage(units, targetLevelAverage, maxLevelDifference);
-        }
+            for (Unit unit : units) {
+                int randomLevelDifference = (int) (Math.random() * (maxLevelDifference + 1)) + 1;
 
-        int counter = 0;
-        while (counter < units.size() && difference > 0) {
-            counter++;
-            difference = approachAverage(units, targetLevelAverage, 0);
+                if (totalLevel > targetTotalLevel) {
+                    unit.setLevel(unit.getLevel() - randomLevelDifference);
+                } else {
+                    unit.setLevel(unit.getLevel() + randomLevelDifference);
+                }
+
+                totalLevel = getTotalLevel(units);
+                difference = Math.abs(totalLevel - targetTotalLevel);
+                if (difference <= maxLevelDifference) {
+                    break;
+                }
+            }
         }
 
         formation = new Formation(new User("TestUser_" + side, "TestUser_" + side), units);
@@ -102,65 +115,12 @@ public class CreateFormations {
         return formation;
     }
 
-    /**
-     * creates a formation, with random positioning and random unit types and random levels.
-     * this method takes the min and max level of the units into account and tries to create a formation with the average level.
-     *
-     * @param side              the side of the formation
-     * @param idCounter         the id counter of the formation (used to create unique ids for the units)
-     * @param randomPositioning if true, the units will be placed randomly on the side, otherwise they will be placed in a straight line
-     * @param allowedUnitTypes  the unit types that are allowed in the formation
-     * @param minLevel          the minimum level of the units
-     * @param maxLevel          the maximum level of the units
-     * @param amountUnits       the amount of units that should be in the formation, the formation will never have more units than this. but it is not guaranteed to have so many units, as it can't exceed the amount of slots.
-     * @param unitSlots         the amount of slots that the formation has
-     * @return the formation
-     */
-    public Formation createTestFormation(Side side, long idCounter, boolean randomPositioning, UnitTypes[] allowedUnitTypes, int minLevel, int maxLevel, int amountUnits, int unitSlots) {
-        return createTestFormation(side, idCounter, randomPositioning, allowedUnitTypes, minLevel, maxLevel, (float) ((minLevel + maxLevel) / 2), amountUnits, unitSlots);
-    }
-
-    private float approachAverage(ArrayList<Unit> units, float targetLevelAverage, int maxLevelDifference) {
-        float averageLevel = getAverage(units);
-        float difference = Math.abs(averageLevel - targetLevelAverage);
+    private int getTotalLevel(ArrayList<Unit> units) {
+        int totalLevel = 0;
         for (Unit unit : units) {
-            float levelDifference = Math.abs(unit.getLevel() - targetLevelAverage);
-
-            if (levelDifference > maxLevelDifference) {
-                int newLevel;
-                float newLevelChanger = levelDifference / units.size();
-                if (averageLevel > targetLevelAverage) {
-                    newLevel = (int) (unit.getLevel() - newLevelChanger);
-                    if (newLevel <= 0) {
-                        newLevel = 1;
-                    }
-                } else {
-                    newLevel = (int) (unit.getLevel() + newLevelChanger);
-                }
-
-                unit.setLevel(newLevel);
-            }
-
-            averageLevel = getAverage(units);
-
-            difference = Math.abs(averageLevel - targetLevelAverage);
-
-            if (difference <= maxLevelDifference) {
-                break;
-            }
+            totalLevel += unit.getLevel();
         }
-
-        return difference;
-    }
-
-    private float getAverage(ArrayList<Unit> units) {
-        // get average level of units in the formation
-        float averageLevel = 0;
-        for (Unit unitInFormation : units) {
-            averageLevel += unitInFormation.getLevel();
-        }
-        averageLevel /= units.size();
-        return averageLevel;
+        return totalLevel;
     }
 
     public Unit createTestUnit(long id, int priority, Vector position, UnitTypes type, int minLevel, int maxLevel) {

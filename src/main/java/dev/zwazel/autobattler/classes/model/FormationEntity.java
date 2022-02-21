@@ -96,6 +96,14 @@ public class FormationEntity {
         return (float) totalLevel / this.formationUnitTable.size();
     }
 
+    public int getTotalLevel() {
+        int totalLevel = 0;
+        for (FormationUnitTable formationUnitTable : this.formationUnitTable) {
+            totalLevel += formationUnitTable.getUnitModel().getLevel();
+        }
+        return totalLevel;
+    }
+
     @Override
     public String toString() {
         return "FormationEntity{" +

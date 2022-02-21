@@ -135,7 +135,7 @@ public class BattlerGen2 {
         }, 1, 10, amountUnitsLeft, unitSlots);
         Formation right = createFormations.createTestFormation(ENEMY, amountUnitsLeft, true, new UnitTypes[]{
                 UnitTypes.MY_FIRST_UNIT,
-        }, 1, 10, amountUnitsRight, unitSlots);
+        }, 1, 10, left.getTotalLevels(), amountUnitsRight, unitSlots);
 
         new BattlerGen2(new FormationEntity(left), new FormationEntity(right), false, true, gridSize, false, true);
     }

@@ -41,6 +41,14 @@ public class Formation {
         }
     }
 
+    public int getTotalLevels() {
+        int totalLevels = 0;
+        for (Unit unit : units) {
+            totalLevels += unit.getLevel();
+        }
+        return totalLevels;
+    }
+
     public User getUser() {
         return user;
     }

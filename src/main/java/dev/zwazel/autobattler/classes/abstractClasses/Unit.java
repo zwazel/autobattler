@@ -364,4 +364,48 @@ public abstract class Unit implements Obstacle, Cloneable {
             throw new AssertionError();
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Unit unit = (Unit) o;
+
+        if (getID() != unit.getID()) return false;
+        if (getSymbol() != unit.getSymbol()) return false;
+        if (getHealth() != unit.getHealth()) return false;
+        if (getEnergy() != unit.getEnergy()) return false;
+        if (getLevel() != unit.getLevel()) return false;
+        if (getPriority() != unit.getPriority()) return false;
+        if (getSpeed() != unit.getSpeed()) return false;
+        if (getType() != unit.getType()) return false;
+        if (getSide() != unit.getSide()) return false;
+        if (!getName().equals(unit.getName())) return false;
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        if (!Arrays.equals(getAbilities(), unit.getAbilities())) return false;
+        if (getGridPosition() != null ? !getGridPosition().equals(unit.getGridPosition()) : unit.getGridPosition() != null)
+            return false;
+        if (getBattler() != null ? !getBattler().equals(unit.getBattler()) : unit.getBattler() != null) return false;
+        return getMyState() == unit.getMyState();
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (getID() ^ (getID() >>> 32));
+        result = 31 * result + (int) getSymbol();
+        result = 31 * result + getType().hashCode();
+        result = 31 * result + (getSide() != null ? getSide().hashCode() : 0);
+        result = 31 * result + getHealth();
+        result = 31 * result + getEnergy();
+        result = 31 * result + getLevel();
+        result = 31 * result + getPriority();
+        result = 31 * result + getName().hashCode();
+        result = 31 * result + Arrays.hashCode(getAbilities());
+        result = 31 * result + (getGridPosition() != null ? getGridPosition().hashCode() : 0);
+        result = 31 * result + getSpeed();
+        result = 31 * result + (getBattler() != null ? getBattler().hashCode() : 0);
+        result = 31 * result + (getMyState() != null ? getMyState().hashCode() : 0);
+        return result;
+    }
 }

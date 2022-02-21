@@ -19,7 +19,7 @@ public class GUI extends Canvas {
     private final BattlerGen2 BATTLER_GEN2;
 
     private final boolean DIFFERENTIATE_SIDE = true;
-    private final boolean DIFFERENTIATE_LAST_UNIT = false;
+    private final boolean DIFFERENTIATE_LAST_UNIT = true;
     private final boolean DIFFERENTIATE_CURRENT_UNIT = true;
     private final boolean DIFFERENTIATE_TARGET = true;
     private final boolean SHOW_LAST_POSITION = true;
@@ -41,6 +41,7 @@ public class GUI extends Canvas {
     private final Color COLOR_GRID = Color.gray;
     private final Color COLOR_PATH_GRID = Color.BLACK;
     private final Color COLOR_PATH = Color.RED;
+    private final Color COLOR_UNIT_INFOS = Color.BLACK;
 
     private Iterator<Unit> unitIterator;
     private Node[] nodes = new Node[0];
@@ -192,18 +193,20 @@ public class GUI extends Canvas {
                         if (obstacle.equals(currentUnit)) {
                             // current unit
                             differentiateFriendlyAndEnemy(g, currentUnit, DIFFERENTIATE_CURRENT_UNIT, COLOR_CURRENT_UNIT);
-                        } else if (obstacle.equals(lastUnit) && !lastUnit.equals(target)) {
+                        } else if (obstacle.equals(target)) {
+                            // target unit
+                            differentiateFriendlyAndEnemy(g, target, DIFFERENTIATE_TARGET, COLOR_TARGET);
+                        } else if (obstacle.equals(lastUnit)) {
                             // last unit
                             differentiateFriendlyAndEnemy(g, lastUnit, DIFFERENTIATE_LAST_UNIT, COLOR_LAST_UNIT);
                         } else {
-                            // target unit
-                            differentiateFriendlyAndEnemy(g, target, DIFFERENTIATE_TARGET, COLOR_TARGET);
+                            throw new RuntimeException("Unknown obstacle");
                         }
                     }
                     g.fillRect(gridPositionNow.getX(), gridPositionNow.getY(), SCALAR, SCALAR);
 
                     // TODO: 17.02.2022 only draw infos for the selected unit (click on it)
-                    g.setColor(Color.BLACK);
+                    g.setColor(COLOR_UNIT_INFOS);
                     if (obstacle.getClass() == MyFirstUnit.class) {
                         MyFirstUnit unit = (MyFirstUnit) obstacle;
                         g.drawString(unit.getName() + "(" + unit.getID() + "," + unit.getPriority() + "," +

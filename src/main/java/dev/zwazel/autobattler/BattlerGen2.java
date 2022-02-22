@@ -138,7 +138,7 @@ public class BattlerGen2 {
                 UnitTypes.MY_FIRST_UNIT,
         }, 1, 10, left.getTotalLevels(), amountUnitsRight, unitSlots);
 
-        new BattlerGen2(new FormationEntity(left), new FormationEntity(right), false, false, gridSize, false, true);
+        new BattlerGen2(new FormationEntity(left), new FormationEntity(right), false, true, gridSize, false, true);
     }
 
     private void mirrorSide(Unit unit) {

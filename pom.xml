@@ -129,6 +129,13 @@
             <artifactId>hibernate-types-52</artifactId>
             <version>2.14.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.eirslett/frontend-maven-plugin -->
+        <dependency>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <version>1.12.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -190,6 +197,10 @@
                 <configuration>
                     <jdkVersion>17.0.2</jdkVersion>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

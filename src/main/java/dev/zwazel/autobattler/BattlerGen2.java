@@ -11,6 +11,7 @@ import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.model.FormationEntity;
 import dev.zwazel.autobattler.classes.model.User;
 import dev.zwazel.autobattler.classes.units.MyFirstUnit;
+import dev.zwazel.autobattler.classes.units.SimpleWall;
 import dev.zwazel.autobattler.classes.utils.Formation;
 import dev.zwazel.autobattler.classes.utils.GetFile;
 import dev.zwazel.autobattler.classes.utils.UnitTypeParser;
@@ -137,7 +138,7 @@ public class BattlerGen2 {
                 UnitTypes.MY_FIRST_UNIT,
         }, 1, 10, left.getTotalLevels(), amountUnitsRight, unitSlots);
 
-        new BattlerGen2(new FormationEntity(left), new FormationEntity(right), false, true, gridSize, false, true);
+        new BattlerGen2(new FormationEntity(left), new FormationEntity(right), false, false, gridSize, false, true);
     }
 
     private void mirrorSide(Unit unit) {
@@ -235,10 +236,16 @@ public class BattlerGen2 {
                 GridCell cell = grid.getGridCells()[gridPositionNow.getX()][gridPositionNow.getY()];
                 Obstacle obstacle = cell.getCurrentObstacle();
                 if (obstacle != null) {
-                    if (obstacle.getClass() == MyFirstUnit.class) {
-                        character = "" + ((MyFirstUnit) obstacle).getSymbol();
-                    } else {
-                        character = "/";
+                    switch (obstacle) {
+                        case MyFirstUnit myFirstUnit -> {
+                            character = "" + myFirstUnit.getSymbol();
+                        }
+                        case SimpleWall simpleWall -> {
+                            character = "/";
+                        }
+                        default -> {
+                            throw new IllegalStateException("Unexpected value: " + obstacle);
+                        }
                     }
                 }
 

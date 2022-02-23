@@ -10,7 +10,6 @@ import dev.zwazel.autobattler.classes.enums.UnitTypes;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.model.FormationEntity;
 import dev.zwazel.autobattler.classes.model.User;
-import dev.zwazel.autobattler.classes.units.MyFirstUnit;
 import dev.zwazel.autobattler.classes.units.SimpleWall;
 import dev.zwazel.autobattler.classes.utils.Formation;
 import dev.zwazel.autobattler.classes.utils.GetFile;
@@ -237,8 +236,8 @@ public class BattlerGen2 {
                 Obstacle obstacle = cell.getCurrentObstacle();
                 if (obstacle != null) {
                     switch (obstacle) {
-                        case MyFirstUnit myFirstUnit -> {
-                            character = "" + myFirstUnit.getSymbol();
+                        case Unit unit -> {
+                            character = "" + unit.getSymbol();
                         }
                         case SimpleWall simpleWall -> {
                             character = "/";

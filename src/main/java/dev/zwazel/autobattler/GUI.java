@@ -178,9 +178,9 @@ public class GUI extends Canvas {
                     Obstacle obstacle = gridCell.getCurrentObstacle();
                     if (!obstacle.equals(currentUnit) && !obstacle.equals(lastUnit) && !obstacle.equals(target)) {
                         switch (obstacle) {
-                            case MyFirstUnit myFirstUnit -> {
+                            case Unit unit -> {
                                 if (DIFFERENTIATE_SIDE) {
-                                    if (myFirstUnit.getSide() == Side.FRIENDLY) {
+                                    if (unit.getSide() == Side.FRIENDLY) {
                                         // friendlies
                                         g.setColor(COLOR_FRIENDLY);
                                     } else {

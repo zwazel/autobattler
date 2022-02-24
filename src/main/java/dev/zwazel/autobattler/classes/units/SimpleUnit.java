@@ -60,6 +60,10 @@ public class SimpleUnit {
         this.unitType = UnitTypes.findUnitType(unitType);
     }
 
+    public void setUnitType(UnitTypes unitType) {
+        this.unitType = unitType;
+    }
+
     @Override
     public String toString() {
         return "SimpleUnit{" +

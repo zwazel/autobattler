@@ -19,7 +19,6 @@ import java.util.Arrays;
 
 @Getter
 @Setter
-@Builder
 public abstract class Unit implements Obstacle, Cloneable {
     /**
      * The unit's unique ID.

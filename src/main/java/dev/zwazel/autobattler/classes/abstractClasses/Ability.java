@@ -11,7 +11,6 @@ import java.util.Random;
 
 @Getter
 @Setter
-@Builder
 public abstract class Ability extends RoundAffected {
     private final UsageType costType;
     private final AbilityOutputType outputType;

@@ -105,9 +105,9 @@ public class GUI extends Canvas {
                 if (!SHOW_LAST_POSITION) {
                     start = currentUnit.getGridPosition();
                 }
-                if (actionHistory.targets().length > 0) {
-                    Unit target = actionHistory.targets()[0];
-                    this.CURRENT_ACTION.setText("Current Action = " + actionHistory.actionType());
+                if (actionHistory.getTargets().length > 0) {
+                    Unit target = actionHistory.getTargets()[0];
+                    this.CURRENT_ACTION.setText("Current Action = " + actionHistory.getActionType());
                     if (target != null) {
                         end = target.getGridPosition();
                         this.target = target;

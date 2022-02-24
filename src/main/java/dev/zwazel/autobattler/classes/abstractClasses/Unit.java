@@ -11,7 +11,6 @@ import dev.zwazel.autobattler.classes.utils.Vector;
 import dev.zwazel.autobattler.classes.utils.json.ActionHistory;
 import dev.zwazel.autobattler.classes.utils.map.FindPath;
 import dev.zwazel.autobattler.classes.utils.map.Node;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -227,18 +226,18 @@ public abstract class Unit implements Obstacle, Cloneable {
         return new ActionHistory(Action.DIE, this, new Unit[0], null, new Vector[]{this.getGridPosition()});
     }
 
-    public long getID() {
-        return ID;
-    }
-
-    public String getName() {
-        return name;
-    }
-
     public void setName(String name) {
         if (this.type.isCustomNamesAllowed()) {
             this.name = name;
         }
+    }
+
+    public boolean setLevel(int level) {
+        if (level > 0) {
+            this.level = level;
+            return true;
+        }
+        return false;
     }
 
     @Override

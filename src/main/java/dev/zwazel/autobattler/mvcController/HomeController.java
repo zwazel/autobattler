@@ -36,7 +36,7 @@ public class HomeController {
         }
 
         ArrayList<String> infos = new ArrayList<>();
-        infos.add("Error while loading project.properties");
+        infos.add("Error while loading pom.properties");
         return infos;
     }
 }

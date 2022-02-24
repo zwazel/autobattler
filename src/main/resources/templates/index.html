@@ -6,7 +6,10 @@
 </head>
 <body>
 
-
-
+<p th:each="currentInfo : ${info}">
+    <span th:text="${currentInfo}">
+        
+    </span>
+</p>
 </body>
 </html>

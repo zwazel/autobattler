@@ -27,6 +27,7 @@ public class HomeController {
             String groupID = p.getProperty("groupid");
             String artifactID = p.getProperty("artifactid");
             String description = p.getProperty("description");
+            String javaVersion = p.getProperty("java.version");
 
             ArrayList<String> infos = new ArrayList<>();
             infos.add("Project name: " + name);
@@ -34,6 +35,7 @@ public class HomeController {
             infos.add("Version: " + version);
             infos.add("Description: " + description);
             infos.add("Group ID: " + groupID);
+            infos.add("Java version: " + javaVersion);
 
             // return the infos
             return infos;

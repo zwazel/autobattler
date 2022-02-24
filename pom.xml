@@ -16,11 +16,6 @@
     <description>A basic autobattler</description>
     <properties>
         <java.version>17</java.version>
-        <name>${project.name}</name>
-        <version>${project.version}</version>
-        <groupid>${project.groupId}</groupid>
-        <artifactid>${project.artifactId}</artifactid>
-        <description>${project.description}</description>
     </properties>
     <dependencies>
         <dependency>
@@ -140,16 +135,14 @@
             <artifactId>properties-maven-plugin</artifactId>
             <version>1.0.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-model</artifactId>
+            <version>3.8.1</version>
+        </dependency>
     </dependencies>
 
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -209,22 +202,6 @@
                 <configuration>
                     <jdkVersion>17.0.2</jdkVersion>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>properties-maven-plugin</artifactId>
-                <version>1.0.0</version>
-                <executions>
-                    <execution>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>write-project-properties</goal>
-                        </goals>
-                        <configuration>
-                            <outputFile>${project.build.outputDirectory}/pom.properties</outputFile>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

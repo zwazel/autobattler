@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -28,8 +27,8 @@ public class ServerInfo {
             String version = p.getProperty("version");
             String javaVersion = p.getProperty("java.version");
 
-            infos.put("Version",version);
-            infos.put("Java version",javaVersion);
+            infos.put("Version", version);
+            infos.put("Java version", javaVersion);
 
             // return the infos
             return infos;
@@ -37,7 +36,7 @@ public class ServerInfo {
             e.printStackTrace();
         }
 
-        infos.put("Error","Error while loading pom.properties");
+        infos.put("Error", "Error while loading pom.properties");
         return infos;
     }
 

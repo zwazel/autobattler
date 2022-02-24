@@ -3,7 +3,6 @@ package dev.zwazel.autobattler.mvcController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,7 +30,7 @@ public class HomeController {
             final String javaVersion = properties.getProperty("program-java-version");
 
             ArrayList<String> infos = new ArrayList<>();
-            infos.add("Name: " + name);
+            infos.add("Project name: " + name);
             infos.add("Artifact ID: " + artifactID);
             infos.add("Version: " + version);
             infos.add("Description: " + desc);

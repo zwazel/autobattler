@@ -22,19 +22,11 @@ public class HomeController {
             InputStream is = this.getClass().getClassLoader().getResourceAsStream("pom.properties");
             Properties p = new Properties();
             p.load(is);
-            String name = p.getProperty("name");
             String version = p.getProperty("version");
-            String groupID = p.getProperty("groupid");
-            String artifactID = p.getProperty("artifactid");
-            String description = p.getProperty("description");
             String javaVersion = p.getProperty("java.version");
 
             ArrayList<String> infos = new ArrayList<>();
-            infos.add("Project name: " + name);
-            infos.add("Artifact ID: " + artifactID);
             infos.add("Version: " + version);
-            infos.add("Description: " + description);
-            infos.add("Group ID: " + groupID);
             infos.add("Java version: " + javaVersion);
 
             // return the infos

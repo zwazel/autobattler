@@ -52,44 +52,44 @@ public class HistoryToJson {
         StringBuilder json = new StringBuilder("{");
 
         // TODO: 16.02.2022 only write stuff that has changed
-        json.append("\"user\":{" + "\"id\":").append(actionHistory.user().getID()).append(",")
-                .append("\"side\":\"").append(actionHistory.user().getSide()).append("\",")
-                .append("\"health\":").append(actionHistory.user().getHealth()).append(",")
-                .append("\"energy\":").append(actionHistory.user().getEnergy())
+        json.append("\"user\":{" + "\"id\":").append(actionHistory.getUser().getID()).append(",")
+                .append("\"side\":\"").append(actionHistory.getUser().getSide()).append("\",")
+                .append("\"health\":").append(actionHistory.getUser().getHealth()).append(",")
+                .append("\"energy\":").append(actionHistory.getUser().getEnergy())
                 .append("}");
 
         json.append(",\"targets\":[");
         int counter = 0;
 
         // TODO: 16.02.2022 only write stuff that has changed (e.g. health)
-        for (Unit unit : actionHistory.targets()) {
+        for (Unit unit : actionHistory.getTargets()) {
             json.append("{\"id\":").append(unit.getID()).append(",")
                     .append("\"side\":\"").append(unit.getSide()).append("\",")
                     .append("\"health\":").append(unit.getHealth()).append(",")
                     .append("\"energy\":").append(unit.getEnergy())
                     .append("}");
-            if (counter < actionHistory.targets().length - 1) {
+            if (counter < actionHistory.getTargets().length - 1) {
                 counter++;
                 json.append(",");
             }
         }
         json.append("]");
 
-        json.append(",\"ability\":{").append((actionHistory.ability() == null) ?
+        json.append(",\"ability\":{").append((actionHistory.getAbility() == null) ?
                         "\"title\":\"undefined\"" :
-                        "\"title\":\"" + actionHistory.ability().getTitle() + "\"" +
-                                ",\"targetSide\":\"" + actionHistory.ability().getTargetSide() + "\"" +
-                                ",\"outPutType\":" + "\"" + actionHistory.ability().getOutputType() + "\","
-                                + "\"outPutAmount\":" + actionHistory.ability().getOutPutAmount())
+                        "\"title\":\"" + actionHistory.getAbility().getTitle() + "\"" +
+                                ",\"targetSide\":\"" + actionHistory.getAbility().getTargetSide() + "\"" +
+                                ",\"outPutType\":" + "\"" + actionHistory.getAbility().getOutputType() + "\","
+                                + "\"outPutAmount\":" + actionHistory.getAbility().getOutPutAmount())
                 .append("}");
 
-        json.append(",\"type\":" + "\"").append(actionHistory.actionType()).append("\"");
+        json.append(",\"type\":" + "\"").append(actionHistory.getActionType()).append("\"");
 
         json.append(",\"positions\":[");
         counter = 0;
-        for (Vector position : actionHistory.positions()) {
+        for (Vector position : actionHistory.getPositions()) {
             json.append(gson.toJson(position));
-            if (counter < actionHistory.positions().length - 1) {
+            if (counter < actionHistory.getPositions().length - 1) {
                 counter++;
                 json.append(",");
             }

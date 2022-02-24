@@ -4,10 +4,14 @@ import dev.zwazel.autobattler.classes.abstractClasses.Ability;
 import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.enums.Action;
 import dev.zwazel.autobattler.classes.utils.Vector;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Arrays;
 import java.util.Objects;
 
+@Getter
+@Setter
 public final class ActionHistory {
     private final Action actionType;
     private final Unit user;
@@ -55,26 +59,6 @@ public final class ActionHistory {
                 ", ability=" + ability +
                 ", position=" + Arrays.toString(positions) +
                 '}';
-    }
-
-    public Action actionType() {
-        return actionType;
-    }
-
-    public Unit user() {
-        return user;
-    }
-
-    public Unit[] targets() {
-        return targets;
-    }
-
-    public Ability ability() {
-        return ability;
-    }
-
-    public Vector[] positions() {
-        return positions;
     }
 
     @Override

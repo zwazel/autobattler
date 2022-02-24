@@ -3,9 +3,15 @@ package dev.zwazel.autobattler.classes.abstractClasses;
 import dev.zwazel.autobattler.classes.RoundAffected;
 import dev.zwazel.autobattler.classes.enums.*;
 import dev.zwazel.autobattler.classes.utils.Vector;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Random;
 
+@Getter
+@Setter
+@Builder
 public abstract class Ability extends RoundAffected {
     private final UsageType costType;
     private final AbilityOutputType outputType;
@@ -98,82 +104,6 @@ public abstract class Ability extends RoundAffected {
      */
     public boolean isInRange(Unit target, boolean checkDead) {
         return (target != null && (target.getMyState() != State.DEAD || checkDead) && isInRange(target.getGridPosition()));
-    }
-
-    public UsageType getCostType() {
-        return costType;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public AbilityType getType() {
-        return type;
-    }
-
-    public void setType(AbilityType type) {
-        this.type = type;
-    }
-
-    public int getCooldown() {
-        return cooldown;
-    }
-
-    public int getUsageCostAmount() {
-        return usageCostAmount;
-    }
-
-    public void setUsageCostAmount(int usageCostAmount) {
-        this.usageCostAmount = usageCostAmount;
-    }
-
-    public AbilityOutputType getOutputType() {
-        return outputType;
-    }
-
-    public int getRange() {
-        return range;
-    }
-
-    public void setRange(int range) {
-        this.range = range;
-    }
-
-    public int getCurrentCooldown() {
-        return currentCooldown;
-    }
-
-    public void setCurrentCooldown(int currentCooldown) {
-        this.currentCooldown = currentCooldown;
-    }
-
-    public int getOutPutAmount() {
-        return outPutAmount;
-    }
-
-    public Unit getOwner() {
-        return owner;
-    }
-
-    public Side getTargetSide() {
-        return targetSide;
-    }
-
-    public void setTargetSide(Side targetSide) {
-        this.targetSide = targetSide;
     }
 
     @Override

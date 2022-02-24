@@ -11,11 +11,15 @@ import dev.zwazel.autobattler.classes.utils.database.FormationOnly;
 import dev.zwazel.autobattler.classes.utils.database.UnitOnly;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UnitModelRepository;
 import javassist.NotFoundException;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Getter
+@Setter
 public class FormationServiceTemplate {
     private ArrayList<SimpleUnit> units;
 
@@ -111,14 +115,6 @@ public class FormationServiceTemplate {
         }
 
         return new Formation(user, units);
-    }
-
-    public ArrayList<SimpleUnit> getUnits() {
-        return units;
-    }
-
-    public void setUnits(ArrayList<SimpleUnit> units) {
-        this.units = units;
     }
 
     @Override

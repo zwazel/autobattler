@@ -6,10 +6,14 @@ import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.model.UnitModel;
 import dev.zwazel.autobattler.classes.utils.UnitTypeParser;
 import dev.zwazel.autobattler.classes.utils.Vector;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Util class that works as a bridge to create a unit of a certain type.
  */
+@Getter
+@Setter
 public class SimpleUnit {
     private long id;
     private int priority;
@@ -52,56 +56,8 @@ public class SimpleUnit {
         return UnitTypeParser.getUnit(this);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Vector getPosition() {
-        return position;
-    }
-
-    public void setPosition(Vector position) {
-        this.position = position;
-    }
-
-    public int getPriority() {
-        return priority;
-    }
-
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public UnitTypes getUnitType() {
-        return unitType;
-    }
-
     public void setUnitType(String unitType) throws UnknownUnitType {
         this.unitType = UnitTypes.findUnitType(unitType);
-    }
-
-    public void setUnitType(UnitTypes unitType) {
-        this.unitType = unitType;
-    }
-
-    public Integer getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
     }
 
     @Override

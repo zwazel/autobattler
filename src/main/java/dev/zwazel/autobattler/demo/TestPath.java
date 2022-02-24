@@ -34,6 +34,7 @@ public class TestPath {
         drawGrid(grid, path, start, end);
     }
 
+    // TODO: 24.02.2022 ich hab das wohl irgendwann mal kaputt gemacht, oops
     private static void drawGrid(Grid grid, Node[] path, Vector start, Vector end) {
         StringBuilder vertical = new StringBuilder();
         vertical.append("-".repeat((grid.getWidth()) * 4 + 1));

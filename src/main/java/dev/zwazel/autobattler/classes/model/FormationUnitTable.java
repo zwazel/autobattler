@@ -3,9 +3,13 @@ package dev.zwazel.autobattler.classes.model;
 import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.utils.Vector;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
+@Getter
+@Setter
 @Entity
 public class FormationUnitTable {
     @Id
@@ -42,22 +46,6 @@ public class FormationUnitTable {
 
     public Unit getUnit() throws UnknownUnitType {
         return unitModel.getUnit(this.getUnitPriority(), this.getUnitPosition());
-    }
-
-    public UnitModel getUnitModel() {
-        return unitModel;
-    }
-
-    public void setUnitModel(UnitModel unitModel) {
-        this.unitModel = unitModel;
-    }
-
-    public int getUnitPriority() {
-        return unitPriority;
-    }
-
-    public void setUnitPriority(int unitPriority) {
-        this.unitPriority = unitPriority;
     }
 
     public Vector getUnitPosition() {

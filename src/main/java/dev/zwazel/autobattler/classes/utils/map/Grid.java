@@ -3,9 +3,13 @@ package dev.zwazel.autobattler.classes.utils.map;
 import dev.zwazel.autobattler.classes.Obstacle;
 import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.utils.Vector;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Arrays;
 
+@Getter
+@Setter
 public class Grid {
     private final GridCell[][] gridCells;
     private final int width;
@@ -40,18 +44,6 @@ public class Grid {
 
     public Vector getGridSize() {
         return new Vector(width, height);
-    }
-
-    public GridCell[][] getGridCells() {
-        return gridCells;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package dev.zwazel.autobattler.services;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,11 +11,23 @@ import java.util.Properties;
 
 @RestController
 @RequestMapping("/api/public/server")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ServerInfo {
 
-    @RequestMapping("/info")
-    public HashMap<String, String> getServerInfo() {
-        return getInfos();
+    @RequestMapping(path = "/info", produces = "application/json")
+    public String getServerInfo() {
+        HashMap<String, String> infos = getInfos();
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for (String key : infos.keySet()) {
+            sb.append("{");
+            sb.append("\"name\":\"").append(key).append("\",");
+            sb.append("\"value\":\"").append(infos.get(key)).append("\"");
+            sb.append("},");
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        sb.append("]");
+        return sb.toString();
     }
 
     private HashMap<String, String> getInfos() {

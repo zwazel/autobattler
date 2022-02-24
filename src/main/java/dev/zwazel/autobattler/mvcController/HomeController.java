@@ -19,7 +19,7 @@ public class HomeController {
 
     private ArrayList<String> getInfos() {
         try {
-            InputStream is = this.getClass().getResourceAsStream("my.properties");
+            InputStream is = this.getClass().getClassLoader().getResourceAsStream("pom.properties");
             Properties p = new Properties();
             p.load(is);
             String name = p.getProperty("name");

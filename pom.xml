@@ -221,7 +221,7 @@
                             <goal>write-project-properties</goal>
                         </goals>
                         <configuration>
-                            <outputFile>${project.build.outputDirectory}/my.properties</outputFile>
+                            <outputFile>${project.build.outputDirectory}/pom.properties</outputFile>
                         </configuration>
                     </execution>
                 </executions>

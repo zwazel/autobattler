@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/authenticated/user")
 public class UserService {
     private final UserRepository userRepository;
     private final FormationEntityRepository formationEntityRepository;

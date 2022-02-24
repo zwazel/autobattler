@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @RestController()
-@RequestMapping("/api/battle")
+@RequestMapping("/api/authenticated/battle")
 public class BattleServices {
     private final Vector gridSize = new Vector(10, 10);
     private final Vector userGridSize = new Vector(3, 10);

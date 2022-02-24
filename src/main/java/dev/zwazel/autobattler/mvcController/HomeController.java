@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -17,24 +18,21 @@ public class HomeController {
     }
 
     private ArrayList<String> getInfos() {
-        final Properties properties = new Properties();
         try {
-            properties.load(this.getClass().getClassLoader().getResourceAsStream("project.properties"));
-
-            // get the different properties
-            final String version = properties.getProperty("program-version");
-            final String desc = properties.getProperty("program-description");
-            final String groupID = properties.getProperty("program-group-id");
-            final String artifactID = properties.getProperty("program-artifact-id");
-            final String name = properties.getProperty("program-name");
-            final String javaVersion = properties.getProperty("program-java-version");
+            InputStream is = this.getClass().getResourceAsStream("my.properties");
+            Properties p = new Properties();
+            p.load(is);
+            String name = p.getProperty("name");
+            String version = p.getProperty("version");
+            String groupID = p.getProperty("groupid");
+            String artifactID = p.getProperty("artifactid");
+            String description = p.getProperty("description");
 
             ArrayList<String> infos = new ArrayList<>();
             infos.add("Project name: " + name);
             infos.add("Artifact ID: " + artifactID);
             infos.add("Version: " + version);
-            infos.add("Description: " + desc);
-            infos.add("Java Version: " + javaVersion);
+            infos.add("Description: " + description);
             infos.add("Group ID: " + groupID);
 
             // return the infos

@@ -16,6 +16,11 @@
     <description>A basic autobattler</description>
     <properties>
         <java.version>17</java.version>
+        <name>${project.name}</name>
+        <version>${project.version}</version>
+        <groupid>${project.groupId}</groupid>
+        <artifactid>${project.artifactId}</artifactid>
+        <description>${project.description}</description>
     </properties>
     <dependencies>
         <dependency>
@@ -129,6 +134,13 @@
             <version>1.18.22</version>
             <scope>provided</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.codehaus.mojo/properties-maven-plugin -->
+        <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>properties-maven-plugin</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -197,6 +209,22 @@
                 <configuration>
                     <jdkVersion>17.0.2</jdkVersion>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>write-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <outputFile>${project.build.outputDirectory}/my.properties</outputFile>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

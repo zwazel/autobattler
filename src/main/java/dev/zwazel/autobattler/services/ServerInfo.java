@@ -1,5 +1,6 @@
 package dev.zwazel.autobattler.services;
 
+import dev.zwazel.autobattler.classes.enums.UserLoginInfos;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +17,7 @@ public class ServerInfo {
 
     @RequestMapping(path = "/info", produces = "application/json")
     public String getServerInfo() {
-        HashMap<String, String> infos = getInfos();
+        HashMap<String, String> infos = getServerInfos();
         StringBuilder sb = new StringBuilder();
         sb.append("[");
         for (String key : infos.keySet()) {
@@ -30,7 +31,17 @@ public class ServerInfo {
         return sb.toString();
     }
 
-    private HashMap<String, String> getInfos() {
+    @RequestMapping(path = "/userLoginInfo", produces = "application/json")
+    public String getUserLoginInfo() {
+        return "{" +
+                "\"usernameMinLength\":" + UserLoginInfos.MIN_USERNAME_LENGTH + "," +
+                "\"usernameMaxLength\":" + UserLoginInfos.MAX_USERNAME_LENGTH + "," +
+                "\"passwordMinLength\":" + UserLoginInfos.MIN_PASSWORD_LENGTH + "," +
+                "\"passwordMaxLength\":" + UserLoginInfos.MAX_PASSWORD_LENGTH +
+                "}";
+    }
+
+    private HashMap<String, String> getServerInfos() {
         HashMap<String, String> infos = new HashMap<>();
 
         try {

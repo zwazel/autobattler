@@ -1,11 +1,13 @@
 package dev.zwazel.autobattler.classes.model;
 
+import dev.zwazel.autobattler.classes.enums.UserLoginInfos;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,9 +23,13 @@ public class User {
     private long id;
 
     @NotNull
+    @Size(min = UserLoginInfos.MIN_USERNAME_LENGTH, max = UserLoginInfos.MAX_USERNAME_LENGTH)
+    @Column(length = UserLoginInfos.MAX_USERNAME_LENGTH, unique = true)
     private String username;
 
     @NotNull
+    @Size(min = UserLoginInfos.MIN_PASSWORD_LENGTH, max = UserLoginInfos.MAX_PASSWORD_LENGTH)
+    @Column(length = UserLoginInfos.MAX_PASSWORD_LENGTH)
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

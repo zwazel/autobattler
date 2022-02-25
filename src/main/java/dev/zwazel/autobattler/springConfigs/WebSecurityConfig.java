@@ -1,4 +1,4 @@
-package dev.zwazel.autobattler.security;
+package dev.zwazel.autobattler.springConfigs;
 
 import dev.zwazel.autobattler.security.jwt.AuthEntryPointJwt;
 import dev.zwazel.autobattler.security.jwt.AuthTokenFilter;

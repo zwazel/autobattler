@@ -1,7 +1,6 @@
 package dev.zwazel.autobattler.services;
 
 import dev.zwazel.autobattler.classes.enums.UserLoginInfos;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

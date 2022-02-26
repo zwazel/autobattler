@@ -30,7 +30,7 @@ public class Initializer implements CommandLineRunner {
                 System.out.println(userRole + " not found, creating...");
                 userRoleRepository.save(new UserRole(userRole));
             } else {
-                System.out.println(userRole + " found");
+                System.out.println(userRole + " found, skipping it...");
             }
         }
 

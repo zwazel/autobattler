@@ -11,7 +11,6 @@ import java.util.Properties;
 
 @RestController
 @RequestMapping("/api/public/server")
-//@CrossOrigin(origins = "http://localhost:3000")
 public class ServerInfo {
 
     @RequestMapping(path = "/info", produces = "application/json")

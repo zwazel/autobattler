@@ -72,7 +72,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(ImmutableList.of("http://localhost:[*]", "https://localhost:[*]"));
+        configuration.setAllowedOriginPatterns(ImmutableList.of("http://localhost:[*]", "https://localhost:[*]", "https://zwazels-autobattler.herokuapp.com", "https://zwazels-autobattler-test.herokuapp.com", "https://zwazel.github.io"));
         configuration.setAllowedMethods(ImmutableList.of("HEAD",
                 "GET", "POST", "PUT", "DELETE", "PATCH"));
         // setAllowCredentials(true) is important, otherwise:

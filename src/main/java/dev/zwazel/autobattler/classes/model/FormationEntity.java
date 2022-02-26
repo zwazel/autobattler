@@ -14,7 +14,7 @@ import java.util.Set;
 @Table(name = "formation")
 public class FormationEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @ManyToOne

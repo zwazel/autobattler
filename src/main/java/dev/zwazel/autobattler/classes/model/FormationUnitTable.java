@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Entity
 public class FormationUnitTable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "formation_unit_table", nullable = false)
     private Long id;
 

@@ -158,3 +158,40 @@
 
 - Es werden auch für die Gegner "Charakter Karten" angezeigt und nicht wie in AFK Arena nur die eigenen, bei vielen
   Effekten kann man schnell den Überblick verlieren, wie viele Gegner noch leben & wieviel Leben sie noch haben.
+
+## Setup
+
+For this project ro run successfully, you need to create the following environment variables:
+
+- SPRING_DATASOURCE_DRIVER-CLASS-NAME
+    - The driver class name for the database.
+    - Example: org.postgresql.Driver
+    - Default: com.mysql.jdbc.Driver
+- SPRING_DATASOURCE_USERNAME
+    - The username for the database.
+    - Default: root
+- SPRING_DATASOURCE_PASSWORD
+    - The password for the database.
+    - Example: root
+    - Default:
+- SPRING_DATASOURCE_URL
+    - The URL for the database.
+    - Default: jdbc:mysql://localhost:3306/autobattler?createDatabaseIfNotExist=true
+- SPRING_JPA_HIBERNATE_DDL-AUTO
+    - The DDL auto value for the database.
+    - Example: create, update, create-drop, validate, or none
+    - Default: update
+- SPRING_JPA_SHOW-SQL
+    - The show sql value for the database, if you want to see the SQL queries in the console set this to true, otherwise
+      set it to false.
+    - Example: true or false
+    - Default: false
+- ZWAZEL_APP_JWT_COOKIE_NAME
+    - The name of the cookie that is used to store the JWT token.
+    - Default: zwazelAutobattler
+- ZWAZEL_APP_JWT_SECRET
+    - The secret for the JWT token.
+    - Default: zwazelAutobattlerSecret
+- ZWAZEL_APP_JWT_EXPIRATION_TIME
+    - The expiration time for the JWT token in MS.
+    - Default: 86400000

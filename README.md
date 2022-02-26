@@ -165,7 +165,6 @@ For this project ro run successfully, you need to create the following environme
 
 - SPRING_DATASOURCE_DRIVER-CLASS-NAME
     - The driver class name for the database.
-    - Example: org.postgresql.Driver
     - Default: com.mysql.jdbc.Driver
 - SPRING_DATASOURCE_USERNAME
     - The username for the database.

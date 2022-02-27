@@ -26,15 +26,16 @@ public class UserService {
     private final UserRepository userRepository;
     private final FormationEntityRepository formationEntityRepository;
     private final UnitModelRepository unitModelRepository;
+    private final JwtUtils jwtUtils;
 
-    public UserService(UserRepository userRepository, FormationEntityRepository formationEntityRepository, UnitModelRepository unitModelRepository) {
+    public UserService(UserRepository userRepository, FormationEntityRepository formationEntityRepository, UnitModelRepository unitModelRepository, JwtUtils jwtUtils) {
         this.userRepository = userRepository;
         this.formationEntityRepository = formationEntityRepository;
         this.unitModelRepository = unitModelRepository;
+        this.jwtUtils = jwtUtils;
     }
 
     private Optional<User> getUserWithJWT(UserRepository userRepository, HttpServletRequest request) {
-        JwtUtils jwtUtils = new JwtUtils("");
         String jwt = jwtUtils.getJwtFromCookies(request);
         boolean valid = jwtUtils.validateJwtToken(jwt);
         if (valid) {

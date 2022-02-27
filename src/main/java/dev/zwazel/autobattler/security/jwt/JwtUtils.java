@@ -26,12 +26,6 @@ public class JwtUtils {
     public JwtUtils() {
     }
 
-    public JwtUtils(String hello) {
-        jwtSecret = System.getenv("ZWAZEL_APP_JWT_SECRET");
-        jwtExpirationMs = Integer.parseInt(System.getenv("ZWAZEL_APP_JWT_EXPIRATION_MS"));
-        jwtCookie = System.getenv("ZWAZEL_APP_JWT_COOKIE_NAME");
-    }
-
     public String getJwtFromCookies(HttpServletRequest request) {
         Cookie cookie = WebUtils.getCookie(request, jwtCookie);
         if (cookie != null) {
@@ -79,5 +73,14 @@ public class JwtUtils {
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
+    }
+
+    @Override
+    public String toString() {
+        return "JwtUtils{" +
+                "jwtSecret='" + jwtSecret + '\'' +
+                ", jwtExpirationMs=" + jwtExpirationMs +
+                ", jwtCookie='" + jwtCookie + '\'' +
+                '}';
     }
 }

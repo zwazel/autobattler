@@ -26,25 +26,26 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/auth")
 @Controller
 public class AuthController {
-    final AuthenticationManager authenticationManager;
-    final UserRepository userRepository;
-    final UserRoleRepository roleRepository;
-    final PasswordEncoder encoder;
-    final JwtUtils jwtUtils;
+    private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final UserRoleRepository roleRepository;
+    private final PasswordEncoder encoder;
+
+    private final JwtUtils jwtUtils;
 
     public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, UserRoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils) {
         this.authenticationManager = authenticationManager;
@@ -140,5 +141,16 @@ public class AuthController {
         ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(new MessageResponse("You've been signed out!"));
+    }
+
+    @GetMapping("/checkIfLoggedIn")
+    public ResponseEntity<?> checkIfLoggedIn(HttpServletRequest request) {
+        String jwt = jwtUtils.getJwtFromCookies(request);
+        boolean valid = jwtUtils.validateJwtToken(jwt);
+        if (valid) {
+            return ResponseEntity.ok().body(new MessageResponse("You're logged in!"));
+        } else {
+            return ResponseEntity.status(201).body(new MessageResponse("You're not logged in!"));
+        }
     }
 }

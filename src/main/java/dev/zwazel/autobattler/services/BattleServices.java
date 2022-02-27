@@ -32,10 +32,12 @@ public class BattleServices {
 
     private final UserRepository userRepository;
     private final FormationEntityRepository formationEntityRepository;
+    private final JwtUtils jwtUtils;
 
-    public BattleServices(UserRepository userRepository, FormationEntityRepository formationEntityRepository) {
+    public BattleServices(UserRepository userRepository, FormationEntityRepository formationEntityRepository, JwtUtils jwtUtils) {
         this.userRepository = userRepository;
         this.formationEntityRepository = formationEntityRepository;
+        this.jwtUtils = jwtUtils;
     }
 
     @GetMapping(path = "/getGridSize/battle")
@@ -52,7 +54,6 @@ public class BattleServices {
 
     @GetMapping(path = "/getFightHistory/{formationId}")
     public ResponseEntity<String> getFightHistory(@PathVariable long formationId, HttpServletRequest request) {
-        JwtUtils jwtUtils = new JwtUtils("");
         String jwt = jwtUtils.getJwtFromCookies(request);
         boolean valid = jwtUtils.validateJwtToken(jwt);
         if (valid) {

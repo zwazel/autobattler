@@ -41,7 +41,7 @@ public class JwtUtils {
     }
 
     public ResponseCookie getCleanJwtCookie() {
-        return ResponseCookie.from(jwtCookie, null).path("/").build();
+        return ResponseCookie.from(jwtCookie, null).path("/").httpOnly(true).secure(true).sameSite("None").build();
     }
 
     public String getUserNameFromJwtToken(String token) {

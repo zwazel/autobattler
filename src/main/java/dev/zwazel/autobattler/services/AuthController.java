@@ -73,21 +73,14 @@ public class AuthController {
 
             userRepository.save(user);
 
-            ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
-            List<String> roles = userDetails.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .collect(Collectors.toList());
-            return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                    .body(new UserInfoResponse(userDetails.getId(),
-                            userDetails.getUsername(),
-                            roles));
+            return getResponseEntityWithCookie(userDetails);
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse("Invalid username or password"));
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest, BindingResult result, Model model) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest, BindingResult result, Model model) {
         if (result.hasErrors()) {
             System.out.println("Error: " + result.getAllErrors());
             return ResponseEntity.badRequest().body(new MessageResponse("Invalid username or password, or something else idk!"));
@@ -133,7 +126,24 @@ public class AuthController {
 
         userRepository.save(user);
 
-        return ResponseEntity.ok().body(new MessageResponse("User registered successfully!"));
+        System.out.println("user = " + user);
+
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(signUpRequest.getUsername(), signUpRequest.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        return getResponseEntityWithCookie(userDetails);
+    }
+
+    private ResponseEntity<?> getResponseEntityWithCookie(UserDetailsImpl userDetails) {
+        ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
+        List<String> userRoles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .body(new UserInfoResponse(userDetails.getId(),
+                        userDetails.getUsername(),
+                        userRoles));
     }
 
     @PostMapping("/signout")

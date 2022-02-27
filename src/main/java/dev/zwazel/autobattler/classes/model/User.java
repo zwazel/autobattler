@@ -48,6 +48,7 @@ public class User {
 
     public User() {
         accountCreated = new Date();
+        lastLogin = accountCreated;
         this.units = new HashSet<>();
     }
 
@@ -55,6 +56,7 @@ public class User {
         this.username = username;
         this.password = password;
         accountCreated = new Date();
+        lastLogin = accountCreated;
         this.units = new HashSet<>();
     }
 

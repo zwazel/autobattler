@@ -148,7 +148,12 @@ public class AuthController {
         String jwt = jwtUtils.getJwtFromCookies(request);
         boolean valid = jwtUtils.validateJwtToken(jwt);
         if (valid) {
-            return ResponseEntity.ok().body(new MessageResponse("You're logged in!"));
+            String username = jwtUtils.getUserNameFromJwtToken(jwt);
+            User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Error: User not found."));
+            return ResponseEntity.ok().body(new MessageResponse("{" +
+                    "\"username\":" + "\"" + user.getUsername() + "\"" +
+                    ",\"id\":" + user.getId() +
+                    "}"));
         } else {
             return ResponseEntity.status(201).body(new MessageResponse("You're not logged in!"));
         }

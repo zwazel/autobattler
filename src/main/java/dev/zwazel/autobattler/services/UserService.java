@@ -113,6 +113,11 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    @GetMapping(path = "/get/{username}", produces = "application/json")
+    public Optional<User> getUserByName(@PathVariable String username) {
+        return userRepository.findByUsername(username);
+    }
+
     @GetMapping(path = "/getAll", produces = "application/json")
     public List<UserOnly> getAllUsers() {
         return userRepository.findAllUserOnly();

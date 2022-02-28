@@ -4,6 +4,7 @@ import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.model.FormationEntity;
 import dev.zwazel.autobattler.classes.model.UnitModel;
 import dev.zwazel.autobattler.classes.model.User;
+import dev.zwazel.autobattler.classes.units.SimpleUnit;
 import dev.zwazel.autobattler.classes.utils.FormationServiceTemplate;
 import dev.zwazel.autobattler.classes.utils.database.FormationOnly;
 import dev.zwazel.autobattler.classes.utils.database.UnitOnly;
@@ -67,6 +68,25 @@ public class UserService {
             return FormationServiceTemplate.getUnitOnlyList(unitModels);
         }
         return null;
+    }
+
+    @PostMapping(path = "/updateUnit", produces = "application/json")
+    public ResponseEntity<UnitOnly> updateUnit(@RequestBody SimpleUnit simpleUnit, HttpServletRequest request) {
+        Optional<User> userOptional = getUserWithJWT(userRepository, request);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            Optional<UnitModel> unitModelOptional = unitModelRepository.findById(simpleUnit.getId());
+            if (unitModelOptional.isPresent()) {
+                UnitModel unitModel = unitModelOptional.get();
+                unitModel.setLevel(simpleUnit.getLevel());
+                unitModel.setName(simpleUnit.getName());
+                unitModel.setUser(user);
+                unitModelRepository.save(unitModel);
+                return ResponseEntity.ok(FormationServiceTemplate.getUnitOnly(unitModel));
+            }
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     // TODO: 19.02.2022 - SET A LIMIT OF HOW MANY FORMATIONS A USER CAN HAVE

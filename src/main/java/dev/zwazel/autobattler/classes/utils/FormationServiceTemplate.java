@@ -30,35 +30,43 @@ public class FormationServiceTemplate {
         this.units = units;
     }
 
+    public static UnitOnly getUnitOnly(UnitModel unitModel) {
+        return getUnitOnly(new SimpleUnit(unitModel));
+    }
+
+    public static UnitOnly getUnitOnly(SimpleUnit simpleUnit) {
+        return new UnitOnly() {
+            @Override
+            public long getId() {
+                return simpleUnit.getId();
+            }
+
+            @Override
+            public String getName() {
+                return simpleUnit.getName();
+            }
+
+            @Override
+            public int getLevel() {
+                return simpleUnit.getLevel();
+            }
+
+            @Override
+            public UnitTypes getUnitType() {
+                return simpleUnit.getUnitType();
+            }
+
+            @Override
+            public boolean isCustomNamesAllowed() {
+                return simpleUnit.getUnitType().isCustomNamesAllowed();
+            }
+        };
+    }
+
     public static List<UnitOnly> getUnitOnlyList(List<UnitModel> unitModels) {
         List<UnitOnly> unitOnlyList = new ArrayList<>();
         for (UnitModel unitModel : unitModels) {
-            unitOnlyList.add(new UnitOnly() {
-                @Override
-                public long getId() {
-                    return unitModel.getId();
-                }
-
-                @Override
-                public String getName() {
-                    return unitModel.getName();
-                }
-
-                @Override
-                public int getLevel() {
-                    return unitModel.getLevel();
-                }
-
-                @Override
-                public UnitTypes getUnitType() {
-                    return unitModel.getUnitType();
-                }
-
-                @Override
-                public boolean isCustomNamesAllowed() {
-                    return unitModel.isCustomNamesAllowed();
-                }
-            });
+            unitOnlyList.add(getUnitOnly(unitModel));
         }
         return unitOnlyList;
     }

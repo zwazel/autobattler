@@ -25,11 +25,15 @@ public class SimpleUnit {
     public SimpleUnit() {
     }
 
-    public SimpleUnit(UnitModel unitModel, int priority, Vector position) {
+    public SimpleUnit(UnitModel unitModel) {
         this.id = unitModel.getId();
         this.level = unitModel.getLevel();
         this.unitType = unitModel.getUnitType();
         this.name = unitModel.getName();
+    }
+
+    public SimpleUnit(UnitModel unitModel, int priority, Vector position) {
+        this(unitModel);
         this.priority = priority;
         this.position = position;
     }

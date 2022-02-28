@@ -27,7 +27,7 @@ public class UnitModel {
     private String name;
 
     private int level;
-
+    
     @Enumerated(EnumType.STRING)
     private UnitTypes unitType;
 
@@ -50,6 +50,12 @@ public class UnitModel {
 
     public UnitModel(int level, UnitTypes unitType, User user) {
         this(unitType.getDefaultName(), level, unitType, user);
+    }
+
+    public void setLevel(int level) {
+        if (level > 0) {
+            this.level = level;
+        }
     }
 
     public Unit getUnit(int priority, Vector position) throws UnknownUnitType {

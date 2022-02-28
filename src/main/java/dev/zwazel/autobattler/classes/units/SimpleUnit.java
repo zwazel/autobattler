@@ -60,6 +60,12 @@ public class SimpleUnit {
         return UnitTypeParser.getUnit(this);
     }
 
+    public void setLevel(Integer level) {
+        if (level != null && level > 0) {
+            this.level = level;
+        }
+    }
+
     public void setUnitType(String unitType) throws UnknownUnitType {
         this.unitType = UnitTypes.findUnitType(unitType);
     }

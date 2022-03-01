@@ -89,6 +89,22 @@ public class UserService {
         return ResponseEntity.badRequest().build();
     }
 
+    @PostMapping(path="/addUnit", produces = "application/json")
+    public ResponseEntity<UnitOnly> addUnit(@RequestBody SimpleUnit simpleUnit, HttpServletRequest request) {
+        Optional<User> userOptional = getUserWithJWT(userRepository, request);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            UnitModel unitModel = new UnitModel();
+            unitModel.setLevel(simpleUnit.getLevel());
+            unitModel.setName(simpleUnit.getName());
+            unitModel.setUser(user);
+            unitModelRepository.save(unitModel);
+            return ResponseEntity.ok(FormationServiceTemplate.getUnitOnly(unitModel));
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
     // TODO: 19.02.2022 - SET A LIMIT OF HOW MANY FORMATIONS A USER CAN HAVE
     // TODO: 19.02.2022 - SET A LIMIT OF HOW MANY UNITS PER FORMATION A USER CAN HAVE
     @PostMapping(path = "/addFormation")

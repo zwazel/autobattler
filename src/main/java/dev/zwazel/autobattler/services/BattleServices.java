@@ -8,6 +8,7 @@ import dev.zwazel.autobattler.classes.model.User;
 import dev.zwazel.autobattler.classes.utils.Formation;
 import dev.zwazel.autobattler.classes.utils.Vector;
 import dev.zwazel.autobattler.classes.utils.battle.CreateFormations;
+import dev.zwazel.autobattler.classes.utils.database.UnitTypeWithInfo;
 import dev.zwazel.autobattler.classes.utils.database.repositories.FormationEntityRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
 import dev.zwazel.autobattler.classes.utils.json.History;
@@ -53,8 +54,29 @@ public class BattleServices {
     }
 
     @GetMapping(path = "/getUnitTypes", produces = "application/json")
-    public ResponseEntity<UnitTypes[]> getUnitTypes() {
-        return ResponseEntity.ok(UnitTypes.values());
+    public ResponseEntity<UnitTypeWithInfo[]> getUnitTypes() {
+        UnitTypes[] unitTypes = UnitTypes.values();
+        UnitTypeWithInfo[] unitTypeWithInfos = new UnitTypeWithInfo[unitTypes.length];
+        for (int i = 0; i < unitTypes.length; i++) {
+            UnitTypes type = unitTypes[i];
+            unitTypeWithInfos[i] = new UnitTypeWithInfo() {
+                @Override
+                public String getName() {
+                    return type.name();
+                }
+
+                @Override
+                public String getDefaultName() {
+                    return type.getDefaultName();
+                }
+
+                @Override
+                public boolean isCustomNamesAllowed() {
+                    return type.isCustomNamesAllowed();
+                }
+            };
+        }
+        return ResponseEntity.ok(unitTypeWithInfos);
     }
 
     @GetMapping(path = "/getFightHistory/{formationId}")

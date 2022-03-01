@@ -165,11 +165,11 @@ public class AuthController {
             String username = jwtUtils.getUserNameFromJwtToken(jwt);
             User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Error: User not found."));
             Long amountUnits = unitModelRepository.countByUser(user);
-            boolean canCreateNewUnits = amountUnits < MAXIMUM_AMOUNT_UNITS;
             return ResponseEntity.ok().body(new MessageResponse("{" +
                     "\"username\":" + "\"" + user.getUsername() + "\"" +
                     ",\"id\":" + user.getId() +
-                    ",\"canCreateNewUnits\":" + canCreateNewUnits +
+                    ",\"amountUnits\":" + amountUnits +
+                    ",\"maxAmountUnits\":" + MAXIMUM_AMOUNT_UNITS +
                     "}"));
         } else {
             return ResponseEntity.status(201).body(new MessageResponse("You're not logged in!"));

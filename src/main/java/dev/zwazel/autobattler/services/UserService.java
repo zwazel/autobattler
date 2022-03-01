@@ -98,6 +98,7 @@ public class UserService {
             UnitModel unitModel = new UnitModel();
             unitModel.setLevel(simpleUnit.getLevel());
             unitModel.setName(simpleUnit.getName());
+            unitModel.setUnitType(simpleUnit.getUnitType());
             unitModel.setUser(user);
             unitModelRepository.save(unitModel);
             return ResponseEntity.ok(FormationServiceTemplate.getUnitOnly(unitModel));

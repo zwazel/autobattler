@@ -81,6 +81,8 @@ public class SimpleUnit {
                 ", position=" + position +
                 ", priority=" + priority +
                 ", id=" + id +
+                ", level=" + level +
+                ", unitType=" + unitType.name() +
                 '}';
     }
 }

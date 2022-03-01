@@ -52,6 +52,11 @@ public class BattleServices {
         return ResponseEntity.ok(userGridSize.toSize());
     }
 
+    @GetMapping(path = "/getUnitTypes", produces = "application/json")
+    public ResponseEntity<UnitTypes[]> getUnitTypes() {
+        return ResponseEntity.ok(UnitTypes.values());
+    }
+
     @GetMapping(path = "/getFightHistory/{formationId}")
     public ResponseEntity<String> getFightHistory(@PathVariable long formationId, HttpServletRequest request) {
         String jwt = jwtUtils.getJwtFromCookies(request);

@@ -14,6 +14,7 @@ import dev.zwazel.autobattler.security.payload.request.SignupRequest;
 import dev.zwazel.autobattler.security.payload.response.MessageResponse;
 import dev.zwazel.autobattler.security.payload.response.UserInfoResponse;
 import dev.zwazel.autobattler.security.services.UserDetailsImpl;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -25,7 +26,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +33,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -46,8 +45,10 @@ public class AuthController {
     private final UserRoleRepository roleRepository;
     private final PasswordEncoder encoder;
     private final UnitModelRepository unitModelRepository;
-
     private final JwtUtils jwtUtils;
+
+    @Value("${zwazel.app.maximumAmountUnitsPerUser}")
+    private int MAXIMUM_AMOUNT_UNITS;
 
     public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, UserRoleRepository roleRepository, PasswordEncoder encoder, UnitModelRepository unitModelRepository, JwtUtils jwtUtils) {
         this.authenticationManager = authenticationManager;
@@ -59,7 +60,7 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, BindingResult result, Model model, HttpServletResponse response) {
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, BindingResult result) {
         if (result.hasErrors()) {
             return ResponseEntity.badRequest().body(new MessageResponse("Invalid username or password, or something else idk!"));
         }
@@ -83,7 +84,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest, BindingResult result, Model model) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest, BindingResult result) {
         if (result.hasErrors()) {
             System.out.println("Error: " + result.getAllErrors());
             return ResponseEntity.badRequest().body(new MessageResponse("Invalid username or password, or something else idk!"));
@@ -164,8 +165,7 @@ public class AuthController {
             String username = jwtUtils.getUserNameFromJwtToken(jwt);
             User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Error: User not found."));
             Long amountUnits = unitModelRepository.countByUser(user);
-            // todo put this number somewhere globally, like a config or something!
-            boolean canCreateNewUnits = amountUnits < 10;
+            boolean canCreateNewUnits = amountUnits < MAXIMUM_AMOUNT_UNITS;
             return ResponseEntity.ok().body(new MessageResponse("{" +
                     "\"username\":" + "\"" + user.getUsername() + "\"" +
                     ",\"id\":" + user.getId() +

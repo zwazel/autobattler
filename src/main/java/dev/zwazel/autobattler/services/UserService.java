@@ -14,6 +14,7 @@ import dev.zwazel.autobattler.classes.utils.database.repositories.UnitModelRepos
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
 import dev.zwazel.autobattler.security.jwt.JwtUtils;
 import javassist.NotFoundException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,9 @@ public class UserService {
     private final FormationEntityRepository formationEntityRepository;
     private final UnitModelRepository unitModelRepository;
     private final JwtUtils jwtUtils;
+
+    @Value("${zwazel.app.maximumAmountUnitsPerUser}")
+    private int MAXIMUM_AMOUNT_UNITS;
 
     public UserService(UserRepository userRepository, FormationEntityRepository formationEntityRepository, UnitModelRepository unitModelRepository, JwtUtils jwtUtils) {
         this.userRepository = userRepository;
@@ -89,19 +93,22 @@ public class UserService {
         return ResponseEntity.badRequest().build();
     }
 
-    @PostMapping(path="/addUnit", produces = "application/json")
+    @PostMapping(path = "/addUnit", produces = "application/json")
     public ResponseEntity<UnitOnly> addUnit(@RequestBody SimpleUnit simpleUnit, HttpServletRequest request) {
         Optional<User> userOptional = getUserWithJWT(userRepository, request);
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            UnitModel unitModel = new UnitModel();
-            unitModel.setLevel(simpleUnit.getLevel());
-            unitModel.setName(simpleUnit.getName());
-            unitModel.setUnitType(simpleUnit.getUnitType());
-            unitModel.setUser(user);
-            unitModelRepository.save(unitModel);
-            return ResponseEntity.ok(FormationServiceTemplate.getUnitOnly(unitModel));
+            Long amountUnits = unitModelRepository.countByUser(user);
+            if (amountUnits < MAXIMUM_AMOUNT_UNITS) {
+                UnitModel unitModel = new UnitModel();
+                unitModel.setLevel(simpleUnit.getLevel());
+                unitModel.setName(simpleUnit.getName());
+                unitModel.setUnitType(simpleUnit.getUnitType());
+                unitModel.setUser(user);
+                unitModelRepository.save(unitModel);
+                return ResponseEntity.ok(FormationServiceTemplate.getUnitOnly(unitModel));
+            }
         }
         return ResponseEntity.badRequest().build();
     }

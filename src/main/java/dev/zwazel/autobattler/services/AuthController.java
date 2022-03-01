@@ -5,6 +5,7 @@ import dev.zwazel.autobattler.classes.model.UnitModel;
 import dev.zwazel.autobattler.classes.model.User;
 import dev.zwazel.autobattler.classes.model.UserRole;
 import dev.zwazel.autobattler.classes.utils.EnumUserRole;
+import dev.zwazel.autobattler.classes.utils.database.repositories.UnitModelRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRoleRepository;
 import dev.zwazel.autobattler.security.jwt.JwtUtils;
@@ -44,14 +45,16 @@ public class AuthController {
     private final UserRepository userRepository;
     private final UserRoleRepository roleRepository;
     private final PasswordEncoder encoder;
+    private final UnitModelRepository unitModelRepository;
 
     private final JwtUtils jwtUtils;
 
-    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, UserRoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils) {
+    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, UserRoleRepository roleRepository, PasswordEncoder encoder, UnitModelRepository unitModelRepository, JwtUtils jwtUtils) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.encoder = encoder;
+        this.unitModelRepository = unitModelRepository;
         this.jwtUtils = jwtUtils;
     }
 
@@ -160,9 +163,13 @@ public class AuthController {
         if (valid) {
             String username = jwtUtils.getUserNameFromJwtToken(jwt);
             User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Error: User not found."));
+            Long amountUnits = unitModelRepository.countByUser(user);
+            // todo put this number somewhere globally, like a config or something!
+            boolean canCreateNewUnits = amountUnits < 10;
             return ResponseEntity.ok().body(new MessageResponse("{" +
                     "\"username\":" + "\"" + user.getUsername() + "\"" +
                     ",\"id\":" + user.getId() +
+                    ",\"canCreateNewUnits\":" + canCreateNewUnits +
                     "}"));
         } else {
             return ResponseEntity.status(201).body(new MessageResponse("You're not logged in!"));

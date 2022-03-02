@@ -32,10 +32,10 @@ public class UnitModel {
     @Enumerated(EnumType.STRING)
     private UnitTypes unitType;
 
-    private Date earnedDate;
+    private Date dateCollected;
 
     public UnitModel() {
-        this.earnedDate = new Date();
+        this.dateCollected = new Date();
     }
 
     public UnitModel(Unit unit) {
@@ -43,7 +43,7 @@ public class UnitModel {
         this.name = unit.getName();
         this.level = unit.getLevel();
         this.unitType = unit.getType();
-        this.earnedDate = new Date();
+        this.dateCollected = new Date();
     }
 
     public UnitModel(String name, int level, UnitTypes unitType, User user) {
@@ -51,7 +51,7 @@ public class UnitModel {
         this.level = level;
         this.unitType = unitType;
         this.user = user;
-        this.earnedDate = new Date();
+        this.dateCollected = new Date();
     }
 
     public UnitModel(int level, UnitTypes unitType, User user) {

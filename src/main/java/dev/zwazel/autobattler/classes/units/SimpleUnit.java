@@ -9,6 +9,8 @@ import dev.zwazel.autobattler.classes.utils.Vector;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 /**
  * Util class that works as a bridge to create a unit of a certain type.
  */
@@ -21,6 +23,7 @@ public class SimpleUnit {
     private Vector position;
     private UnitTypes unitType;
     private String name;
+    private Date dateCollected;
 
     public SimpleUnit() {
     }
@@ -30,21 +33,13 @@ public class SimpleUnit {
         this.level = unitModel.getLevel();
         this.unitType = unitModel.getUnitType();
         this.name = unitModel.getName();
+        this.dateCollected = unitModel.getDateCollected();
     }
 
     public SimpleUnit(UnitModel unitModel, int priority, Vector position) {
         this(unitModel);
         this.priority = priority;
         this.position = position;
-    }
-
-    public SimpleUnit(long id, int priority, int level, Vector position, String unitType, String name) throws UnknownUnitType {
-        this.id = id;
-        this.priority = priority;
-        this.level = level;
-        this.position = position;
-        this.unitType = UnitTypes.findUnitType(unitType);
-        this.name = name;
     }
 
     public SimpleUnit(long id, int priority, int level, Vector position, UnitTypes unitType, String name) {
@@ -83,6 +78,7 @@ public class SimpleUnit {
                 ", id=" + id +
                 ", level=" + level +
                 ", unitType=" + unitType.name() +
+                ", dateCollected=" + dateCollected +
                 '}';
     }
 }

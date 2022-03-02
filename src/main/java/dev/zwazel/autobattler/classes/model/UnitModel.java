@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -27,11 +28,14 @@ public class UnitModel {
     private String name;
 
     private int level;
-    
+
     @Enumerated(EnumType.STRING)
     private UnitTypes unitType;
 
+    private Date earnedDate;
+
     public UnitModel() {
+        this.earnedDate = new Date();
     }
 
     public UnitModel(Unit unit) {
@@ -39,6 +43,7 @@ public class UnitModel {
         this.name = unit.getName();
         this.level = unit.getLevel();
         this.unitType = unit.getType();
+        this.earnedDate = new Date();
     }
 
     public UnitModel(String name, int level, UnitTypes unitType, User user) {
@@ -46,6 +51,7 @@ public class UnitModel {
         this.level = level;
         this.unitType = unitType;
         this.user = user;
+        this.earnedDate = new Date();
     }
 
     public UnitModel(int level, UnitTypes unitType, User user) {

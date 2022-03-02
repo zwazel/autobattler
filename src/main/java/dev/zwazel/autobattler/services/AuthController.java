@@ -163,14 +163,20 @@ public class AuthController {
         boolean valid = jwtUtils.validateJwtToken(jwt);
         if (valid) {
             String username = jwtUtils.getUserNameFromJwtToken(jwt);
-            User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Error: User not found."));
-            Long amountUnits = unitModelRepository.countByUser(user);
-            return ResponseEntity.ok().body(new MessageResponse("{" +
-                    "\"username\":" + "\"" + user.getUsername() + "\"" +
-                    ",\"id\":" + user.getId() +
-                    ",\"amountUnits\":" + amountUnits +
-                    ",\"maxAmountUnits\":" + MAXIMUM_AMOUNT_UNITS +
-                    "}"));
+            try {
+                User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Error: User not found."));
+                Long amountUnits = unitModelRepository.countByUser(user);
+                return ResponseEntity.ok().body(new MessageResponse("{" +
+                        "\"username\":" + "\"" + user.getUsername() + "\"" +
+                        ",\"id\":" + user.getId() +
+                        ",\"amountUnits\":" + amountUnits +
+                        ",\"maxAmountUnits\":" + MAXIMUM_AMOUNT_UNITS +
+                        "}"));
+            } catch (RuntimeException e) {
+                ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
+                return ResponseEntity.status(201).header(HttpHeaders.SET_COOKIE, cookie.toString())
+                        .body(new MessageResponse("You've been signed out!"));
+            }
         } else {
             return ResponseEntity.status(201).body(new MessageResponse("You're not logged in!"));
         }

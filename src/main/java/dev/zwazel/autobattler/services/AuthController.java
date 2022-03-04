@@ -92,7 +92,7 @@ public class AuthController {
 
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             System.out.println("Username is already taken!");
-            return ResponseEntity.status(HttpStatus.IM_USED).body(new MessageResponse("Username is already taken!"));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageResponse("Username is already taken!"));
         }
         // Create new user's account
         User user = new User(signUpRequest.getUsername(),

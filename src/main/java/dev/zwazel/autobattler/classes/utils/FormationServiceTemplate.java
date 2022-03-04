@@ -106,7 +106,7 @@ public class FormationServiceTemplate {
             if (unitModel.isPresent()) {
                 simpleUnit.setUnitType(unitModel.get().getUnitType());
 
-                if (!unitModel.get().getName().equals(simpleUnit.getName())) {
+                if (!unitModel.get().getName().equals(simpleUnit.getName()) && simpleUnit.getName() != null && !simpleUnit.getName().isEmpty() && !simpleUnit.getName().isBlank()) {
                     unitModel.get().setName(simpleUnit.getName());
                     unitModelRepository.save(unitModel.get());
                 }

@@ -124,7 +124,7 @@ public class UserService {
             try {
                 FormationEntity formationEntity = formationServiceTemplate.getFormationEntity(user, unitModelRepository);
 
-                // this might not be the most performant way to check if a formation already exists, but my brain cant figure out how to do it better right now. so this has to do for now. And I mean i'll limit the amount of formations a user can have to a smaller number, so it won't take too long!
+                // this might not be the most performant way to check if a formation already exists, but my brain can't figure out how to do it better right now. so this has to do for now. And I mean i'll limit the amount of formations a user can have to a smaller number, so it won't take too long!
                 boolean formationAlreadyExists = false;
                 List<FormationEntity> formationEntities = formationEntityRepository.findAllByUserOrderById(user);
                 for (FormationEntity formationEntityToCheck : formationEntities) {

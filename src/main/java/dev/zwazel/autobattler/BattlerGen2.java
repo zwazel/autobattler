@@ -88,7 +88,7 @@ public class BattlerGen2 {
                 }
             }
 
-            System.out.println(units);
+            
 
             history = new History(new Formation(friendlyUser, new ArrayList<>(friendlyUnitList)), new Formation(enemyUser, new ArrayList<>(enemyUnitList)), this);
 

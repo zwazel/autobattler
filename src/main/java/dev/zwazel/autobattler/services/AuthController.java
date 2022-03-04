@@ -86,12 +86,12 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest, BindingResult result) {
         if (result.hasErrors()) {
-            System.out.println("Error: " + result.getAllErrors());
+            
             return ResponseEntity.badRequest().body(new MessageResponse("Invalid username or password, or something else idk!"));
         }
 
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            System.out.println("Username is already taken!");
+            
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Username is already taken!"));
         }
         // Create new user's account
@@ -130,7 +130,7 @@ public class AuthController {
 
         userRepository.save(user);
 
-        System.out.println("user = " + user);
+        
 
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(signUpRequest.getUsername(), signUpRequest.getPassword()));

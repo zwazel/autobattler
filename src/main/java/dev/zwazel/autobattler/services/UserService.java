@@ -128,7 +128,7 @@ public class UserService {
                 FormationEntity formationEntity = formationEntityOptional.get();
                 if (formationEntity.getUser().getId() == user.getId()) {
                     formationEntityRepository.delete(formationEntity);
-                    System.out.println("Formation " + formationID + " deleted");
+                    
                     return ResponseEntity.ok().build();
                 }
             }
@@ -140,7 +140,7 @@ public class UserService {
     // TODO: 19.02.2022 - SET A LIMIT OF HOW MANY UNITS PER FORMATION A USER CAN HAVE
     @PostMapping(path = "/addFormation")
     public ResponseEntity<?> setFormationForUser(@RequestBody FormationServiceTemplate formationServiceTemplate, HttpServletRequest request) {
-        System.out.println("formationServiceTemplate = " + formationServiceTemplate);
+        
         Optional<User> userOptional = getUserWithJWT(userRepository, request);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -164,7 +164,7 @@ public class UserService {
                     if (!formationAlreadyExists) {
                         user.addFormation(formationEntity);
 
-                        System.out.println("formation has been added");
+                        
 
                         userRepository.save(user);
 

@@ -1,7 +1,9 @@
 package dev.zwazel.autobattler.services;
 
+import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.model.FormationEntity;
+import dev.zwazel.autobattler.classes.model.FormationUnitTable;
 import dev.zwazel.autobattler.classes.model.UnitModel;
 import dev.zwazel.autobattler.classes.model.User;
 import dev.zwazel.autobattler.classes.units.SimpleUnit;
@@ -174,8 +176,38 @@ public class UserService {
                 } catch (UnknownUnitType | NotFoundException e) {
                     e.printStackTrace();
                 }
-            } else  {
-                System.out.println("updating formation " + formationServiceTemplate.getId());
+            } else {
+                // update formation
+                Optional<FormationEntity> formationEntityOptional = formationEntityRepository.findById(formationServiceTemplate.getId());
+                if (formationEntityOptional.isPresent()) {
+                    FormationEntity formationEntity = formationEntityOptional.get();
+                    if (formationEntity.getUser().getId() == user.getId()) {
+                        // add every unit not in the formation
+                        try {
+                            FormationEntity newFormationEntity = formationServiceTemplate.getFormationEntity(user, unitModelRepository);
+                            for (FormationUnitTable unitNew : newFormationEntity.getFormationUnitTable()) {
+                                boolean found = false;
+                                for (FormationUnitTable unitOld : formationEntity.getFormationUnitTable()) {
+                                    if (unitNew.getUnit().getID() == unitOld.getUnit().getID()) {
+                                        found = true;
+                                        unitOld.update(unitNew);
+                                        break;
+                                    }
+                                }
+                                if (!found) {
+                                    formationEntity.addFormationUnitTable(unitNew);
+                                }
+                            }
+
+                            formationEntityRepository.save(formationEntity);
+                            return ResponseEntity.ok(FormationServiceTemplate.getFormationOnly(formationEntity));
+                        } catch (UnknownUnitType | NotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } else {
+                    return ResponseEntity.badRequest().body("Formation not found");
+                }
             }
         }
         return ResponseEntity.badRequest().body("User not found");

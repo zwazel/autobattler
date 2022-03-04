@@ -106,17 +106,10 @@ public class FormationServiceTemplate {
     }
 
     public FormationEntity getFormationEntity(User user, UnitModelRepository unitModelRepository) throws UnknownUnitType, NotFoundException {
-
-
         for (SimpleUnit simpleUnit : this.units) {
             Optional<UnitModel> unitModel = unitModelRepository.findById(simpleUnit.getId());
             if (unitModel.isPresent()) {
                 simpleUnit.setUnitType(unitModel.get().getUnitType());
-
-                if (!unitModel.get().getName().equals(simpleUnit.getName()) && simpleUnit.getName() != null && !simpleUnit.getName().isEmpty() && !simpleUnit.getName().isBlank()) {
-                    unitModel.get().setName(simpleUnit.getName());
-                    unitModelRepository.save(unitModel.get());
-                }
             } else {
                 throw new NotFoundException("UnitModel with id " + simpleUnit.getId() + " not found");
             }

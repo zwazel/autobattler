@@ -57,6 +57,12 @@ public class FormationUnitTable {
         this.positionY = position.getY();
     }
 
+    public void update(FormationUnitTable formationUnitTable) {
+        this.unitPriority = formationUnitTable.getUnitPriority();
+        this.positionX = formationUnitTable.getPositionX();
+        this.positionY = formationUnitTable.getPositionY();
+    }
+
     @Override
     public String toString() {
         return "FormationUnitTable{" +

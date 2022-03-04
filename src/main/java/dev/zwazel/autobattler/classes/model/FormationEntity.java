@@ -52,6 +52,13 @@ public class FormationEntity {
         this.id = id;
     }
 
+    public void addFormationUnitTable(FormationUnitTable formationUnitTable) {
+        if (this.formationUnitTable == null) {
+            this.formationUnitTable = new HashSet<>();
+        }
+        this.formationUnitTable.add(formationUnitTable);
+    }
+
     public Set<FormationUnitTable> getFormationUnitTable() {
         return formationUnitTable;
     }

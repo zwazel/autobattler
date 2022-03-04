@@ -116,7 +116,7 @@ public class UserService {
     // TODO: 19.02.2022 - SET A LIMIT OF HOW MANY FORMATIONS A USER CAN HAVE
     // TODO: 19.02.2022 - SET A LIMIT OF HOW MANY UNITS PER FORMATION A USER CAN HAVE
     @PostMapping(path = "/addFormation")
-    public ResponseEntity<String> setFormationForUser(@RequestBody FormationServiceTemplate formationServiceTemplate, HttpServletRequest request) {
+    public ResponseEntity<?> setFormationForUser(@RequestBody FormationServiceTemplate formationServiceTemplate, HttpServletRequest request) {
         Optional<User> userOptional = getUserWithJWT(userRepository, request);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -140,7 +140,8 @@ public class UserService {
                     System.out.println("formation has been added");
 
                     userRepository.save(user);
-                    return ResponseEntity.ok("Formation added");
+
+                    return ResponseEntity.ok(FormationServiceTemplate.getFormationOnly(formationEntity));
                 } else {
                     System.err.println("formation already exists");
                     return ResponseEntity.badRequest().body("Formation already exists");

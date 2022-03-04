@@ -80,19 +80,23 @@ public class FormationServiceTemplate {
     public static List<FormationOnly> getFormationOnlyList(List<FormationEntity> formationEntities) {
         List<FormationOnly> formationOnlyList = new ArrayList<>();
         for (FormationEntity formationEntity : formationEntities) {
-            formationOnlyList.add(new FormationOnly() {
-                @Override
-                public long getId() {
-                    return formationEntity.getId();
-                }
-
-                @Override
-                public String getFormationJson() {
-                    return formationEntity.getFormationJson();
-                }
-            });
+            formationOnlyList.add(getFormationOnly(formationEntity));
         }
         return formationOnlyList;
+    }
+
+    public static FormationOnly getFormationOnly(FormationEntity formationEntity) {
+        return new FormationOnly() {
+            @Override
+            public long getId() {
+                return formationEntity.getId();
+            }
+
+            @Override
+            public String getFormationJson() {
+                return formationEntity.getFormationJson();
+            }
+        };
     }
 
     public FormationEntity getFormationEntity(User user) throws UnknownUnitType {

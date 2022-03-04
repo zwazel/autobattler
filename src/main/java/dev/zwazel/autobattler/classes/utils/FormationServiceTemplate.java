@@ -22,6 +22,7 @@ import java.util.Optional;
 @Getter
 @Setter
 public class FormationServiceTemplate {
+    private Long id;
     private ArrayList<SimpleUnit> units;
 
     public FormationServiceTemplate() {
@@ -105,6 +106,8 @@ public class FormationServiceTemplate {
     }
 
     public FormationEntity getFormationEntity(User user, UnitModelRepository unitModelRepository) throws UnknownUnitType, NotFoundException {
+
+
         for (SimpleUnit simpleUnit : this.units) {
             Optional<UnitModel> unitModel = unitModelRepository.findById(simpleUnit.getId());
             if (unitModel.isPresent()) {
@@ -135,10 +138,27 @@ public class FormationServiceTemplate {
         return new Formation(user, units);
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public ArrayList<SimpleUnit> getUnits() {
+        return units;
+    }
+
+    public void setUnits(ArrayList<SimpleUnit> units) {
+        this.units = units;
+    }
+
     @Override
     public String toString() {
         return "FormationServiceTemplate{" +
-                "units=" + units +
+                "id=" + id +
+                ", units=" + units +
                 '}';
     }
 }

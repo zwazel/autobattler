@@ -77,7 +77,7 @@ public class SimpleUnit {
                 ", priority=" + priority +
                 ", id=" + id +
                 ", level=" + level +
-                ", unitType=" + unitType.name() +
+                ", unitType=" + ((unitType == null) ? "null" : unitType.name()) +
                 ", dateCollected=" + dateCollected +
                 '}';
     }

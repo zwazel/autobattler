@@ -12,6 +12,7 @@ import dev.zwazel.autobattler.classes.utils.database.UserOnly;
 import dev.zwazel.autobattler.classes.utils.database.repositories.FormationEntityRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UnitModelRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
+import dev.zwazel.autobattler.classes.utils.rest.FormationIdOnly;
 import dev.zwazel.autobattler.security.jwt.JwtUtils;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Value;
@@ -108,6 +109,26 @@ public class UserService {
                 unitModel.setUser(user);
                 unitModelRepository.save(unitModel);
                 return ResponseEntity.ok(FormationServiceTemplate.getUnitOnly(unitModel));
+            }
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @PostMapping(path = "/deleteFormation")
+    public ResponseEntity<?> deleteFormationFromUser(@RequestBody FormationIdOnly formationID, HttpServletRequest request) {
+        Optional<User> userOptional = getUserWithJWT(userRepository, request);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            Optional<FormationEntity> formationEntityOptional = formationEntityRepository.findById(formationID.formationID);
+            if (formationEntityOptional.isPresent()) {
+                FormationEntity formationEntity = formationEntityOptional.get();
+                if (formationEntity.getUser().getId() == user.getId()) {
+                    formationEntityRepository.delete(formationEntity);
+                    System.out.println("Formation " + formationID + " deleted");
+                    return ResponseEntity.ok().build();
+                }
             }
         }
         return ResponseEntity.badRequest().build();

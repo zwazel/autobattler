@@ -5,6 +5,7 @@ import dev.zwazel.autobattler.classes.model.UnitModel;
 import dev.zwazel.autobattler.classes.model.User;
 import dev.zwazel.autobattler.classes.model.UserRole;
 import dev.zwazel.autobattler.classes.utils.EnumUserRole;
+import dev.zwazel.autobattler.classes.utils.database.repositories.FormationEntityRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UnitModelRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRoleRepository;
@@ -45,17 +46,22 @@ public class AuthController {
     private final UserRoleRepository roleRepository;
     private final PasswordEncoder encoder;
     private final UnitModelRepository unitModelRepository;
+    private final FormationEntityRepository formationEntityRepository;
     private final JwtUtils jwtUtils;
 
     @Value("${zwazel.app.maximumAmountUnitsPerUser}")
     private int MAXIMUM_AMOUNT_UNITS;
 
-    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, UserRoleRepository roleRepository, PasswordEncoder encoder, UnitModelRepository unitModelRepository, JwtUtils jwtUtils) {
+    @Value("${zwazel.app.maximumAmountFormationsPerUser}")
+    private int MAXIMUM_AMOUNT_FORMATIONS;
+
+    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, UserRoleRepository roleRepository, PasswordEncoder encoder, UnitModelRepository unitModelRepository, FormationEntityRepository formationEntityRepository, JwtUtils jwtUtils) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.encoder = encoder;
         this.unitModelRepository = unitModelRepository;
+        this.formationEntityRepository = formationEntityRepository;
         this.jwtUtils = jwtUtils;
     }
 
@@ -86,12 +92,12 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest, BindingResult result) {
         if (result.hasErrors()) {
-            
+
             return ResponseEntity.badRequest().body(new MessageResponse("Invalid username or password, or something else idk!"));
         }
 
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            
+
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Username is already taken!"));
         }
         // Create new user's account
@@ -130,7 +136,6 @@ public class AuthController {
 
         userRepository.save(user);
 
-        
 
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(signUpRequest.getUsername(), signUpRequest.getPassword()));
@@ -166,11 +171,14 @@ public class AuthController {
             try {
                 User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Error: User not found."));
                 Long amountUnits = unitModelRepository.countByUser(user);
+                Long amountFormations = formationEntityRepository.countByUser(user);
                 return ResponseEntity.ok().body(new MessageResponse("{" +
                         "\"username\":" + "\"" + user.getUsername() + "\"" +
                         ",\"id\":" + user.getId() +
                         ",\"amountUnits\":" + amountUnits +
                         ",\"maxAmountUnits\":" + MAXIMUM_AMOUNT_UNITS +
+                        ",\"amountFormations\":" + amountFormations +
+                        ",\"maxAmountFormations\":" + MAXIMUM_AMOUNT_FORMATIONS +
                         "}"));
             } catch (RuntimeException e) {
                 ResponseCookie cookie = jwtUtils.getCleanJwtCookie();

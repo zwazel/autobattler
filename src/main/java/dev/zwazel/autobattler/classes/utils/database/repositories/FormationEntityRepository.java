@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface FormationEntityRepository extends JpaRepository<FormationEntity, Long> {
     List<FormationEntity> findAllByUserOrderById(User user);
+
+    Long countByUser(User user);
 }

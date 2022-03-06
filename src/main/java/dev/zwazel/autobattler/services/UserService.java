@@ -155,7 +155,7 @@ public class UserService {
                     try {
                         FormationEntity formationEntity = formationServiceTemplate.getFormationEntity(user, unitModelRepository);
 
-                        if (!formationAlreadyExists(formationEntity, user)) {
+                        if (formationDoesNotExist(formationEntity, user)) {
                             user.addFormation(formationEntity);
 
                             userRepository.save(user);
@@ -191,7 +191,7 @@ public class UserService {
                                     }
                                 }
 
-                                if (!formationAlreadyExists(formationEntity, user)) {
+                                if (formationDoesNotExist(formationEntity, user)) {
                                     formationEntityRepository.save(formationEntity);
                                     return ResponseEntity.ok(FormationServiceTemplate.getFormationOnly(formationEntity));
                                 } else {
@@ -214,16 +214,16 @@ public class UserService {
         return ResponseEntity.badRequest().body("User not found");
     }
 
-    private boolean formationAlreadyExists(FormationEntity formation, User user) {
-        boolean formationAlreadyExists = true;
+    private boolean formationDoesNotExist(FormationEntity formation, User user) {
+        boolean formationDoesNotAlreadyExist = false;
         for (FormationUnitTable formationUnitTable : formation.getFormationUnitTable()) {
             List<FormationEntity> formationEntitySame = formationEntityRepository.findAllByFormationUnitTableAndUser(formationUnitTable, user);
             if (formationEntitySame.size() <= 0) {
-                formationAlreadyExists = false;
+                formationDoesNotAlreadyExist = true;
                 break;
             }
         }
-        return formationAlreadyExists;
+        return formationDoesNotAlreadyExist;
     }
 
     @GetMapping(path = "/get/{id}", produces = "application/json")

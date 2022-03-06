@@ -11,6 +11,7 @@ import dev.zwazel.autobattler.classes.utils.database.FormationOnly;
 import dev.zwazel.autobattler.classes.utils.database.UnitOnly;
 import dev.zwazel.autobattler.classes.utils.database.UserOnly;
 import dev.zwazel.autobattler.classes.utils.database.repositories.FormationEntityRepository;
+import dev.zwazel.autobattler.classes.utils.database.repositories.FormationUnitTableRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UnitModelRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
 import dev.zwazel.autobattler.classes.utils.rest.FormationIdOnly;
@@ -21,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +32,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final FormationEntityRepository formationEntityRepository;
     private final UnitModelRepository unitModelRepository;
+    private final FormationUnitTableRepository formationUnitTableRepository;
     private final JwtUtils jwtUtils;
 
     @Value("${zwazel.app.maximumAmountUnitsPerUser}")
@@ -38,10 +41,11 @@ public class UserService {
     @Value("${zwazel.app.maximumAmountFormationsPerUser}")
     private int MAXIMUM_AMOUNT_FORMATIONS;
 
-    public UserService(UserRepository userRepository, FormationEntityRepository formationEntityRepository, UnitModelRepository unitModelRepository, JwtUtils jwtUtils) {
+    public UserService(UserRepository userRepository, FormationEntityRepository formationEntityRepository, UnitModelRepository unitModelRepository, FormationUnitTableRepository formationUnitTableRepository, JwtUtils jwtUtils) {
         this.userRepository = userRepository;
         this.formationEntityRepository = formationEntityRepository;
         this.unitModelRepository = unitModelRepository;
+        this.formationUnitTableRepository = formationUnitTableRepository;
         this.jwtUtils = jwtUtils;
     }
 
@@ -142,7 +146,6 @@ public class UserService {
     // TODO: 19.02.2022 - SET A LIMIT OF HOW MANY UNITS PER FORMATION A USER CAN HAVE
     @PostMapping(path = "/addFormation")
     public ResponseEntity<?> setFormationForUser(@RequestBody FormationServiceTemplate formationServiceTemplate, HttpServletRequest request) {
-
         Optional<User> userOptional = getUserWithJWT(userRepository, request);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -152,6 +155,7 @@ public class UserService {
 
                 // new formation
                 if (formationServiceTemplate.getId() == null) {
+                    System.out.println("NEW FORMATION");
                     try {
                         FormationEntity formationEntity = formationServiceTemplate.getFormationEntity(user, unitModelRepository);
 
@@ -169,14 +173,16 @@ public class UserService {
                         e.printStackTrace();
                     }
                 } else {
+                    System.out.println("UPDATE FORMATION");
                     // update formation
                     Optional<FormationEntity> formationEntityOptional = formationEntityRepository.findById(formationServiceTemplate.getId());
                     if (formationEntityOptional.isPresent()) {
                         FormationEntity formationEntity = formationEntityOptional.get();
                         if (formationEntity.getUser().getId() == user.getId()) {
-                            // add every unit not in the formation
                             try {
                                 FormationEntity newFormationEntity = formationServiceTemplate.getFormationEntity(user, unitModelRepository);
+
+                                // add every new unit to the formation
                                 for (FormationUnitTable unitNew : newFormationEntity.getFormationUnitTable()) {
                                     boolean found = false;
                                     for (FormationUnitTable unitOld : formationEntity.getFormationUnitTable()) {
@@ -191,8 +197,31 @@ public class UserService {
                                     }
                                 }
 
+                                // remove every unit that is not in the new formation
+                                ArrayList<FormationUnitTable> unitsToRemove = new ArrayList<>();
+                                for (FormationUnitTable unitOld : formationEntity.getFormationUnitTable()) {
+                                    boolean found = false;
+                                    for (FormationUnitTable unitNew : newFormationEntity.getFormationUnitTable()) {
+                                        if (unitOld.getUnit().getID() == unitNew.getUnit().getID()) {
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!found) {
+                                        unitsToRemove.add(unitOld);
+                                    }
+                                }
+
+                                if (unitsToRemove.size() > 0) {
+                                    formationUnitTableRepository.deleteAll(unitsToRemove);
+                                }
+
                                 if (formationDoesNotExist(formationEntity, user)) {
-                                    formationEntityRepository.save(formationEntity);
+                                    System.out.println("before save");
+                                    System.out.println(formationEntity);
+                                    formationEntity = formationEntityRepository.save(formationEntity);
+                                    System.out.println("after save");
+                                    System.out.println(formationEntity);
                                     return ResponseEntity.ok(FormationServiceTemplate.getFormationOnly(formationEntity));
                                 } else {
                                     System.err.println("formation already exists");
@@ -203,8 +232,6 @@ public class UserService {
                                 e.printStackTrace();
                             }
                         }
-                    } else {
-                        return ResponseEntity.badRequest().body("Formation not found");
                     }
                 }
             } else {

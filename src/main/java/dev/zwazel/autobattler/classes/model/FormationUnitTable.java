@@ -26,7 +26,7 @@ public class FormationUnitTable {
 
     private int positionY;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private FormationEntity formation;
 
     public FormationUnitTable() {

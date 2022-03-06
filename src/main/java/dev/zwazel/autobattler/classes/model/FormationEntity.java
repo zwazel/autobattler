@@ -59,6 +59,10 @@ public class FormationEntity {
         this.formationUnitTable.add(formationUnitTable);
     }
 
+    public void removeFormationUnitTable(FormationUnitTable formationUnitTable) {
+        this.formationUnitTable.remove(formationUnitTable);
+    }
+
     public Set<FormationUnitTable> getFormationUnitTable() {
         return formationUnitTable;
     }

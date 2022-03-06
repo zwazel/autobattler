@@ -1,6 +1,5 @@
 package dev.zwazel.autobattler.services;
 
-import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.model.FormationEntity;
 import dev.zwazel.autobattler.classes.model.FormationUnitTable;
@@ -12,6 +11,7 @@ import dev.zwazel.autobattler.classes.utils.database.FormationOnly;
 import dev.zwazel.autobattler.classes.utils.database.UnitOnly;
 import dev.zwazel.autobattler.classes.utils.database.UserOnly;
 import dev.zwazel.autobattler.classes.utils.database.repositories.FormationEntityRepository;
+import dev.zwazel.autobattler.classes.utils.database.repositories.FormationUnitTableRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UnitModelRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
 import dev.zwazel.autobattler.classes.utils.rest.FormationIdOnly;
@@ -31,15 +31,20 @@ public class UserService {
     private final UserRepository userRepository;
     private final FormationEntityRepository formationEntityRepository;
     private final UnitModelRepository unitModelRepository;
+    private final FormationUnitTableRepository formationUnitTableRepository;
     private final JwtUtils jwtUtils;
 
     @Value("${zwazel.app.maximumAmountUnitsPerUser}")
     private int MAXIMUM_AMOUNT_UNITS;
 
-    public UserService(UserRepository userRepository, FormationEntityRepository formationEntityRepository, UnitModelRepository unitModelRepository, JwtUtils jwtUtils) {
+    @Value("${zwazel.app.maximumAmountFormationsPerUser}")
+    private int MAXIMUM_AMOUNT_FORMATIONS;
+
+    public UserService(UserRepository userRepository, FormationEntityRepository formationEntityRepository, UnitModelRepository unitModelRepository, FormationUnitTableRepository formationUnitTableRepository, JwtUtils jwtUtils) {
         this.userRepository = userRepository;
         this.formationEntityRepository = formationEntityRepository;
         this.unitModelRepository = unitModelRepository;
+        this.formationUnitTableRepository = formationUnitTableRepository;
         this.jwtUtils = jwtUtils;
     }
 
@@ -128,7 +133,7 @@ public class UserService {
                 FormationEntity formationEntity = formationEntityOptional.get();
                 if (formationEntity.getUser().getId() == user.getId()) {
                     formationEntityRepository.delete(formationEntity);
-                    
+
                     return ResponseEntity.ok().build();
                 }
             }
@@ -140,77 +145,88 @@ public class UserService {
     // TODO: 19.02.2022 - SET A LIMIT OF HOW MANY UNITS PER FORMATION A USER CAN HAVE
     @PostMapping(path = "/addFormation")
     public ResponseEntity<?> setFormationForUser(@RequestBody FormationServiceTemplate formationServiceTemplate, HttpServletRequest request) {
-        
+
         Optional<User> userOptional = getUserWithJWT(userRepository, request);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
 
-            // new formation
-            if (formationServiceTemplate.getId() == null) {
-                try {
-                    FormationEntity formationEntity = formationServiceTemplate.getFormationEntity(user, unitModelRepository);
+            Long amountFormations = formationEntityRepository.countByUser(user);
+            if (amountFormations < MAXIMUM_AMOUNT_FORMATIONS) {
 
-                    // new formation!
-                    // this might not be the most performant way to check if a formation already exists, but my brain can't figure out how to do it better right now. so this has to do for now. And I mean i'll limit the amount of formations a user can have to a smaller number, so it won't take too long!
-                    boolean formationAlreadyExists = false;
-                    List<FormationEntity> formationEntities = formationEntityRepository.findAllByUserOrderById(user);
-                    for (FormationEntity formationEntityToCheck : formationEntities) {
-                        if (formationEntityToCheck.getFormationJson().equals(formationEntity.getFormationJson())) {
-                            formationAlreadyExists = true;
-                            break;
-                        }
-                    }
+                // new formation
+                if (formationServiceTemplate.getId() == null) {
+                    try {
+                        FormationEntity formationEntity = formationServiceTemplate.getFormationEntity(user, unitModelRepository);
 
-                    if (!formationAlreadyExists) {
-                        user.addFormation(formationEntity);
+                        if (!formationAlreadyExists(formationEntity, user)) {
+                            user.addFormation(formationEntity);
 
-                        
+                            userRepository.save(user);
 
-                        userRepository.save(user);
-
-                        return ResponseEntity.ok(FormationServiceTemplate.getFormationOnly(formationEntity));
-                    } else {
-                        System.err.println("formation already exists");
-                        return ResponseEntity.badRequest().body("Formation already exists");
-                    }
-                } catch (UnknownUnitType | NotFoundException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                // update formation
-                Optional<FormationEntity> formationEntityOptional = formationEntityRepository.findById(formationServiceTemplate.getId());
-                if (formationEntityOptional.isPresent()) {
-                    FormationEntity formationEntity = formationEntityOptional.get();
-                    if (formationEntity.getUser().getId() == user.getId()) {
-                        // add every unit not in the formation
-                        try {
-                            FormationEntity newFormationEntity = formationServiceTemplate.getFormationEntity(user, unitModelRepository);
-                            for (FormationUnitTable unitNew : newFormationEntity.getFormationUnitTable()) {
-                                boolean found = false;
-                                for (FormationUnitTable unitOld : formationEntity.getFormationUnitTable()) {
-                                    if (unitNew.getUnit().getID() == unitOld.getUnit().getID()) {
-                                        found = true;
-                                        unitOld.update(unitNew);
-                                        break;
-                                    }
-                                }
-                                if (!found) {
-                                    formationEntity.addFormationUnitTable(unitNew);
-                                }
-                            }
-
-                            formationEntityRepository.save(formationEntity);
                             return ResponseEntity.ok(FormationServiceTemplate.getFormationOnly(formationEntity));
-                        } catch (UnknownUnitType | NotFoundException e) {
-                            e.printStackTrace();
+                        } else {
+                            System.err.println("formation already exists");
+                            return ResponseEntity.badRequest().body("Formation already exists");
                         }
+                    } catch (UnknownUnitType | NotFoundException e) {
+                        e.printStackTrace();
                     }
                 } else {
-                    return ResponseEntity.badRequest().body("Formation not found");
+                    // update formation
+                    Optional<FormationEntity> formationEntityOptional = formationEntityRepository.findById(formationServiceTemplate.getId());
+                    if (formationEntityOptional.isPresent()) {
+                        FormationEntity formationEntity = formationEntityOptional.get();
+                        if (formationEntity.getUser().getId() == user.getId()) {
+                            // add every unit not in the formation
+                            try {
+                                FormationEntity newFormationEntity = formationServiceTemplate.getFormationEntity(user, unitModelRepository);
+                                for (FormationUnitTable unitNew : newFormationEntity.getFormationUnitTable()) {
+                                    boolean found = false;
+                                    for (FormationUnitTable unitOld : formationEntity.getFormationUnitTable()) {
+                                        if (unitNew.getUnit().getID() == unitOld.getUnit().getID()) {
+                                            found = true;
+                                            unitOld.update(unitNew);
+                                            break;
+                                        }
+                                    }
+                                    if (!found) {
+                                        formationEntity.addFormationUnitTable(unitNew);
+                                    }
+                                }
+
+                                if (!formationAlreadyExists(formationEntity, user)) {
+                                    formationEntityRepository.save(formationEntity);
+                                    return ResponseEntity.ok(FormationServiceTemplate.getFormationOnly(formationEntity));
+                                } else {
+                                    System.err.println("formation already exists");
+                                    return ResponseEntity.badRequest().body("Formation already exists");
+                                }
+
+                            } catch (UnknownUnitType | NotFoundException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    } else {
+                        return ResponseEntity.badRequest().body("Formation not found");
+                    }
                 }
+            } else {
+                return ResponseEntity.badRequest().body("You can't have more than " + MAXIMUM_AMOUNT_FORMATIONS + " formations");
             }
         }
         return ResponseEntity.badRequest().body("User not found");
+    }
+
+    private boolean formationAlreadyExists(FormationEntity formation, User user) {
+        boolean formationAlreadyExists = true;
+        for (FormationUnitTable formationUnitTable : formation.getFormationUnitTable()) {
+            List<FormationEntity> formationEntitySame = formationEntityRepository.findAllByFormationUnitTableAndUser(formationUnitTable, user);
+            if (formationEntitySame.size() <= 0) {
+                formationAlreadyExists = false;
+                break;
+            }
+        }
+        return formationAlreadyExists;
     }
 
     @GetMapping(path = "/get/{id}", produces = "application/json")

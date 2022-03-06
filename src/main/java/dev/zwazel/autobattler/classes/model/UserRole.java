@@ -23,4 +23,11 @@ public class UserRole {
 
     public UserRole() {
     }
+
+    @Override
+    public String toString() {
+        return "UserRole{" +
+                "name=" + name +
+                '}';
+    }
 }

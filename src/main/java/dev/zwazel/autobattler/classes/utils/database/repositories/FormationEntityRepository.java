@@ -14,7 +14,7 @@ import java.util.List;
 public interface FormationEntityRepository extends JpaRepository<FormationEntity, Long> {
     List<FormationEntity> findAllByUserOrderById(User user);
 
-    @Query("select f, fU from FormationEntity f, FormationUnitTable fU where fU.positionX = :#{#formationUnitTable.positionX} and fU.positionY = :#{#formationUnitTable.positionY} and fU.unitModel.id = :#{#formationUnitTable.unitModel.id} and fU.unitPriority = :#{#formationUnitTable.unitPriority} and f.user.id = :#{#user.id}")
+    @Query("select f, fU from FormationEntity f, FormationUnitTable fU where fU.positionX = :#{#formationUnitTable.positionX} and fU.positionY = :#{#formationUnitTable.positionY} and fU.unitModel.id = :#{#formationUnitTable.unitModel.id} and not fU.formation.id = :#{#formationUnitTable.formation.id} and f.user.id = :#{#user.id}")
     List<FormationEntity> findAllByFormationUnitTableAndUser(@Param("formationUnitTable") FormationUnitTable formationUnitTable, @Param("user") User user);
 
     Long countByUser(User user);

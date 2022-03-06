@@ -11,7 +11,6 @@ import dev.zwazel.autobattler.classes.utils.database.FormationOnly;
 import dev.zwazel.autobattler.classes.utils.database.UnitOnly;
 import dev.zwazel.autobattler.classes.utils.database.UserOnly;
 import dev.zwazel.autobattler.classes.utils.database.repositories.FormationEntityRepository;
-import dev.zwazel.autobattler.classes.utils.database.repositories.FormationUnitTableRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UnitModelRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
 import dev.zwazel.autobattler.classes.utils.rest.FormationIdOnly;
@@ -31,7 +30,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final FormationEntityRepository formationEntityRepository;
     private final UnitModelRepository unitModelRepository;
-    private final FormationUnitTableRepository formationUnitTableRepository;
     private final JwtUtils jwtUtils;
 
     @Value("${zwazel.app.maximumAmountUnitsPerUser}")
@@ -40,11 +38,10 @@ public class UserService {
     @Value("${zwazel.app.maximumAmountFormationsPerUser}")
     private int MAXIMUM_AMOUNT_FORMATIONS;
 
-    public UserService(UserRepository userRepository, FormationEntityRepository formationEntityRepository, UnitModelRepository unitModelRepository, FormationUnitTableRepository formationUnitTableRepository, JwtUtils jwtUtils) {
+    public UserService(UserRepository userRepository, FormationEntityRepository formationEntityRepository, UnitModelRepository unitModelRepository, JwtUtils jwtUtils) {
         this.userRepository = userRepository;
         this.formationEntityRepository = formationEntityRepository;
         this.unitModelRepository = unitModelRepository;
-        this.formationUnitTableRepository = formationUnitTableRepository;
         this.jwtUtils = jwtUtils;
     }
 

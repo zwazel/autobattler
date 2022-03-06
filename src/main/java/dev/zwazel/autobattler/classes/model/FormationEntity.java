@@ -20,7 +20,7 @@ public class FormationEntity {
     @ManyToOne
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "formation")
     private Set<FormationUnitTable> formationUnitTable;
 
     public FormationEntity(Formation formation) {
@@ -28,7 +28,7 @@ public class FormationEntity {
 
         this.formationUnitTable = new HashSet<>();
         for (Unit unit : formation.getUnits()) {
-            FormationUnitTable formationUnitTable = new FormationUnitTable(unit);
+            FormationUnitTable formationUnitTable = new FormationUnitTable(unit, this);
             this.formationUnitTable.add(formationUnitTable);
         }
     }

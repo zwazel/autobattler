@@ -26,14 +26,18 @@ public class FormationUnitTable {
 
     private int positionY;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    private FormationEntity formation;
+
     public FormationUnitTable() {
     }
 
-    public FormationUnitTable(Unit unit) {
+    public FormationUnitTable(Unit unit, FormationEntity formation) {
         this.unitModel = unit.getUnitModel();
         this.unitPriority = unit.getPriority();
         this.positionX = unit.getGridPosition().getX();
         this.positionY = unit.getGridPosition().getY();
+        this.formation = formation;
     }
 
     public Long getId() {
@@ -72,5 +76,45 @@ public class FormationUnitTable {
                 ", positionX=" + positionX +
                 ", positionY=" + positionY +
                 '}';
+    }
+
+    public UnitModel getUnitModel() {
+        return unitModel;
+    }
+
+    public void setUnitModel(UnitModel unitModel) {
+        this.unitModel = unitModel;
+    }
+
+    public int getUnitPriority() {
+        return unitPriority;
+    }
+
+    public void setUnitPriority(int unitPriority) {
+        this.unitPriority = unitPriority;
+    }
+
+    public int getPositionX() {
+        return positionX;
+    }
+
+    public void setPositionX(int positionX) {
+        this.positionX = positionX;
+    }
+
+    public int getPositionY() {
+        return positionY;
+    }
+
+    public void setPositionY(int positionY) {
+        this.positionY = positionY;
+    }
+
+    public FormationEntity getFormation() {
+        return formation;
+    }
+
+    public void setFormation(FormationEntity formation) {
+        this.formation = formation;
     }
 }

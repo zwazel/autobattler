@@ -159,9 +159,9 @@ public class UserService {
                         FormationEntity formationEntity = formationServiceTemplate.getFormationEntity(user, unitModelRepository);
 
                         if (formationDoesNotExist(formationEntity, user)) {
-                            user.addFormation(formationEntity);
+                            formationEntity.setUser(user);
 
-                            userRepository.save(user);
+                            formationEntity = formationEntityRepository.save(formationEntity);
 
                             return ResponseEntity.ok(FormationServiceTemplate.getFormationOnly(formationEntity));
                         } else {

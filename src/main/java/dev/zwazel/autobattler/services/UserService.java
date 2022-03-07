@@ -212,9 +212,9 @@ public class UserService {
                                 }
 
                                 if (unitsToRemove.size() > 0) {
-                                    formationUnitTableRepository.deleteAll(unitsToRemove);
                                     unitsToRemove.forEach(formationEntity.getFormationUnitTable()::remove);
-                                    System.out.println("unitsToRemove = " + unitsToRemove);
+                                    unitsToRemove.forEach(unit -> unit.setFormation(null));
+                                    formationUnitTableRepository.deleteAll(unitsToRemove);
                                 }
 
                                 if (formationDoesNotExist(formationEntity, user)) {

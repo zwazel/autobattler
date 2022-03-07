@@ -1,6 +1,7 @@
 package dev.zwazel.autobattler.classes.utils.json;
 
 import dev.zwazel.autobattler.BattlerGen2;
+import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.utils.Formation;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +16,7 @@ public class History {
     private final Formation left;
     private final Formation right;
     private final ArrayList<ActionHistory> actionHistory;
+    private Side winner;
 
     public History(Formation left, Formation right, BattlerGen2 battler) {
         this.left = left;

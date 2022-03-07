@@ -108,6 +108,8 @@ public class BattlerGen2 {
                     }
                 }
 
+                history.setWinner(winningSide);
+
                 if (createJson) {
                     try {
                         new Export().export(history);

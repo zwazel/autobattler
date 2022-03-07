@@ -155,7 +155,6 @@ public class UserService {
 
                 // new formation
                 if (formationServiceTemplate.getId() == null) {
-                    System.out.println("NEW FORMATION");
                     try {
                         FormationEntity formationEntity = formationServiceTemplate.getFormationEntity(user, unitModelRepository);
 
@@ -173,7 +172,6 @@ public class UserService {
                         e.printStackTrace();
                     }
                 } else {
-                    System.out.println("UPDATE FORMATION");
                     // update formation
                     Optional<FormationEntity> formationEntityOptional = formationEntityRepository.findById(formationServiceTemplate.getId());
                     if (formationEntityOptional.isPresent()) {
@@ -194,6 +192,7 @@ public class UserService {
                                     }
                                     if (!found) {
                                         formationEntity.addFormationUnitTable(unitNew);
+                                        unitNew.setFormation(formationEntity);
                                     }
                                 }
 
@@ -214,14 +213,12 @@ public class UserService {
 
                                 if (unitsToRemove.size() > 0) {
                                     formationUnitTableRepository.deleteAll(unitsToRemove);
+                                    unitsToRemove.forEach(formationEntity.getFormationUnitTable()::remove);
+                                    System.out.println("unitsToRemove = " + unitsToRemove);
                                 }
 
                                 if (formationDoesNotExist(formationEntity, user)) {
-                                    System.out.println("before save");
-                                    System.out.println(formationEntity);
                                     formationEntity = formationEntityRepository.save(formationEntity);
-                                    System.out.println("after save");
-                                    System.out.println(formationEntity);
                                     return ResponseEntity.ok(FormationServiceTemplate.getFormationOnly(formationEntity));
                                 } else {
                                     System.err.println("formation already exists");

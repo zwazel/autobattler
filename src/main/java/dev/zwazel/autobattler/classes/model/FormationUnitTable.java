@@ -26,7 +26,7 @@ public class FormationUnitTable {
 
     private int positionY;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private FormationEntity formation;
 
     public FormationUnitTable() {

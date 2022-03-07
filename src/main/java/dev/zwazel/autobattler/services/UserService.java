@@ -214,10 +214,10 @@ public class UserService {
                                 if (unitsToRemove.size() > 0) {
                                     unitsToRemove.forEach(formationEntity.getFormationUnitTable()::remove);
                                     unitsToRemove.forEach(unit -> unit.setFormation(null));
-                                    formationUnitTableRepository.deleteAll(unitsToRemove);
                                 }
 
                                 if (formationDoesNotExist(formationEntity, user)) {
+                                    formationUnitTableRepository.deleteAll(unitsToRemove);
                                     formationEntity = formationEntityRepository.save(formationEntity);
                                     return ResponseEntity.ok(FormationServiceTemplate.getFormationOnly(formationEntity));
                                 } else {

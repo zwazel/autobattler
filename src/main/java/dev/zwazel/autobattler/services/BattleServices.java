@@ -108,7 +108,7 @@ public class BattleServices {
                     }
 
                     int randomNumber = (int) (Math.random() * (maxAmountUnits - minAmountUnits + 1)) + minAmountUnits;
-                    Formation formation = createFormations.createTestFormation(Side.ENEMY, 0, true, new UnitTypes[]{
+                    Formation formation = createFormations.createTestFormation(Side.ENEMY, 1, true, new UnitTypes[]{
                             UnitTypes.MY_FIRST_UNIT,
                     }, formationEntity.get().getMinLevel(), formationEntity.get().getMaxLevel(), formationEntity.get().getTotalLevel(), randomNumber, unitSlots);
 

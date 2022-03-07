@@ -88,7 +88,6 @@ public class BattlerGen2 {
                 }
             }
 
-            
 
             history = new History(new Formation(friendlyUser, new ArrayList<>(friendlyUnitList)), new Formation(enemyUser, new ArrayList<>(enemyUnitList)), this);
 
@@ -132,10 +131,10 @@ public class BattlerGen2 {
 
         int amountUnitsLeft = 3;
         int amountUnitsRight = amountUnitsLeft;
-        Formation left = createFormations.createTestFormation(FRIENDLY, 0, true, new UnitTypes[]{
+        Formation left = createFormations.createTestFormation(FRIENDLY, 1, true, new UnitTypes[]{
                 UnitTypes.MY_FIRST_UNIT,
         }, 1, 10, amountUnitsLeft, unitSlots);
-        Formation right = createFormations.createTestFormation(ENEMY, amountUnitsLeft, true, new UnitTypes[]{
+        Formation right = createFormations.createTestFormation(ENEMY, amountUnitsLeft + 1, true, new UnitTypes[]{
                 UnitTypes.MY_FIRST_UNIT,
         }, 1, 10, left.getTotalLevels(), amountUnitsRight, unitSlots);
 

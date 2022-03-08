@@ -4,6 +4,7 @@ import dev.zwazel.autobattler.classes.Obstacle;
 import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.enums.Side;
 import dev.zwazel.autobattler.classes.units.MyFirstUnit;
+import dev.zwazel.autobattler.classes.units.SimpleWall;
 import dev.zwazel.autobattler.classes.utils.Vector;
 import dev.zwazel.autobattler.classes.utils.json.ActionHistory;
 import dev.zwazel.autobattler.classes.utils.map.*;
@@ -42,6 +43,7 @@ public class GUI extends Canvas {
     private final Color COLOR_PATH_GRID = Color.BLACK;
     private final Color COLOR_PATH = Color.RED;
     private final Color COLOR_UNIT_INFOS = Color.BLACK;
+    private final Color COLOR_WALL = Color.BLACK;
 
     private Iterator<Unit> unitIterator;
     private Node[] nodes = new Node[0];
@@ -103,9 +105,9 @@ public class GUI extends Canvas {
                 if (!SHOW_LAST_POSITION) {
                     start = currentUnit.getGridPosition();
                 }
-                if (actionHistory.targets().length > 0) {
-                    Unit target = actionHistory.targets()[0];
-                    this.CURRENT_ACTION.setText("Current Action = " + actionHistory.actionType());
+                if (actionHistory.getTargets().length > 0) {
+                    Unit target = actionHistory.getTargets()[0];
+                    this.CURRENT_ACTION.setText("Current Action = " + actionHistory.getActionType());
                     if (target != null) {
                         end = target.getGridPosition();
                         this.target = target;
@@ -175,19 +177,24 @@ public class GUI extends Canvas {
                 if (gridCell.getCurrentObstacle() != null) {
                     Obstacle obstacle = gridCell.getCurrentObstacle();
                     if (!obstacle.equals(currentUnit) && !obstacle.equals(lastUnit) && !obstacle.equals(target)) {
-                        if (obstacle.getClass() == MyFirstUnit.class) {
-                            MyFirstUnit unit = (MyFirstUnit) obstacle;
-                            if (DIFFERENTIATE_SIDE) {
-                                if (unit.getSide() == Side.FRIENDLY) {
-                                    // friendlies
-                                    g.setColor(COLOR_FRIENDLY);
+                        switch (obstacle) {
+                            case Unit unit -> {
+                                if (DIFFERENTIATE_SIDE) {
+                                    if (unit.getSide() == Side.FRIENDLY) {
+                                        // friendlies
+                                        g.setColor(COLOR_FRIENDLY);
+                                    } else {
+                                        // enemies
+                                        g.setColor(COLOR_ENEMY);
+                                    }
                                 } else {
-                                    // enemies
-                                    g.setColor(COLOR_ENEMY);
+                                    g.setColor(COLOR_FRIENDLY);
                                 }
-                            } else {
-                                g.setColor(COLOR_FRIENDLY);
                             }
+                            case SimpleWall simpleWall -> {
+                                g.setColor(COLOR_WALL);
+                            }
+                            default -> throw new IllegalStateException("Unexpected value: " + obstacle);
                         }
                     } else {
                         if (obstacle.equals(currentUnit)) {

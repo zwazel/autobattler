@@ -1,7 +1,12 @@
 package dev.zwazel.autobattler.classes.utils.map;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.LinkedList;
 
+@Getter
+@Setter
 public class Node {
     private final GridCell myGridCell;
     private final LinkedList<Node> myNeighbors;
@@ -21,30 +26,6 @@ public class Node {
             node = node.getPredecessor();
         }
         return counter;
-    }
-
-    public GridCell getMyGridCell() {
-        return myGridCell;
-    }
-
-    public LinkedList<Node> getMyNeighbors() {
-        return myNeighbors;
-    }
-
-    public double getCost() {
-        return cost;
-    }
-
-    public void setCost(double cost) {
-        this.cost = cost;
-    }
-
-    public Node getPredecessor() {
-        return predecessor;
-    }
-
-    public void setPredecessor(Node predecessor) {
-        this.predecessor = predecessor;
     }
 
     @Override

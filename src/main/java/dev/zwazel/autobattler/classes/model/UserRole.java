@@ -1,13 +1,17 @@
 package dev.zwazel.autobattler.classes.model;
 
 import dev.zwazel.autobattler.classes.utils.EnumUserRole;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
+@Getter
+@Setter
 @Entity
 public class UserRole {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Enumerated(EnumType.STRING)
@@ -20,19 +24,10 @@ public class UserRole {
     public UserRole() {
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public EnumUserRole getName() {
-        return name;
-    }
-
-    public void setName(EnumUserRole name) {
-        this.name = name;
+    @Override
+    public String toString() {
+        return "UserRole{" +
+                "name=" + name +
+                '}';
     }
 }

@@ -11,9 +11,13 @@ import dev.zwazel.autobattler.classes.utils.Vector;
 import dev.zwazel.autobattler.classes.utils.json.ActionHistory;
 import dev.zwazel.autobattler.classes.utils.map.FindPath;
 import dev.zwazel.autobattler.classes.utils.map.Node;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Arrays;
 
+@Getter
+@Setter
 public abstract class Unit implements Obstacle, Cloneable {
     /**
      * The unit's unique ID.
@@ -222,118 +226,18 @@ public abstract class Unit implements Obstacle, Cloneable {
         return new ActionHistory(Action.DIE, this, new Unit[0], null, new Vector[]{this.getGridPosition()});
     }
 
-    public long getID() {
-        return ID;
-    }
-
-    public String getName() {
-        return name;
-    }
-
     public void setName(String name) {
         if (this.type.isCustomNamesAllowed()) {
             this.name = name;
         }
     }
 
-    public String getDescription() {
-        return type.getDescription();
-    }
-
-    public int getHealth() {
-        return health;
-    }
-
-    public void setHealth(int health) {
-        this.health = health;
-    }
-
-    public int getEnergy() {
-        return energy;
-    }
-
-    public void setEnergy(int energy) {
-        this.energy = energy;
-    }
-
-    public Ability[] getAbilities() {
-        return abilities;
-    }
-
-    public void setAbilities(Ability[] abilities) {
-        this.abilities = abilities;
-    }
-
-    public void setAbility(Ability ability, int index) {
-        this.abilities[index] = ability;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
-    public char getSymbol() {
-        return symbol;
-    }
-
-    public Vector getGridPosition() {
-        return gridPosition;
-    }
-
-    public void setGridPosition(Vector gridPosition) {
-        this.gridPosition = gridPosition;
-    }
-
-    public int getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(int speed) {
-        this.speed = speed;
-    }
-
-    public BattlerGen2 getBattler() {
-        return battler;
-    }
-
-    public void setBattler(BattlerGen2 battler) {
-        this.battler = battler;
-    }
-
-    public Side getSide() {
-        return side;
-    }
-
-    public void setSide(Side side) {
-        this.side = side;
-    }
-
-    public int getPriority() {
-        return priority;
-    }
-
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
-
-    public State getMyState() {
-        return myState;
-    }
-
-    public void setMyState(State myState) {
-        this.myState = myState;
-    }
-
-    public UnitTypes getType() {
-        return type;
-    }
-
-    public boolean isCanMoveDiagonally() {
-        return type.isCanMoveDiagonally();
+    public boolean setLevel(int level) {
+        if (level > 0) {
+            this.level = level;
+            return true;
+        }
+        return false;
     }
 
     @Override

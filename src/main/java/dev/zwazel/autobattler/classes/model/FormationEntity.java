@@ -14,13 +14,13 @@ import java.util.Set;
 @Table(name = "formation")
 public class FormationEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "formation")
     private Set<FormationUnitTable> formationUnitTable;
 
     public FormationEntity(Formation formation) {
@@ -28,7 +28,7 @@ public class FormationEntity {
 
         this.formationUnitTable = new HashSet<>();
         for (Unit unit : formation.getUnits()) {
-            FormationUnitTable formationUnitTable = new FormationUnitTable(unit);
+            FormationUnitTable formationUnitTable = new FormationUnitTable(unit, this);
             this.formationUnitTable.add(formationUnitTable);
         }
     }
@@ -50,6 +50,17 @@ public class FormationEntity {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public void addFormationUnitTable(FormationUnitTable formationUnitTable) {
+        if (this.formationUnitTable == null) {
+            this.formationUnitTable = new HashSet<>();
+        }
+        this.formationUnitTable.add(formationUnitTable);
+    }
+
+    public void removeFormationUnitTable(FormationUnitTable formationUnitTable) {
+        this.formationUnitTable.remove(formationUnitTable);
     }
 
     public Set<FormationUnitTable> getFormationUnitTable() {

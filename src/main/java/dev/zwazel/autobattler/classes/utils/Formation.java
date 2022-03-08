@@ -4,9 +4,13 @@ import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.model.FormationEntity;
 import dev.zwazel.autobattler.classes.model.User;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 
+@Getter
+@Setter
 public class Formation {
     private final User user;
 
@@ -47,14 +51,6 @@ public class Formation {
             totalLevels += unit.getLevel();
         }
         return totalLevels;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public ArrayList<Unit> getUnits() {
-        return units;
     }
 
     @Override

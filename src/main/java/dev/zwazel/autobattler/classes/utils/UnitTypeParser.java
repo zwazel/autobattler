@@ -31,6 +31,7 @@ public class UnitTypeParser {
     public static Unit getUnit(JsonObject unitJson, BattlerGen2 battler, Side side) throws UnknownUnitType {
         JsonElement unitType = unitJson.get("type");
         UnitTypes type = UnitTypes.findUnitType(unitType.getAsString());
+
         switch (type) {
             case MY_FIRST_UNIT -> {
                 return new MyFirstUnit(unitJson.get("id").getAsLong(), unitJson.get("priority").getAsInt(),

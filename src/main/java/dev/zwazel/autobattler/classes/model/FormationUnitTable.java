@@ -3,13 +3,17 @@ package dev.zwazel.autobattler.classes.model;
 import dev.zwazel.autobattler.classes.abstractClasses.Unit;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.utils.Vector;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
+@Getter
+@Setter
 @Entity
 public class FormationUnitTable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "formation_unit_table", nullable = false)
     private Long id;
 
@@ -22,14 +26,18 @@ public class FormationUnitTable {
 
     private int positionY;
 
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    private FormationEntity formation;
+
     public FormationUnitTable() {
     }
 
-    public FormationUnitTable(Unit unit) {
+    public FormationUnitTable(Unit unit, FormationEntity formation) {
         this.unitModel = unit.getUnitModel();
         this.unitPriority = unit.getPriority();
         this.positionX = unit.getGridPosition().getX();
         this.positionY = unit.getGridPosition().getY();
+        this.formation = formation;
     }
 
     public Long getId() {
@@ -42,6 +50,32 @@ public class FormationUnitTable {
 
     public Unit getUnit() throws UnknownUnitType {
         return unitModel.getUnit(this.getUnitPriority(), this.getUnitPosition());
+    }
+
+    public Vector getUnitPosition() {
+        return new Vector(positionX, positionY);
+    }
+
+    public void setUnitPosition(Vector position) {
+        this.positionX = position.getX();
+        this.positionY = position.getY();
+    }
+
+    public void update(FormationUnitTable formationUnitTable) {
+        this.unitPriority = formationUnitTable.getUnitPriority();
+        this.positionX = formationUnitTable.getPositionX();
+        this.positionY = formationUnitTable.getPositionY();
+    }
+
+    @Override
+    public String toString() {
+        return "FormationUnitTable{" +
+                "id=" + id +
+                ", unitModel=" + unitModel +
+                ", unitPriority=" + unitPriority +
+                ", positionX=" + positionX +
+                ", positionY=" + positionY +
+                '}';
     }
 
     public UnitModel getUnitModel() {
@@ -60,23 +94,27 @@ public class FormationUnitTable {
         this.unitPriority = unitPriority;
     }
 
-    public Vector getUnitPosition() {
-        return new Vector(positionX, positionY);
+    public int getPositionX() {
+        return positionX;
     }
 
-    public void setUnitPosition(Vector position) {
-        this.positionX = position.getX();
-        this.positionY = position.getY();
+    public void setPositionX(int positionX) {
+        this.positionX = positionX;
     }
 
-    @Override
-    public String toString() {
-        return "FormationUnitTable{" +
-                "id=" + id +
-                ", unitModel=" + unitModel +
-                ", unitPriority=" + unitPriority +
-                ", positionX=" + positionX +
-                ", positionY=" + positionY +
-                '}';
+    public int getPositionY() {
+        return positionY;
+    }
+
+    public void setPositionY(int positionY) {
+        this.positionY = positionY;
+    }
+
+    public FormationEntity getFormation() {
+        return formation;
+    }
+
+    public void setFormation(FormationEntity formation) {
+        this.formation = formation;
     }
 }

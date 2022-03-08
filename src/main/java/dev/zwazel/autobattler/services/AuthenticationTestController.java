@@ -10,20 +10,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/test")
 public class AuthenticationTestController {
-    @GetMapping("/all")
-    public ResponseEntity<MessageResponse> allAccess() {
-        return ResponseEntity.ok(new MessageResponse("Content Available to All"));
-    }
+  @GetMapping("/all")
+  public ResponseEntity<MessageResponse> allAccess() {
+    return ResponseEntity.ok(new MessageResponse("Content Available to All"));
+  }
 
-    @GetMapping("/user")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<MessageResponse> userAccess() {
-        return ResponseEntity.ok(new MessageResponse("Content Available to User"));
-    }
+  @GetMapping("/user")
+  @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+  public ResponseEntity<MessageResponse> userAccess() {
+    return ResponseEntity.ok(new MessageResponse("Content Available to User"));
+  }
 
-    @GetMapping("/admin")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<MessageResponse> adminAccess() {
-        return ResponseEntity.ok(new MessageResponse("Content Available to Admin"));
-    }
+  @GetMapping("/admin")
+  @PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<MessageResponse> adminAccess() {
+    return ResponseEntity.ok(new MessageResponse("Content Available to Admin"));
+  }
 }

@@ -1,9 +1,9 @@
 package dev.zwazel.autobattler.classes.utils.database;
 
 public interface UnitTypeWithInfo {
-    String getName();
+  String getName();
 
-    String getDefaultName();
+  String getDefaultName();
 
-    boolean isCustomNamesAllowed();
+  boolean isCustomNamesAllowed();
 }

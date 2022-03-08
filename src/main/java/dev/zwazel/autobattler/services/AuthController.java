@@ -15,6 +15,10 @@ import dev.zwazel.autobattler.security.payload.request.SignupRequest;
 import dev.zwazel.autobattler.security.payload.response.MessageResponse;
 import dev.zwazel.autobattler.security.payload.response.UserInfoResponse;
 import dev.zwazel.autobattler.security.services.UserDetailsImpl;
+import java.util.*;
+import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -33,85 +37,98 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.util.*;
-import java.util.stream.Collectors;
-
 @RequestMapping("/api/auth")
 @Controller
 public class AuthController {
-    private final AuthenticationManager authenticationManager;
-    private final UserRepository userRepository;
-    private final UserRoleRepository roleRepository;
-    private final PasswordEncoder encoder;
-    private final UnitModelRepository unitModelRepository;
-    private final FormationEntityRepository formationEntityRepository;
-    private final JwtUtils jwtUtils;
+  private final AuthenticationManager authenticationManager;
+  private final UserRepository userRepository;
+  private final UserRoleRepository roleRepository;
+  private final PasswordEncoder encoder;
+  private final UnitModelRepository unitModelRepository;
+  private final FormationEntityRepository formationEntityRepository;
+  private final JwtUtils jwtUtils;
 
-    @Value("${zwazel.app.maximumAmountUnitsPerUser}")
-    private int MAXIMUM_AMOUNT_UNITS;
+  @Value("${zwazel.app.maximumAmountUnitsPerUser}")
+  private int MAXIMUM_AMOUNT_UNITS;
 
-    @Value("${zwazel.app.maximumAmountFormationsPerUser}")
-    private int MAXIMUM_AMOUNT_FORMATIONS;
+  @Value("${zwazel.app.maximumAmountFormationsPerUser}")
+  private int MAXIMUM_AMOUNT_FORMATIONS;
 
-    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, UserRoleRepository roleRepository, PasswordEncoder encoder, UnitModelRepository unitModelRepository, FormationEntityRepository formationEntityRepository, JwtUtils jwtUtils) {
-        this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.encoder = encoder;
-        this.unitModelRepository = unitModelRepository;
-        this.formationEntityRepository = formationEntityRepository;
-        this.jwtUtils = jwtUtils;
+  public AuthController(AuthenticationManager authenticationManager,
+                        UserRepository userRepository,
+                        UserRoleRepository roleRepository,
+                        PasswordEncoder encoder,
+                        UnitModelRepository unitModelRepository,
+                        FormationEntityRepository formationEntityRepository,
+                        JwtUtils jwtUtils) {
+    this.authenticationManager = authenticationManager;
+    this.userRepository = userRepository;
+    this.roleRepository = roleRepository;
+    this.encoder = encoder;
+    this.unitModelRepository = unitModelRepository;
+    this.formationEntityRepository = formationEntityRepository;
+    this.jwtUtils = jwtUtils;
+  }
+
+  @PostMapping("/signin")
+  public ResponseEntity<?>
+  authenticateUser(@Valid @RequestBody LoginRequest loginRequest,
+                   BindingResult result) {
+    if (result.hasErrors()) {
+      return ResponseEntity.badRequest().body(new MessageResponse(
+          "Invalid username or password, or something else idk!"));
     }
 
-    @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, BindingResult result) {
-        if (result.hasErrors()) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Invalid username or password, or something else idk!"));
-        }
+    Authentication authentication = authenticationManager.authenticate(
+        new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
+                                                loginRequest.getPassword()));
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+    UserDetailsImpl userDetails =
+        (UserDetailsImpl)authentication.getPrincipal();
 
-        Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+    Optional<User> optionalUser = userRepository.findById(userDetails.getId());
+    if (optionalUser.isPresent()) {
+      User user = optionalUser.get();
+      user.setLastLogin(new Date());
 
-        Optional<User> optionalUser = userRepository.findById(userDetails.getId());
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            user.setLastLogin(new Date());
+      userRepository.save(user);
 
-            userRepository.save(user);
-
-            return getResponseEntityWithCookie(userDetails);
-        }
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse("Invalid username or password"));
+      return getResponseEntityWithCookie(userDetails);
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest, BindingResult result) {
-        if (result.hasErrors()) {
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+        .body(new MessageResponse("Invalid username or password"));
+  }
 
-            return ResponseEntity.badRequest().body(new MessageResponse("Invalid username or password, or something else idk!"));
-        }
+  @PostMapping("/signup")
+  public ResponseEntity<?>
+  registerUser(@Valid @RequestBody SignupRequest signUpRequest,
+               BindingResult result) {
+    if (result.hasErrors()) {
 
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+      return ResponseEntity.badRequest().body(new MessageResponse(
+          "Invalid username or password, or something else idk!"));
+    }
 
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Username is already taken!"));
-        }
-        // Create new user's account
-        User user = new User(signUpRequest.getUsername(),
-                encoder.encode(signUpRequest.getPassword()));
-        Set<String> strRoles = signUpRequest.getRole();
-        Set<UserRole> roles = new HashSet<>();
-        if (strRoles == null) {
-            UserRole userRole = roleRepository.findByName(EnumUserRole.ROLE_USER)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(userRole);
-        } else {
+    if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+
+      return ResponseEntity.status(HttpStatus.CONFLICT)
+          .body(new MessageResponse("Username is already taken!"));
+    }
+    // Create new user's account
+    User user = new User(signUpRequest.getUsername(),
+                         encoder.encode(signUpRequest.getPassword()));
+    Set<String> strRoles = signUpRequest.getRole();
+    Set<UserRole> roles = new HashSet<>();
+    if (strRoles == null) {
+      UserRole userRole =
+          roleRepository.findByName(EnumUserRole.ROLE_USER)
+              .orElseThrow(
+                  () -> new RuntimeException("Error: Role is not found."));
+      roles.add(userRole);
+    } else {
             strRoles.forEach(role -> {
-                switch (role) {
+        switch (role) {
                     case "admin" -> {
                         UserRole adminRole = roleRepository.findByName(EnumUserRole.ROLE_ADMIN)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));

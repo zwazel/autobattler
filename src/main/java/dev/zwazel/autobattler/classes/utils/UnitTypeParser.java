@@ -14,11 +14,11 @@ import dev.zwazel.autobattler.classes.units.SimpleUnit;
  * An util class to parse a json or simple Unit object into an actual unit.
  */
 public class UnitTypeParser {
-    public static Unit getUnit(SimpleUnit unit) throws UnknownUnitType {
-        int level = (unit.getLevel() == null) ? 1 : unit.getLevel();
-        UnitTypes type = unit.getUnitType();
+  public static Unit getUnit(SimpleUnit unit) throws UnknownUnitType {
+    int level = (unit.getLevel() == null) ? 1 : unit.getLevel();
+    UnitTypes type = unit.getUnitType();
 
-        switch (type) {
+    switch (type) {
             case MY_FIRST_UNIT -> {
                 return new MyFirstUnit(unit.getId(), unit.getPriority(), level, unit.getPosition(), unit.getName());
             }

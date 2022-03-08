@@ -5,80 +5,71 @@ import dev.zwazel.autobattler.classes.enums.UnitTypes;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.units.SimpleUnit;
 import dev.zwazel.autobattler.classes.utils.Vector;
+import java.util.Date;
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.persistence.*;
-import java.util.Date;
 
 @Getter
 @Setter
 @Entity
 public class UnitModel {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id", nullable = false)
+  private Long id;
 
-    @ManyToOne()
-    @JoinColumn(name = "user_id")
-    private User user;
+  @ManyToOne() @JoinColumn(name = "user_id") private User user;
 
-    // TODO: 18.02.2022 NO : (doppelpunkt) BECAUSE FRONTEND USES THIS!!!!!
-    private String name;
+  // TODO: 18.02.2022 NO : (doppelpunkt) BECAUSE FRONTEND USES THIS!!!!!
+  private String name;
 
-    private int level;
+  private int level;
 
-    @Enumerated(EnumType.STRING)
-    private UnitTypes unitType;
+  @Enumerated(EnumType.STRING) private UnitTypes unitType;
 
-    private Date dateCollected;
+  private Date dateCollected;
 
-    public UnitModel() {
-        this.dateCollected = new Date();
+  public UnitModel() { this.dateCollected = new Date(); }
+
+  public UnitModel(Unit unit) {
+    this.id = unit.getID();
+    this.name = unit.getName();
+    this.level = unit.getLevel();
+    this.unitType = unit.getType();
+    this.dateCollected = new Date();
+  }
+
+  public UnitModel(String name, int level, UnitTypes unitType, User user) {
+    this.name = name;
+    this.level = level;
+    this.unitType = unitType;
+    this.user = user;
+    this.dateCollected = new Date();
+  }
+
+  public UnitModel(int level, UnitTypes unitType, User user) {
+    this(unitType.getDefaultName(), level, unitType, user);
+  }
+
+  public void setLevel(int level) {
+    if (level > 0) {
+      this.level = level;
     }
+  }
 
-    public UnitModel(Unit unit) {
-        this.id = unit.getID();
-        this.name = unit.getName();
-        this.level = unit.getLevel();
-        this.unitType = unit.getType();
-        this.dateCollected = new Date();
-    }
+  public Unit getUnit(int priority, Vector position) throws UnknownUnitType {
+    return new SimpleUnit(this, priority, position).getUnit();
+  }
 
-    public UnitModel(String name, int level, UnitTypes unitType, User user) {
-        this.name = name;
-        this.level = level;
-        this.unitType = unitType;
-        this.user = user;
-        this.dateCollected = new Date();
-    }
+  public boolean isCustomNamesAllowed() {
+    return unitType.isCustomNamesAllowed();
+  }
 
-    public UnitModel(int level, UnitTypes unitType, User user) {
-        this(unitType.getDefaultName(), level, unitType, user);
-    }
-
-    public void setLevel(int level) {
-        if (level > 0) {
-            this.level = level;
-        }
-    }
-
-    public Unit getUnit(int priority, Vector position) throws UnknownUnitType {
-        return new SimpleUnit(this, priority, position).getUnit();
-    }
-
-    public boolean isCustomNamesAllowed() {
-        return unitType.isCustomNamesAllowed();
-    }
-
-    @Override
-    public String toString() {
-        return "UnitModel{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", level=" + level +
-                ", unitType=" + unitType +
-                '}';
-    }
+  @Override
+  public String toString() {
+    return "UnitModel{"
+        + "id=" + id + ", name='" + name + '\'' + ", level=" + level +
+        ", unitType=" + unitType + '}';
+  }
 }

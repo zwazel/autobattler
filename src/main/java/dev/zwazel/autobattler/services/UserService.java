@@ -41,6 +41,9 @@ public class UserService {
     @Value("${zwazel.app.maximumAmountFormationsPerUser}")
     private int MAXIMUM_AMOUNT_FORMATIONS;
 
+    @Value("${zwazel.app.maximumSlotsPerFormation}")
+    private int MAXIMUM_SLOTS_PER_FORMATION;
+
     public UserService(UserRepository userRepository, FormationEntityRepository formationEntityRepository, UnitModelRepository unitModelRepository, FormationUnitTableRepository formationUnitTableRepository, JwtUtils jwtUtils) {
         this.userRepository = userRepository;
         this.formationEntityRepository = formationEntityRepository;
@@ -157,15 +160,19 @@ public class UserService {
                     try {
                         FormationEntity formationEntity = formationServiceTemplate.getFormationEntity(user, unitModelRepository);
 
-                        if (formationDoesNotExist(formationEntity, user)) {
-                            formationEntity.setUser(user);
+                        if (slotsAreValid(formationEntity)) {
+                            if (formationDoesNotExist(formationEntity, user)) {
+                                formationEntity.setUser(user);
 
-                            formationEntity = formationEntityRepository.save(formationEntity);
+                                formationEntity = formationEntityRepository.save(formationEntity);
 
-                            return ResponseEntity.ok(FormationServiceTemplate.getFormationOnly(formationEntity));
+                                return ResponseEntity.ok(FormationServiceTemplate.getFormationOnly(formationEntity));
+                            } else {
+                                System.err.println("formation already exists");
+                                return ResponseEntity.badRequest().body("Formation already exists");
+                            }
                         } else {
-                            System.err.println("formation already exists");
-                            return ResponseEntity.badRequest().body("Formation already exists");
+                            return ResponseEntity.badRequest().body("Slots are not valid! Max: " + MAXIMUM_SLOTS_PER_FORMATION);
                         }
                     } catch (UnknownUnitType | NotFoundException e) {
                         e.printStackTrace();
@@ -218,15 +225,18 @@ public class UserService {
                                 unitsToRemove.forEach(unit -> unit.setFormation(null));
                             }
 
-                            if (formationDoesNotExist(formationEntity, user)) {
-                                formationUnitTableRepository.deleteAll(unitsToRemove);
-                                formationEntity = formationEntityRepository.save(formationEntity);
-                                return ResponseEntity.ok(FormationServiceTemplate.getFormationOnly(formationEntity));
+                            if (slotsAreValid(formationEntity)) {
+                                if (formationDoesNotExist(formationEntity, user)) {
+                                    formationUnitTableRepository.deleteAll(unitsToRemove);
+                                    formationEntity = formationEntityRepository.save(formationEntity);
+                                    return ResponseEntity.ok(FormationServiceTemplate.getFormationOnly(formationEntity));
+                                } else {
+                                    System.err.println("formation already exists");
+                                    return ResponseEntity.badRequest().body("Formation already exists");
+                                }
                             } else {
-                                System.err.println("formation already exists");
-                                return ResponseEntity.badRequest().body("Formation already exists");
+                                return ResponseEntity.badRequest().body("Slots are not valid! Max: " + MAXIMUM_SLOTS_PER_FORMATION);
                             }
-
                         } catch (UnknownUnitType | NotFoundException e) {
                             e.printStackTrace();
                         }
@@ -236,6 +246,18 @@ public class UserService {
 
         }
         return ResponseEntity.badRequest().body("User not found");
+    }
+
+    private boolean slotsAreValid(FormationEntity formationEntity) {
+        int totalSlots = 0;
+        for (FormationUnitTable unit : formationEntity.getFormationUnitTable()) {
+            try {
+                totalSlots += unit.getUnit().getType().getSlotSize();
+            } catch (UnknownUnitType e) {
+                e.printStackTrace();
+            }
+        }
+        return totalSlots <= MAXIMUM_SLOTS_PER_FORMATION;
     }
 
     private boolean formationDoesNotExist(FormationEntity formation, User user) {

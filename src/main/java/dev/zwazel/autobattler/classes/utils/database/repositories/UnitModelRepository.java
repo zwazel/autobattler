@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface UnitModelRepository extends JpaRepository<UnitModel, Long> {
     List<UnitModel> findByName(String name);
-
+    Long countByUser(User user);
     List<UnitModel> findAllByUserOrderByLevel(User user);
 }

@@ -8,6 +8,7 @@ import dev.zwazel.autobattler.classes.model.User;
 import dev.zwazel.autobattler.classes.utils.Formation;
 import dev.zwazel.autobattler.classes.utils.Vector;
 import dev.zwazel.autobattler.classes.utils.battle.CreateFormations;
+import dev.zwazel.autobattler.classes.utils.database.UnitTypeWithInfo;
 import dev.zwazel.autobattler.classes.utils.database.repositories.FormationEntityRepository;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UserRepository;
 import dev.zwazel.autobattler.classes.utils.json.History;
@@ -24,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @RestController()
-@RequestMapping("/api/battle")
+@RequestMapping("/api/authenticated/battle")
 public class BattleServices {
     private final Vector gridSize = new Vector(10, 10);
     private final Vector userGridSize = new Vector(3, 10);
@@ -32,10 +33,12 @@ public class BattleServices {
 
     private final UserRepository userRepository;
     private final FormationEntityRepository formationEntityRepository;
+    private final JwtUtils jwtUtils;
 
-    public BattleServices(UserRepository userRepository, FormationEntityRepository formationEntityRepository) {
+    public BattleServices(UserRepository userRepository, FormationEntityRepository formationEntityRepository, JwtUtils jwtUtils) {
         this.userRepository = userRepository;
         this.formationEntityRepository = formationEntityRepository;
+        this.jwtUtils = jwtUtils;
     }
 
     @GetMapping(path = "/getGridSize/battle")
@@ -50,9 +53,34 @@ public class BattleServices {
         return ResponseEntity.ok(userGridSize.toSize());
     }
 
+    @GetMapping(path = "/getUnitTypes", produces = "application/json")
+    public ResponseEntity<UnitTypeWithInfo[]> getUnitTypes() {
+        UnitTypes[] unitTypes = UnitTypes.values();
+        UnitTypeWithInfo[] unitTypeWithInfos = new UnitTypeWithInfo[unitTypes.length];
+        for (int i = 0; i < unitTypes.length; i++) {
+            UnitTypes type = unitTypes[i];
+            unitTypeWithInfos[i] = new UnitTypeWithInfo() {
+                @Override
+                public String getName() {
+                    return type.name();
+                }
+
+                @Override
+                public String getDefaultName() {
+                    return type.getDefaultName();
+                }
+
+                @Override
+                public boolean isCustomNamesAllowed() {
+                    return type.isCustomNamesAllowed();
+                }
+            };
+        }
+        return ResponseEntity.ok(unitTypeWithInfos);
+    }
+
     @GetMapping(path = "/getFightHistory/{formationId}")
     public ResponseEntity<String> getFightHistory(@PathVariable long formationId, HttpServletRequest request) {
-        JwtUtils jwtUtils = new JwtUtils("");
         String jwt = jwtUtils.getJwtFromCookies(request);
         boolean valid = jwtUtils.validateJwtToken(jwt);
         if (valid) {
@@ -80,7 +108,7 @@ public class BattleServices {
                     }
 
                     int randomNumber = (int) (Math.random() * (maxAmountUnits - minAmountUnits + 1)) + minAmountUnits;
-                    Formation formation = createFormations.createTestFormation(Side.ENEMY, 0, true, new UnitTypes[]{
+                    Formation formation = createFormations.createTestFormation(Side.ENEMY, 1, true, new UnitTypes[]{
                             UnitTypes.MY_FIRST_UNIT,
                     }, formationEntity.get().getMinLevel(), formationEntity.get().getMaxLevel(), formationEntity.get().getTotalLevel(), randomNumber, unitSlots);
 

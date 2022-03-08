@@ -11,12 +11,18 @@ import dev.zwazel.autobattler.classes.utils.database.FormationOnly;
 import dev.zwazel.autobattler.classes.utils.database.UnitOnly;
 import dev.zwazel.autobattler.classes.utils.database.repositories.UnitModelRepository;
 import javassist.NotFoundException;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+@Getter
+@Setter
 public class FormationServiceTemplate {
+    private Long id;
     private ArrayList<SimpleUnit> units;
 
     public FormationServiceTemplate() {
@@ -26,35 +32,48 @@ public class FormationServiceTemplate {
         this.units = units;
     }
 
+    public static UnitOnly getUnitOnly(UnitModel unitModel) {
+        return getUnitOnly(new SimpleUnit(unitModel));
+    }
+
+    public static UnitOnly getUnitOnly(SimpleUnit simpleUnit) {
+        return new UnitOnly() {
+            @Override
+            public long getId() {
+                return simpleUnit.getId();
+            }
+
+            @Override
+            public String getName() {
+                return simpleUnit.getName();
+            }
+
+            @Override
+            public int getLevel() {
+                return simpleUnit.getLevel();
+            }
+
+            @Override
+            public UnitTypes getUnitType() {
+                return simpleUnit.getUnitType();
+            }
+
+            @Override
+            public boolean isCustomNamesAllowed() {
+                return simpleUnit.getUnitType().isCustomNamesAllowed();
+            }
+
+            @Override
+            public Date getDateCollected() {
+                return simpleUnit.getDateCollected();
+            }
+        };
+    }
+
     public static List<UnitOnly> getUnitOnlyList(List<UnitModel> unitModels) {
         List<UnitOnly> unitOnlyList = new ArrayList<>();
         for (UnitModel unitModel : unitModels) {
-            unitOnlyList.add(new UnitOnly() {
-                @Override
-                public long getId() {
-                    return unitModel.getId();
-                }
-
-                @Override
-                public String getName() {
-                    return unitModel.getName();
-                }
-
-                @Override
-                public int getLevel() {
-                    return unitModel.getLevel();
-                }
-
-                @Override
-                public UnitTypes getUnitType() {
-                    return unitModel.getUnitType();
-                }
-
-                @Override
-                public boolean isCustomNamesAllowed() {
-                    return unitModel.isCustomNamesAllowed();
-                }
-            });
+            unitOnlyList.add(getUnitOnly(unitModel));
         }
         return unitOnlyList;
     }
@@ -62,19 +81,23 @@ public class FormationServiceTemplate {
     public static List<FormationOnly> getFormationOnlyList(List<FormationEntity> formationEntities) {
         List<FormationOnly> formationOnlyList = new ArrayList<>();
         for (FormationEntity formationEntity : formationEntities) {
-            formationOnlyList.add(new FormationOnly() {
-                @Override
-                public long getId() {
-                    return formationEntity.getId();
-                }
-
-                @Override
-                public String getFormationJson() {
-                    return formationEntity.getFormationJson();
-                }
-            });
+            formationOnlyList.add(getFormationOnly(formationEntity));
         }
         return formationOnlyList;
+    }
+
+    public static FormationOnly getFormationOnly(FormationEntity formationEntity) {
+        return new FormationOnly() {
+            @Override
+            public long getId() {
+                return formationEntity.getId();
+            }
+
+            @Override
+            public String getFormationJson() {
+                return formationEntity.getFormationJson();
+            }
+        };
     }
 
     public FormationEntity getFormationEntity(User user) throws UnknownUnitType {
@@ -87,11 +110,6 @@ public class FormationServiceTemplate {
             Optional<UnitModel> unitModel = unitModelRepository.findById(simpleUnit.getId());
             if (unitModel.isPresent()) {
                 simpleUnit.setUnitType(unitModel.get().getUnitType());
-
-                if (!unitModel.get().getName().equals(simpleUnit.getName())) {
-                    unitModel.get().setName(simpleUnit.getName());
-                    unitModelRepository.save(unitModel.get());
-                }
             } else {
                 throw new NotFoundException("UnitModel with id " + simpleUnit.getId() + " not found");
             }
@@ -113,6 +131,14 @@ public class FormationServiceTemplate {
         return new Formation(user, units);
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public ArrayList<SimpleUnit> getUnits() {
         return units;
     }
@@ -124,7 +150,8 @@ public class FormationServiceTemplate {
     @Override
     public String toString() {
         return "FormationServiceTemplate{" +
-                "units=" + units +
+                "id=" + id +
+                ", units=" + units +
                 '}';
     }
 }

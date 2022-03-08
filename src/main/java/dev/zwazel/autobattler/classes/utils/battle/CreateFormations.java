@@ -12,6 +12,7 @@ import dev.zwazel.autobattler.classes.utils.map.FindPath;
 import dev.zwazel.autobattler.classes.utils.map.Grid;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static dev.zwazel.autobattler.classes.enums.Side.ENEMY;
 
@@ -92,20 +93,35 @@ public class CreateFormations {
         int maxLevelDifference = 5;
 
         float difference = Math.abs(totalLevel - targetTotalLevel);
+        boolean[] indexesOk = new boolean[units.size()];
+        Arrays.fill(indexesOk, true);
+
         while (difference > maxLevelDifference) {
-            for (Unit unit : units) {
-                int randomLevelDifference = (int) (Math.random() * (maxLevelDifference + 1)) + 1;
+            for (int i = 0; i < indexesOk.length; i++) {
+                if (indexesOk[i]) {
+                    Unit unit = units.get(i);
 
-                if (totalLevel > targetTotalLevel) {
-                    unit.setLevel(unit.getLevel() - randomLevelDifference);
-                } else {
-                    unit.setLevel(unit.getLevel() + randomLevelDifference);
-                }
+                    int randomLevelDifference = (int) (Math.random() * (maxLevelDifference + 1)) + 1;
 
-                totalLevel = getTotalLevel(units);
-                difference = Math.abs(totalLevel - targetTotalLevel);
-                if (difference <= maxLevelDifference) {
-                    break;
+                    if (totalLevel > targetTotalLevel) {
+                        if (!unit.setLevel(unit.getLevel() - randomLevelDifference)) {
+                            if (!unit.setLevel(unit.getLevel() - 1)) {
+                                indexesOk[i] = false;
+                            }
+                        }
+                    } else {
+                        if (!unit.setLevel(unit.getLevel() + randomLevelDifference)) {
+                            if (!unit.setLevel(unit.getLevel() + 1)) {
+                                indexesOk[i] = false;
+                            }
+                        }
+                    }
+
+                    totalLevel = getTotalLevel(units);
+                    difference = Math.abs(totalLevel - targetTotalLevel);
+                    if (difference <= maxLevelDifference) {
+                        break;
+                    }
                 }
             }
         }

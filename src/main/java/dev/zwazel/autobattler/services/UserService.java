@@ -109,7 +109,7 @@ public class UserService {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             Long amountUnits = unitModelRepository.countByUser(user);
-            if (amountUnits < MAXIMUM_AMOUNT_UNITS) {
+            if ((MAXIMUM_AMOUNT_UNITS < 0) || (amountUnits < MAXIMUM_AMOUNT_UNITS)) {
                 UnitModel unitModel = new UnitModel();
                 unitModel.setLevel(simpleUnit.getLevel());
                 unitModel.setName(simpleUnit.getName());
@@ -151,7 +151,7 @@ public class UserService {
             User user = userOptional.get();
 
             Long amountFormations = formationEntityRepository.countByUser(user);
-            if (amountFormations < MAXIMUM_AMOUNT_FORMATIONS) {
+            if ((MAXIMUM_AMOUNT_FORMATIONS < 0) || (amountFormations < MAXIMUM_AMOUNT_FORMATIONS)) {
 
                 // new formation
                 if (formationServiceTemplate.getId() == null) {

@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Getter
@@ -24,7 +25,7 @@ public class UnitModel {
     @JoinColumn(name = "user_id")
     private User user;
 
-    // TODO: 18.02.2022 NO : (doppelpunkt) BECAUSE FRONTEND USES THIS!!!!!
+    @Size(min = 1, max = 12)
     private String name;
 
     private int level;

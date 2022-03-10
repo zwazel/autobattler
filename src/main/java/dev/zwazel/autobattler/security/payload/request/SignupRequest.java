@@ -17,6 +17,12 @@ public class SignupRequest {
     @Size(min = UserLoginInfos.MIN_PASSWORD_LENGTH, max = UserLoginInfos.MAX_PASSWORD_LENGTH)
     private String password;
 
+    @NotBlank
+    @Size(min = UserLoginInfos.MIN_PASSWORD_LENGTH, max = UserLoginInfos.MAX_PASSWORD_LENGTH)
+    private String confirmPassword;
+
+    private RememberMeTime rememberMeTime;
+
     public String getUsername() {
         return username;
     }
@@ -39,5 +45,21 @@ public class SignupRequest {
 
     public void setRole(Set<String> role) {
         this.role = role;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
+
+    public RememberMeTime getRememberMeTime() {
+        return rememberMeTime;
+    }
+
+    public void setRememberMeTime(RememberMeTime rememberMeTime) {
+        this.rememberMeTime = rememberMeTime;
     }
 }

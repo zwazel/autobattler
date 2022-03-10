@@ -83,7 +83,7 @@ public class AuthController {
 
             userRepository.save(user);
 
-            return getResponseEntityWithCookie(userDetails);
+            return getResponseEntityWithCookie(userDetails, loginRequest.getRememberMeTime().getTime());
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse("Invalid username or password"));
@@ -92,14 +92,17 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest, BindingResult result) {
         if (result.hasErrors()) {
-
             return ResponseEntity.badRequest().body(new MessageResponse("Invalid username or password, or something else idk!"));
         }
 
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Username is already taken!"));
         }
+
+        if (!signUpRequest.getConfirmPassword().equals(signUpRequest.getPassword())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Passwords do not match!"));
+        }
+
         // Create new user's account
         User user = new User(signUpRequest.getUsername(),
                 encoder.encode(signUpRequest.getPassword()));
@@ -141,11 +144,11 @@ public class AuthController {
                 .authenticate(new UsernamePasswordAuthenticationToken(signUpRequest.getUsername(), signUpRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        return getResponseEntityWithCookie(userDetails);
+        return getResponseEntityWithCookie(userDetails, signUpRequest.getRememberMeTime().getTime());
     }
 
-    private ResponseEntity<?> getResponseEntityWithCookie(UserDetailsImpl userDetails) {
-        ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
+    private ResponseEntity<?> getResponseEntityWithCookie(UserDetailsImpl userDetails, long jwtExpirationMs) {
+        ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails, jwtExpirationMs);
         List<String> userRoles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());

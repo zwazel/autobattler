@@ -16,10 +16,10 @@ import java.util.Date;
 @Component
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
+
     @Value("${zwazel.app.jwtSecret}")
     private String jwtSecret;
-    @Value("${zwazel.app.jwtExpirationMs}")
-    private int jwtExpirationMs;
+
     @Value("${zwazel.app.jwtCookieName}")
     private String jwtCookie;
 
@@ -35,8 +35,8 @@ public class JwtUtils {
         }
     }
 
-    public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal) {
-        String jwt = generateTokenFromUsername(userPrincipal.getUsername());
+    public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal, long jwtExpirationMs) {
+        String jwt = generateTokenFromUsername(userPrincipal.getUsername(), jwtExpirationMs);
         return ResponseCookie.from(jwtCookie, jwt).path("/").maxAge(24 * 60 * 60).httpOnly(true).secure(true).sameSite("None").build();
     }
 
@@ -66,7 +66,7 @@ public class JwtUtils {
         return false;
     }
 
-    public String generateTokenFromUsername(String username) {
+    public String generateTokenFromUsername(String username, long jwtExpirationMs) {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
@@ -79,7 +79,6 @@ public class JwtUtils {
     public String toString() {
         return "JwtUtils{" +
                 "jwtSecret='" + jwtSecret + '\'' +
-                ", jwtExpirationMs=" + jwtExpirationMs +
                 ", jwtCookie='" + jwtCookie + '\'' +
                 '}';
     }

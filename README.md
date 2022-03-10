@@ -191,6 +191,3 @@ For this project ro run successfully, you need to create the following environme
 - ZWAZEL_APP_JWT_SECRET
     - The secret for the JWT token.
     - Default: zwazelAutobattlerSecret
-- ZWAZEL_APP_JWT_EXPIRATION_TIME
-    - The expiration time for the JWT token in MS.
-    - Default: 86400000

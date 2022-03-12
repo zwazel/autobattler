@@ -3,6 +3,9 @@ package dev.zwazel.autobattler.classes.enums;
 import dev.zwazel.autobattler.classes.abstractClasses.ScaleAttributeWithLevel;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 
+import static dev.zwazel.autobattler.classes.enums.UnitModelLimitations.CUSTOM_NAME_MAX_LENGTH;
+import static dev.zwazel.autobattler.classes.enums.UnitModelLimitations.CUSTOM_NAME_MIN_LENGTH;
+
 public enum UnitTypes {
     MY_FIRST_UNIT("First unit", 10, 10, 1, false,
             true, "MY_FIRST_UNIT", 1,
@@ -78,7 +81,7 @@ public enum UnitTypes {
         this.baseMoveSpeed = 1;
         this.canMoveDiagonally = false;
         this.customNamesAllowed = true;
-        this.defaultName = this.name();
+        this.defaultName = (this.name().length() > CUSTOM_NAME_MAX_LENGTH) ? this.name().substring(0, CUSTOM_NAME_MAX_LENGTH) : (this.name().length() < CUSTOM_NAME_MIN_LENGTH) ? this.name() + "_".repeat(CUSTOM_NAME_MIN_LENGTH - this.name().length()) : this.name();
         this.slotSize = 1;
         this.scaleHealth = ((health, level) -> health + ((level - 1) * 10)); // add 10 health per level, and make it so that the unit has its base health on level 1
         this.scaleEnergy = ((energy, level) -> energy + ((level - 1) * 10)); // add 10 energy per level, and make it so that the unit has its base energy on level 1
@@ -92,7 +95,7 @@ public enum UnitTypes {
         this.baseMoveSpeed = baseMoveSpeed;
         this.canMoveDiagonally = canMoveDiagonally;
         this.customNamesAllowed = customNamesAllowed;
-        this.defaultName = defaultName;
+        this.defaultName = (defaultName.length() > CUSTOM_NAME_MAX_LENGTH) ? defaultName.substring(0, CUSTOM_NAME_MAX_LENGTH) : (defaultName.length() < CUSTOM_NAME_MIN_LENGTH) ? defaultName + "_".repeat(CUSTOM_NAME_MIN_LENGTH - defaultName.length()) : defaultName;
         this.slotSize = slotSize;
         this.scaleHealth = scaleHealth;
         this.scaleEnergy = scaleEnergy;

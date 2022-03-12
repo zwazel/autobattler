@@ -2,9 +2,9 @@ package dev.zwazel.autobattler.security.payload.request;
 
 import dev.zwazel.autobattler.classes.enums.UserLoginInfos;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Set;
-
-import javax.validation.constraints.*;
 
 public class SignupRequest {
     @NotBlank
@@ -61,5 +61,16 @@ public class SignupRequest {
 
     public void setRememberMeTime(RememberMeTime rememberMeTime) {
         this.rememberMeTime = rememberMeTime;
+    }
+
+    @Override
+    public String toString() {
+        return "SignupRequest{" +
+                "username='" + username + '\'' +
+                ", role=" + role +
+                ", password='" + password + '\'' +
+                ", confirmPassword='" + confirmPassword + '\'' +
+                ", rememberMeTime=" + rememberMeTime +
+                '}';
     }
 }

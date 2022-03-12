@@ -1,6 +1,7 @@
 package dev.zwazel.autobattler.classes.model;
 
 import dev.zwazel.autobattler.classes.abstractClasses.Unit;
+import dev.zwazel.autobattler.classes.enums.UnitModelLimitations;
 import dev.zwazel.autobattler.classes.enums.UnitTypes;
 import dev.zwazel.autobattler.classes.exceptions.UnknownUnitType;
 import dev.zwazel.autobattler.classes.units.SimpleUnit;
@@ -11,6 +12,9 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.Date;
+
+import static dev.zwazel.autobattler.classes.enums.UnitModelLimitations.CUSTOM_NAME_MAX_LENGTH;
+import static dev.zwazel.autobattler.classes.enums.UnitModelLimitations.CUSTOM_NAME_MIN_LENGTH;
 
 @Getter
 @Setter
@@ -25,7 +29,7 @@ public class UnitModel {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Size(min = 1, max = 12)
+    @Size(min = CUSTOM_NAME_MIN_LENGTH, max = CUSTOM_NAME_MAX_LENGTH)
     private String name;
 
     private int level;

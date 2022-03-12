@@ -1,12 +1,15 @@
 package dev.zwazel.autobattler.services;
 
 import dev.zwazel.autobattler.classes.enums.UserLoginInfos;
+import dev.zwazel.autobattler.security.payload.request.RememberMeTime;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 
 @RestController
@@ -31,11 +34,28 @@ public class ServerInfo {
 
     @RequestMapping(path = "/userLoginInfo", produces = "application/json")
     public String getUserLoginInfo() {
+        StringBuilder rememberMeTime = new StringBuilder();
+        Iterator<RememberMeTime> rememberMeTimeIterator = List.of(RememberMeTime.values()).iterator();
+        while (rememberMeTimeIterator.hasNext()) {
+            RememberMeTime next = rememberMeTimeIterator.next();
+            String timeText = "{";
+
+            timeText += "\"text\":\"" + next.getText() + "\",\"time\":" + next.getTime() + ",\"ordinal\":" + next.ordinal() + ",\"name\":\"" + next.name() + "\"";
+
+            timeText += "}";
+            if (rememberMeTimeIterator.hasNext()) {
+                timeText += ",";
+            }
+
+            rememberMeTime.append(timeText);
+        }
+
         return "{" +
                 "\"usernameMinLength\":" + UserLoginInfos.MIN_USERNAME_LENGTH + "," +
                 "\"usernameMaxLength\":" + UserLoginInfos.MAX_USERNAME_LENGTH + "," +
                 "\"passwordMinLength\":" + UserLoginInfos.MIN_PASSWORD_LENGTH + "," +
-                "\"passwordMaxLength\":" + UserLoginInfos.MAX_PASSWORD_LENGTH +
+                "\"passwordMaxLength\":" + UserLoginInfos.MAX_PASSWORD_LENGTH + "," +
+                "\"rememberMeTimes\":" + "[" + rememberMeTime + "]" +
                 "}";
     }
 

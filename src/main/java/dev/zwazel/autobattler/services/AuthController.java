@@ -130,7 +130,7 @@ public class AuthController {
         }
         user.setRoles(roles);
 
-        user = userRepository.save(user);
+//        user = userRepository.save(user);
 
         // add starter units to user
         user.addUnit(new UnitModel(1, UnitTypes.MY_FIRST_UNIT, user));
@@ -138,7 +138,6 @@ public class AuthController {
         user.addUnit(new UnitModel(1, UnitTypes.MY_FIRST_UNIT, user));
 
         userRepository.save(user);
-
 
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(signUpRequest.getUsername(), signUpRequest.getPassword()));

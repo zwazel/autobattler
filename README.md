@@ -123,6 +123,8 @@
         - Entscheidet mit einer Partie Schach das Spiel. Schach wird richtig simuliert, am Anfang random entschieden wer
           schwarz und weiss ist (nicht rassistisch gemeint). Jeder Charakter hat ein "Schach kenntniss" Level mit
           welchem entschieden wird wie weit jeder vorandenken kann.
+    - Catchphrases:
+        - Kazusch
 
 ## Random ideas
 
